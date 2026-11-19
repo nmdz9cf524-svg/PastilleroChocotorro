@@ -1,0 +1,49 @@
+{
+  "pill_nominal_mm": [
+    15,
+    8,
+    6
+  ],
+  "cavity_length_width_mm": [
+    16.2,
+    9
+  ],
+  "pocket_count": 12,
+  "pocket_pitch_degrees": 30,
+  "cone_bolts_xy": [
+    [
+      15.454813220625093,
+      4.141104721640332
+    ],
+    [
+      -11.31370849898476,
+      11.313708498984761
+    ],
+    [
+      -4.14110472164033,
+      -15.454813220625093
+    ]
+  ],
+  "wiper_bolts_xy": [
+    [
+      -17.78154954827745,
+      -30.276335571897633
+    ],
+    [
+      -23.517313911787912,
+      -38.46785601478756
+    ]
+  ],
+  "working_rotation": "CCW viewed from top",
+  "roof_sector_degrees": [
+    235,
+    305
+  ],
+  "version": "V4",
+  "tray_grub_xy": [
+    18.0,
+    -39.0
+  ],
+  "overload_stop_gap_mm": 0.45,
+  "feet_height_mm": 3.0
+}

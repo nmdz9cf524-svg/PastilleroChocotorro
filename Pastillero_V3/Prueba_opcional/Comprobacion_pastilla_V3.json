@@ -1,0 +1,67 @@
+{
+  "pill_nominal_mm": [
+    15,
+    8,
+    6
+  ],
+  "geometric_tests": {
+    "flat_pill_vs_rotor_mm3": 0.0,
+    "flat_pill_vs_roof_mm3": 0.0,
+    "upright_pill_vs_roof_mm3": 186.74973275244213,
+    "crosswise_pill_vs_rotor_mm3": 189.80904223375754,
+    "second_layer_min_thickness_pill_vs_roof_mm3": 215.80093263751073,
+    "uncovered_release_shadow_mm3": 0.0
+  },
+  "flat_release_path_samples": [
+    {
+      "pill_bottom_z": 93,
+      "intersections": []
+    },
+    {
+      "pill_bottom_z": 92,
+      "intersections": []
+    },
+    {
+      "pill_bottom_z": 89,
+      "intersections": []
+    },
+    {
+      "pill_bottom_z": 80,
+      "intersections": []
+    },
+    {
+      "pill_bottom_z": 60,
+      "intersections": []
+    },
+    {
+      "pill_bottom_z": 50,
+      "intersections": []
+    },
+    {
+      "pill_bottom_z": 47,
+      "intersections": []
+    },
+    {
+      "pill_bottom_z": 40,
+      "intersections": []
+    },
+    {
+      "pill_bottom_z": 37,
+      "intersections": []
+    }
+  ],
+  "dummy_mesh_closed": true,
+  "bulk_feed_simulation": false,
+  "physical_feed_test": false,
+  "roof_continuous_coverage_bound": {
+    "pocket_half_angle_bound_deg": 8.029495294231594,
+    "window_half_angle_bound_deg": 8.637131415070753,
+    "required_half_roof_angle_bound_deg": 24.696122003533944,
+    "provided_half_roof_angle_deg": 35,
+    "minimum_inner_pocket_radius_mm": 31.9,
+    "roof_inner_radius_mm": 31.2,
+    "maximum_outer_pocket_radius_mm": 48.1,
+    "roof_outer_radius_mm": 51.8,
+    "result": "covered for every angle where pocket can overlap outlet"
+  }
+}

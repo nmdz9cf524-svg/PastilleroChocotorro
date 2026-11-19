@@ -1,0 +1,7 @@
+Python3.12, CadQuery2.7 y NumPy.
+1) python generar_pastillero_v3.py
+2) python validar_v3.py
+3) python probar_pastilla_v3.py
+El primer script crea Reconstruido_V3 junto a Codigo_CAD. Los demás lo detectan.
+También aceptan un directorio de salida como primer argumento.
+Las comprobaciones son geométricas, sin simulación física de alimentación.
