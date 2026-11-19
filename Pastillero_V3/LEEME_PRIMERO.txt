@@ -1,0 +1,15 @@
+PASTILLERO V3 - CONO CON PUNTA HACIA ARRIBA
+
+Pastilla nominal aportada por el usuario:15x8x6mm. No es una medida universal de paracetamol.
+19 STL del mecanismo ->25piezas: separadores x4, patas x4, resto x1.
+Prueba_opcional añade un STL de pastilla ficticia para ensayos.
+La pieza20 requiereTPU flexible, objetivo95A. Las demás son rígidas.
+Giro de trabajo ANTIHORARIO mirando desde arriba.
+Lee Guia_pastillero_V3.pdf y revisa el ensambleSTEP antes de fabricar.
+
+El cono gira con el rotor; el techo y el peine quedan fijos.
+Validado: geometría del ensamble, tornillería y envolvente completa de giro; paso geométrico de pastilla acostada hasta bandeja.
+Pendiente: alimentación con carga y fricción, par del motor, comportamiento del peine y calibración del sensor real.
+MotorØ32x25/ejeØ6y celda50x15x7 son referencias nominales heredadas.
+No se añadió sensor de origen ni código de control.
+No mezclar las piezas superiores V2 con las nuevas V3.

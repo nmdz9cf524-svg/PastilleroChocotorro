@@ -1,0 +1,173 @@
+{
+  "01_carcasa_con_columnas": {
+    "size_mm": [
+      125.0,
+      125.0,
+      89.0
+    ],
+    "volume_mm3": 202628.44913183045,
+    "note": "Geometr\u00eda conservada de V2."
+  },
+  "02_placa_inferior": {
+    "size_mm": [
+      120.0,
+      120.0,
+      4.0
+    ],
+    "volume_mm3": 42965.177726984286,
+    "note": "Ventana de descarga 16.8x9.6, centrada en (0,-40)."
+  },
+  "03_rotor_15x8_con_cubo": {
+    "size_mm": [
+      105.0,
+      105.0,
+      21.400000199999994
+    ],
+    "volume_mm3": 59801.87443277308,
+    "note": "12 ranuras de16.2x9; cubo \u00d820; dos prisionerosM3x6; cono con tres M3x12 desde abajo."
+  },
+  "04_aro_con_techo_descarga": {
+    "size_mm": [
+      120.0,
+      120.0,
+      4.0
+    ],
+    "volume_mm3": 15377.629045988535,
+    "note": "Techo fijo235\u00b0..305\u00b0; giro de trabajo antihorario visto desde arriba."
+  },
+  "05_separador_placas_x4": {
+    "size_mm": [
+      5.400000000000006,
+      5.400000000000006,
+      8.799999999999997
+    ],
+    "volume_mm3": 121.64246754699955,
+    "note": "Geometr\u00eda conservada de V2."
+  },
+  "06_cono_repartidor_punta_arriba": {
+    "size_mm": [
+      61.343296292260014,
+      61.343296292260035,
+      35.00000000000003
+    ],
+    "volume_mm3": 18435.428991905173,
+    "note": "\u00d862 base, alto35; 12 canales radiales; hueco para reducir masa. Gira solidario al rotor."
+  },
+  "07_reserva_centrada": {
+    "size_mm": [
+      120.0,
+      120.0,
+      61.000000000000014
+    ],
+    "volume_mm3": 69180.25784246378,
+    "note": "\u00d898 interior; flange\u00d8120; cuatro M3x30 fijan reserva, aro, separadores y base."
+  },
+  "09_tapa_reserva_centrada": {
+    "size_mm": [
+      104.0,
+      104.0,
+      15.0
+    ],
+    "volume_mm3": 38206.79321589763,
+    "note": "Pesta\u00f1a\u00d897.4 para boca\u00d898; cuatro respiraderos\u00d82."
+  },
+  "10_bancada_motor_32x25": {
+    "size_mm": [
+      51.0,
+      42.0,
+      65.0
+    ],
+    "volume_mm3": 23815.828201825436,
+    "note": "Geometr\u00eda conservada de V2."
+  },
+  "11_puente_motor": {
+    "size_mm": [
+      53.0,
+      12.0,
+      4.0
+    ],
+    "volume_mm3": 2270.3044480192493,
+    "note": "Geometr\u00eda conservada de V2."
+  },
+  "12_pedestal_extremo_fijo_celda": {
+    "size_mm": [
+      13.0,
+      32.0,
+      20.0
+    ],
+    "volume_mm3": 7507.518367165356,
+    "note": "Geometr\u00eda conservada de V2."
+  },
+  "13_mordaza_fija_celda": {
+    "size_mm": [
+      13.0,
+      32.0,
+      3.5
+    ],
+    "volume_mm3": 1300.082756602335,
+    "note": "Geometr\u00eda conservada de V2."
+  },
+  "14_mordaza_inferior_extremo_movil": {
+    "size_mm": [
+      13.0,
+      30.0,
+      4.800000000000001
+    ],
+    "volume_mm3": 1680.4355743511521,
+    "note": "Geometr\u00eda conservada de V2."
+  },
+  "15_apoyo_bandeja_extremo_movil": {
+    "size_mm": [
+      13.0,
+      30.0,
+      4.0
+    ],
+    "volume_mm3": 1487.3663778490022,
+    "note": "Geometr\u00eda conservada de V2."
+  },
+  "16_bandeja_pesaje": {
+    "size_mm": [
+      45.0,
+      35.0,
+      12.0
+    ],
+    "volume_mm3": 6153.683188924486,
+    "note": "Geometr\u00eda conservada de V2."
+  },
+  "17_canal_descarga": {
+    "size_mm": [
+      35.0,
+      35.0,
+      39.0
+    ],
+    "volume_mm3": 11312.312877423388,
+    "note": "Geometr\u00eda conservada de V2."
+  },
+  "18_plataforma_electronica": {
+    "size_mm": [
+      35.0,
+      65.0,
+      7.0
+    ],
+    "volume_mm3": 6590.23917443266,
+    "note": "Geometr\u00eda conservada de V2."
+  },
+  "19_pata_inferior_x4": {
+    "size_mm": [
+      12.0,
+      12.0,
+      3.0
+    ],
+    "volume_mm3": 339.2920065876977,
+    "note": "Geometr\u00eda conservada de V2."
+  },
+  "20_peine_flexible_TPU": {
+    "size_mm": [
+      16.476088703185038,
+      18.75994185700793,
+      8.200000000000003
+    ],
+    "volume_mm3": 517.2543778490036,
+    "note": "TPU95A obligatorio para ensayo de barrido; dos M3x8. No sustituir por PLA r\u00edgido en prueba con pastillas."
+  }
+}
