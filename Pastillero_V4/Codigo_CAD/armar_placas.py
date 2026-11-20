@@ -36,10 +36,9 @@ PLACAS = {
         'piezas': [
             ('01_carcasa_v4_patas_pedestal_integrados', 65.0, 65.0, 0),
             ('06_cono_repartidor_punta_arriba', 192.5, 62.5, 0),
-            ('10_bancada_motor_32x25', 32.0, 156.0, 0),
+            ('10_bancada_28BYJ48', 32.0, 156.0, 0),
             ('16_bandeja_pesaje_inclinada', 95.0, 165.0, 0),
-            ('11_puente_motor', 35.0, 200.0, 0),
-            ('13_mordaza_fija_celda_tuercas', 35.0, 225.0, 90),
+            ('13_mordaza_fija_celda_tuercas', 35.0, 215.0, 90),
         ]},
     'Placa_2_mecanismo_y_tapa_PLA_capa_0.20': {
         'capa': 0.20, 'material': 'PLA o PETG',
@@ -48,28 +47,30 @@ PLACAS = {
             ('21_tapa_cuadrada', 65.0, 65.0, 0),
             ('07_reserva_con_barredor', 192.5, 62.5, 0),
             ('02_placa_inferior_con_canal', 65.0, 192.5, 0),
-            ('03_rotor_15x8_con_cubo', 192.5, 192.5, 0),
+            ('03_rotor_15x8_eje_D5', 192.5, 192.5, 0),
         ]},
 }
 
-# Solo las piezas que no existen en V3 o que cambiaron. Se reutilizan de V3:
-# 03 rotor, 06 cono, 10 bancada y 11 puente (geometría idéntica).
+# Solo las piezas que no existen en V3 o que cambiaron. Con el motor 28BYJ-48
+# también cambian la bancada 10 y el rotor 03; de V3 solo se reutiliza el cono 06.
 PLACAS_NUEVAS = {
     'Placa_1_nuevas_estructura_PLA_capa_0.28': {
         'capa': 0.28, 'material': 'PLA o PETG',
-        'nota': 'Carcasa, bandeja inclinada y mordaza. Capa gruesa = impresión más rápida.',
+        'nota': 'Carcasa con botón, bancada del 28BYJ-48, bandeja inclinada y mordaza. Capa gruesa = impresión más rápida.',
         'piezas': [
             ('01_carcasa_v4_patas_pedestal_integrados', 65.0, 65.0, 0),
             ('16_bandeja_pesaje_inclinada', 190.0, 62.0, 0),
             ('13_mordaza_fija_celda_tuercas', 190.0, 120.0, 90),
+            ('10_bancada_28BYJ48', 65.0, 185.0, 0),
         ]},
-    'Placa_2_nuevas_reserva_placa_y_tapa_PLA_capa_0.20': {
+    'Placa_2_nuevas_reserva_placa_rotor_y_tapa_PLA_capa_0.20': {
         'capa': 0.20, 'material': 'PLA o PETG',
-        'nota': 'Reserva (con techo, separadores y barredor) y placa con canal: holguras finas. Y la tapa cuadrada.',
+        'nota': 'Reserva (con techo, separadores y barredor), placa con canal y rotor para eje D5: holguras finas. Y la tapa cuadrada.',
         'piezas': [
             ('21_tapa_cuadrada', 65.0, 65.0, 0),
             ('07_reserva_con_barredor', 192.5, 62.5, 0),
             ('02_placa_inferior_con_canal', 65.0, 192.5, 0),
+            ('03_rotor_15x8_eje_D5', 192.5, 192.5, 0),
         ]},
 }
 

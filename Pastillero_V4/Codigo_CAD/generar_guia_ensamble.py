@@ -1,7 +1,9 @@
 """Genera la guía animada de ensamble de Pastillero V4.
 
 Salidas:
-  ../Guia_visual/Ensamble_Pastillero_V4.html   página autocontenida (abre con doble clic)
+  ../Guia_visual/Ensamble_Pastillero_V4.html   guía de ensamble autocontenida (abre con doble clic)
+  ../Guia_visual/Simulacion_boton_V4.html      simulación del botón: 30° y una pastilla por pulsación
+  [--artefacto-boton DIR]  la simulación para publicar (DIR/index.html + DIR/ensamble_v4.txt)
   [--artefacto DIR]  DIR/index.html + DIR/ensamble_v4.txt (base64)  (versión para publicar,
                      con la geometría en un archivo aparte)
 
@@ -28,7 +30,7 @@ for p in sorted((ROOT / 'STEP_piezas').glob('*.step')):
     if p.stem == '21b_embellecedor_alto':
         continue  # la guía muestra el embellecedor corto; el alto se monta igual
     meshes.append((p.stem, load(p)))
-for n in ['REF_celda_50x15x7', 'REF_motor_32x25', 'REF_eje_6x35']:
+for n in ['REF_celda_50x15x7', 'REF_motor_28BYJ48', 'REF_pulsador_12mm', 'REF_driver_ULN2003', 'REF_ESP32_DevKit']:
     meshes.append((n, load(ROOT / 'Referencias_NO_imprimir' / (n + '.step'))))
 hw_names = json.load(open(ROOT / 'Referencias_NO_imprimir' / 'Tornilleria_nominal_nombres.json'))
 hw = load(ROOT / 'Referencias_NO_imprimir' / 'Tornilleria_nominal.step').Solids()
@@ -73,6 +75,21 @@ standalone = ('<!doctype html>\n<html lang="es"><head><meta charset="utf-8">'
               + '\n</body></html>\n')
 (out / 'Ensamble_Pastillero_V4.html').write_text(standalone)
 print('guía:', out / 'Ensamble_Pastillero_V4.html', round(len(standalone) / 1e6, 2), 'MB')
+
+sim_src = (HERE / 'plantilla_simulacion_boton.html').read_text().replace('__CSS__', src[i:j]).replace('__RAMP__', json.dumps(ramp))
+sim = ('<!doctype html>\n<html lang="es"><head><meta charset="utf-8">'
+                         '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">'
+                         '<style>body{margin:0}</style></head><body>\n'
+                         + sim_src.replace('__DATA__', names_js + '\n<script>window.PASTILLERO_B64="' + b64 + '";</script>')
+                         + '\n</body></html>\n')
+(out / 'Simulacion_boton_V4.html').write_text(sim)
+print('simulación:', out / 'Simulacion_boton_V4.html', round(len(sim) / 1e6, 2), 'MB')
+if '--artefacto-boton' in sys.argv:
+    d = pathlib.Path(sys.argv[sys.argv.index('--artefacto-boton') + 1]).resolve()
+    d.mkdir(parents=True, exist_ok=True)
+    (d / 'index.html').write_text(sim_src.replace('__DATA__', names_js))
+    (d / 'ensamble_v4.txt').write_text(b64)
+    print('artefacto simulación:', d)
 
 if '--artefacto' in sys.argv:
     d = pathlib.Path(sys.argv[sys.argv.index('--artefacto') + 1]).resolve()

@@ -1,0 +1,381 @@
+<title>Pastillero con botón</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+__CSS__
+<style>
+/* Simulación: misma mesa de trabajo que la guía de ensamble; el panel lleva el botón y los contadores. */
+:root { --button: #c83a30; --button-press: #9f2a22; --pcb: #2f6b4f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --button: #e0584d; --button-press: #b8423a; --pcb: #4f9a76; } }
+:root[data-theme="dark"] { --button: #e0584d; --button-press: #b8423a; --pcb: #4f9a76; }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-mono); font-size: 0.85rem; color: var(--muted); background: var(--stage); }
+.loading[hidden] { display: none; }
+.press { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 14px 16px; font: 700 1.05rem var(--font-display);
+  color: #fff; background: var(--button); border-radius: 12px; border: 0; box-shadow: 0 4px 0 var(--button-press); transition: transform .08s, box-shadow .08s; }
+.press:hover { background: var(--button); filter: brightness(1.06); }
+.press:active, .press.down { transform: translateY(3px); box-shadow: 0 1px 0 var(--button-press); }
+.press:disabled { opacity: .55; cursor: default; filter: none; }
+.press .dot { width: 18px; height: 18px; border-radius: 50%; background: rgba(255,255,255,.28); border: 2px solid rgba(255,255,255,.75); flex: none; }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.stat { background: var(--chip); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; min-width: 0; }
+.stat .k { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-family: var(--font-display); font-weight: 600; }
+.stat .v { font-family: var(--font-mono); font-size: 1.25rem; font-variant-numeric: tabular-nums; margin-top: 2px; }
+.stat .s { font-size: 0.74rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.dial { display: flex; gap: 3px; margin-top: 6px; }
+.dial i { flex: 1; height: 6px; border-radius: 2px; background: var(--line); }
+.dial i.on { background: var(--accent); }
+.status { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); min-height: 1.3em; }
+.toggles { display: flex; flex-wrap: wrap; gap: 8px; }
+.legend { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; font-size: 0.85rem; }
+.legend span { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.legend b { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+.pins { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.pins td { padding: 3px 0; border-bottom: 1px solid var(--line); }
+.pins td:first-child { font-family: var(--font-mono); color: var(--accent); width: 34%; }
+.lbl.btn { border-color: var(--button); }
+@media (max-width: 420px) { .stats { grid-template-columns: 1fr 1fr; } }
+</style>
+
+<div class="app">
+  <header class="top">
+    <h1>Pastillero con botón</h1>
+    <span class="tag">CAD V4 · 28BYJ-48</span>
+    <p>Una pulsación = 30° de giro = una pastilla en la bandeja.</p>
+  </header>
+  <main class="layout">
+    <section class="stage" id="stage" aria-label="Vista 3D del pastillero">
+      <canvas id="c"></canvas>
+      <div id="labels"></div>
+      <div class="hud">
+        <span class="badge" id="badge">Cavidad 1 de 12 · 0°</span>
+        <label class="toggle" for="xray"><input type="checkbox" id="xray" checked> Ver por dentro</label>
+      </div>
+      <div class="hint">Arrastra para girar · rueda para acercar · toca el botón rojo</div>
+      <div class="loading" id="loading">Cargando geometría…</div>
+    </section>
+    <aside class="panel" aria-live="polite">
+      <div>
+        <div class="eyebrow">Simulación</div>
+        <h2>Pulsa el botón</h2>
+      </div>
+      <p style="margin:0">El firmware nuevo solo espera el botón. Al pulsarlo, el motor gira el rotor una cavidad (30°, antihorario visto desde arriba). La pastilla que llega a la salida cae por el canal y resbala hasta el bolsillo, fuera de la caja.</p>
+      <button class="press" id="press" type="button"><span class="dot"></span>Pulsar botón</button>
+      <div class="status" id="status">Listo. El rotor arranca alineado con la salida.</div>
+      <div class="stats">
+        <div class="stat"><div class="k">Entregadas</div><div class="v" id="count">0</div><div class="s">pastillas</div></div>
+        <div class="stat"><div class="k">Rotor</div><div class="v" id="angle">0°</div><div class="dial" id="dial"></div></div>
+        <div class="stat"><div class="k">Último giro</div><div class="v" id="steps">–</div><div class="s">medios pasos</div></div>
+      </div>
+      <div class="toggles">
+        <label class="toggle" for="labelsOn"><input type="checkbox" id="labelsOn" checked> Etiquetas</label>
+        <label class="toggle" for="capOn"><input type="checkbox" id="capOn" checked> Tapa puesta</label>
+      </div>
+      <div class="group"><h3>Componentes</h3>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div class="group"><h3>Conexiones</h3>
+        <table class="pins">
+          <tr><td>GPIO16–19</td><td>ULN2003 IN1–IN4</td></tr>
+          <tr><td>GPIO23</td><td>Botón 12 mm → GND (pull-up interno)</td></tr>
+          <tr><td>GPIO21</td><td>Zumbador activo (opcional)</td></tr>
+          <tr><td>5 V aparte</td><td>Motor y ULN2003, GND común con el ESP32</td></tr>
+        </table>
+      </div>
+      <div class="note">Simulación con la geometría del CAD. El 28BYJ-48 da 4075.77 medios pasos por vuelta, así que cada pulsación son 339 o 340 medios pasos y 12 pulsaciones suman una vuelta exacta.</div>
+    </aside>
+  </main>
+</div>
+
+__DATA__
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(() => {
+  const RAMP = __RAMP__;
+  const SLOPE = Math.tan(RAMP.slope_deg * Math.PI / 180);
+  const floorTop = (y) => RAMP.z_ref + (Math.max(y, RAMP.y_knee) + 55) * SLOPE;
+  const PPV = 4075.7728, CAV = 12;                      // mismos valores que el firmware
+  const objetivo = (c) => Math.round(c * PPV / CAV);
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---------- Colores por pieza ----------
+  const C = {
+    shell: 0x8b979d, plate: 0x3d6079, rotor: 0xd39a3e, cone: 0x3aa898, hopper: 0xa9c6ca, trim: 0xc9a25a,
+    mount: 0x8fa56d, tray: 0x4f8fc0, motor: 0x50565c, cell: 0xb7bfc5, screw: 0xc3c9ce, nut: 0x98a1a8,
+    pill: 0xf4f1ea, pcb: 0x2f6b4f, button: 0xd2463c,
+  };
+  const colorOf = (n) => n.startsWith('01_') ? 'shell' : n.startsWith('02_') ? 'plate' : n.startsWith('03_') ? 'rotor'
+    : n.startsWith('06_') ? 'cone' : n.startsWith('07_') ? 'hopper' : n.startsWith('21_') ? 'trim'
+    : n.startsWith('10_') || n.startsWith('13_') ? 'mount' : n.startsWith('16_') ? 'tray'
+    : n === 'REF_motor_28BYJ48' ? 'motor' : n === 'REF_celda_50x15x7' ? 'cell' : n === 'REF_pulsador_12mm' ? 'button'
+    : n.startsWith('REF_driver') || n.startsWith('REF_ESP32') ? 'pcb' : n.startsWith('TUERCA') || n.startsWith('tuerca') ? 'nut' : 'screw';
+  const LABELS = {
+    REF_pulsador_12mm: 'Botón 12 mm', REF_motor_28BYJ48: 'Motor 28BYJ-48', REF_driver_ULN2003: 'Driver ULN2003',
+    REF_ESP32_DevKit: 'ESP32', '16_bandeja_pesaje_inclinada': 'Bandeja', '03_rotor_15x8_eje_D5': 'Rotor (12 cavidades)',
+    '07_reserva_con_barredor': 'Reserva',
+  };
+  // Punto de anclaje de algunas etiquetas (marco CAD, mm) para que no se encimen.
+  const ANCHOR = { '16_bandeja_pesaje_inclinada': [0, -74, 44], REF_driver_ULN2003: [-42, 5, 24] };
+  const LEGEND = [['Botón', 'button'], ['Motor 28BYJ-48', 'motor'], ['ULN2003 / ESP32', 'pcb'], ['Rotor', 'rotor'],
+                  ['Cono', 'cone'], ['Bandeja', 'tray'], ['Reserva', 'hopper'], ['Tapa', 'trim']];
+  const ROTOR = n => n.startsWith('03_') || n.startsWith('06_') || /cono_|rotor_X/.test(n);
+  // Fantasmas en "Ver por dentro": carcasa, tapa, reserva y placa.
+  const GHOST = { '01_': 0.16, '21_': 0.12, '07_': 0.22, '02_': 0.35 };
+
+  // ---------- Escena ----------
+  const stageEl = document.getElementById('stage');
+  const canvas = document.getElementById('c');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(32, 1, 1, 4000);
+  const controls = new THREE.OrbitControls(camera, canvas);
+  controls.enableDamping = true; controls.dampingFactor = 0.08;
+  controls.minDistance = 60; controls.maxDistance = 900;
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x8899a0, 0.75));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.75);
+  sun.position.set(160, 320, 220); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+  Object.assign(sun.shadow.camera, { left: -180, right: 180, top: 180, bottom: -180, near: 50, far: 900 });
+  sun.shadow.bias = -0.0005; scene.add(sun);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.3); fill.position.set(-200, 120, -150); scene.add(fill);
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(1400, 1400), new THREE.ShadowMaterial({ opacity: 0.16 }));
+  ground.rotation.x = -Math.PI / 2; ground.position.y = -3.2; ground.receiveShadow = true; scene.add(ground);
+  const cad = new THREE.Group(); cad.rotation.x = -Math.PI / 2; scene.add(cad);    // marco CAD: Z hacia arriba
+  const cad2three = (v) => new THREE.Vector3(v[0], v[2], -v[1]);
+
+  function decode(buf) {
+    const dv = new DataView(buf); const n = dv.getUint32(0, true); let off = 4; const out = [];
+    for (let m = 0; m < n; m++) {
+      const nv = dv.getUint32(off, true), ni = dv.getUint32(off + 4, true); off += 8;
+      const p16 = new Int16Array(buf.slice(off, off + nv * 6)); off += nv * 6;
+      off += (4 - ((nv * 6) % 4)) % 4;
+      const idx = new Uint32Array(buf.slice(off, off + ni * 4)); off += ni * 4;
+      const pos = new Float32Array(nv * 3); for (let i = 0; i < nv * 3; i++) pos[i] = p16[i] / 100;
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setIndex(new THREE.BufferAttribute(idx, 1));
+      g.computeVertexNormals(); g.computeBoundingBox(); out.push(g);
+    }
+    return out;
+  }
+  function loadData() {
+    const fromB64 = (b64) => { const bin = atob(b64.trim()); const u8 = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i); return u8.buffer; };
+    if (window.PASTILLERO_B64) return Promise.resolve(fromB64(window.PASTILLERO_B64));
+    return fetch('ensamble_v4.txt').then((r) => { if (!r.ok) throw new Error(r.status); return r.text(); }).then(fromB64);
+  }
+
+  const parts = []; let pillGeom = null, buttonPart = null;
+  const material = (col, metal) => new THREE.MeshStandardMaterial({ color: C[col], roughness: metal ? 0.35 : 0.62,
+    metalness: metal ? 0.55 : 0.05, side: THREE.DoubleSide });
+  function build(geoms) {
+    window.PASTILLERO_NAMES.forEach((name, i) => {
+      const g = geoms[i];
+      if (name === 'PASTILLA') { pillGeom = g; return; }
+      const col = colorOf(name);
+      const mat = material(col, col === 'screw' || col === 'nut' || col === 'cell');
+      const mesh = new THREE.Mesh(g, mat); mesh.castShadow = true; mesh.receiveShadow = true; cad.add(mesh);
+      const c = new THREE.Vector3(); g.boundingBox.getCenter(c);
+      const p = { name, mesh, mat, center: c, rotor: ROTOR(name) };
+      parts.push(p);
+      if (name === 'REF_pulsador_12mm') buttonPart = p;
+    });
+  }
+
+  // ---------- Pastillas en las cavidades ----------
+  // Cavidades a 90° + 30°·k (radio 40). La salida está a 270° (frente, bajo el techo).
+  const pills = [];
+  let rotorAngle = 0;                                   // grados acumulados (antihorario)
+  const wrap = (a) => ((a % 360) + 360) % 360;
+  const cavAngle = (k) => wrap(90 + 30 * k + rotorAngle);
+  function makePill(opacity) {
+    const m = new THREE.Mesh(pillGeom, new THREE.MeshStandardMaterial({ color: C.pill, roughness: 0.45, transparent: opacity < 1, opacity }));
+    m.castShadow = true; return m;
+  }
+  function buildPills() {
+    for (let k = 0; k < CAV; k++) {
+      const pivot = new THREE.Group(); const m = makePill(1);
+      m.position.set(0, 40, 93.05); pivot.add(m); cad.add(pivot);
+      const a = cavAngle(k);
+      // vacías: la que está sobre la salida (ya entregó) y la siguiente bajo el techo
+      const loaded = !(Math.abs(a - 270) < 1 || Math.abs(a - 300) < 1);
+      m.visible = loaded;
+      pills.push({ k, pivot, mesh: m, loaded, fadeIn: 0 });
+    }
+    placePills();
+  }
+  function placePills() {
+    pills.forEach((p) => { p.pivot.rotation.z = THREE.MathUtils.degToRad(90 + 30 * p.k + rotorAngle - 90); });
+  }
+
+  // Pastilla que cae: canal -> rampa de 25° -> bolsillo exterior.
+  let falling = null, resting = null;
+  function pillPose(t) {
+    const yDrop = -40, zTop = 93, zLand = floorTop(yDrop) + 0.15, yEnd = -58, yPocket = -70;
+    if (t < 0.6) { const k = t / 0.6; return [yDrop, zTop + (zLand - zTop) * k * k, k > 0.8 ? (k - 0.8) / 0.2 * RAMP.slope_deg : 0]; }
+    if (t < 2.0) { const k = (t - 0.6) / 1.4, e = k * k; const y = yDrop + (yEnd - yDrop) * e; return [y, floorTop(y) + 0.15, RAMP.slope_deg]; }
+    if (t < 2.5) { const k = (t - 2.0) / 0.5; const y = yEnd + (yPocket - yEnd) * k; return [y, floorTop(y) + 0.15 * (1 - k) + 0.1 * k, RAMP.slope_deg * (1 - k)]; }
+    return [yPocket, floorTop(yPocket) + 0.1, 0];
+  }
+
+  // ---------- Pulsación ----------
+  const $ = (id) => document.getElementById(id);
+  let delivered = 0, cavTotal = 0, busy = false, anim = null;
+  const ROT_DUR = reduce ? 0.05 : 1.3, PRESS_DUR = reduce ? 0.05 : 0.28;
+  function press() {
+    if (busy || !pillGeom) return;
+    busy = true; $('press').disabled = true; $('press').classList.add('down');
+    cavTotal += 1;
+    const steps = objetivo(cavTotal) - objetivo(cavTotal - 1);
+    $('steps').textContent = steps;
+    $('status').textContent = 'Girando 30°: ' + steps + ' medios pasos…';
+    if (resting) { const r = resting; resting = null; fadeOut(r); }
+    anim = { t0: performance.now(), from: rotorAngle, to: rotorAngle + 30 };
+  }
+  function fadeOut(m) {
+    m.material.transparent = true; const t0 = performance.now();
+    const step = () => { const k = (performance.now() - t0) / 400; m.material.opacity = Math.max(0, 1 - k);
+      if (k < 1) requestAnimationFrame(step); else cad.remove(m); };
+    step();
+  }
+  function finishRotation() {
+    rotorAngle = anim.to; anim = null; placePills();
+    // La cavidad que llega a 270° suelta su pastilla; la que llega a 330° se rellena desde la reserva.
+    pills.forEach((p) => {
+      const a = cavAngle(p.k);
+      if (Math.abs(a - 270) < 1 && p.loaded) {
+        p.loaded = false; p.mesh.visible = false;
+        const m = makePill(1); cad.add(m); falling = { mesh: m, t0: performance.now() };
+      }
+      if (Math.abs(a - 330) < 1 && !p.loaded) {
+        p.loaded = true; p.mesh.visible = true; p.mesh.material.transparent = true; p.mesh.material.opacity = 0; p.fadeIn = performance.now();
+      }
+    });
+    $('press').classList.remove('down');
+    setTimeout(() => { busy = false; $('press').disabled = false; }, reduce ? 0 : 350);
+    renderStats();
+  }
+  function renderStats() {
+    const pos = wrap(rotorAngle);
+    const cav = Math.round(pos / 30) % CAV;
+    $('angle').textContent = pos.toFixed(0) + '°';
+    $('badge').textContent = 'Cavidad ' + (cav + 1) + ' de 12 · ' + pos.toFixed(0) + '°';
+    [...$('dial').children].forEach((d, i) => d.classList.toggle('on', i <= cav));
+    $('count').textContent = delivered;
+  }
+
+  // ---------- Fantasmas, tapa, etiquetas ----------
+  function applyView() {
+    const xr = $('xray').checked, cap = $('capOn').checked;
+    parts.forEach((p) => {
+      const key = Object.keys(GHOST).find((k) => p.name.startsWith(k));
+      if (key === '21_') p.mesh.visible = cap;
+      const on = xr && !!key;
+      p.mat.transparent = on; p.mat.opacity = on ? GHOST[key] : 1; p.mat.depthWrite = !on; p.mesh.castShadow = !on; p.mat.needsUpdate = true;
+    });
+  }
+  const labelsEl = $('labels'); let labels = [];
+  function buildLabels() {
+    labelsEl.innerHTML = ''; labels = [];
+    if (!$('labelsOn').checked) return;
+    parts.forEach((p) => {
+      if (!LABELS[p.name]) return;
+      const d = document.createElement('div'); d.className = 'lbl' + (p.name === 'REF_pulsador_12mm' ? ' btn' : '');
+      d.textContent = LABELS[p.name]; labelsEl.appendChild(d);
+      labels.push({ p, d, at: ANCHOR[p.name] ? new THREE.Vector3(...ANCHOR[p.name]) : p.center });
+    });
+  }
+  const tmp = new THREE.Vector3();
+  function placeLabels() {
+    const w = stageEl.clientWidth, h = stageEl.clientHeight;
+    labels.forEach(({ p, d, at }) => {
+      tmp.copy(at); p.mesh.localToWorld(tmp); tmp.project(camera);
+      d.style.opacity = p.mesh.visible && tmp.z < 1 ? 1 : 0;
+      d.style.left = ((tmp.x + 1) / 2) * w + 'px'; d.style.top = ((1 - tmp.y) / 2) * h + 'px';
+    });
+  }
+  LEGEND.forEach(([t, c]) => {
+    const s = document.createElement('span'); const b = document.createElement('b');
+    b.style.background = '#' + C[c].toString(16).padStart(6, '0'); s.appendChild(b); s.appendChild(document.createTextNode(t)); $('legend').appendChild(s);
+  });
+  for (let i = 0; i < CAV; i++) $('dial').appendChild(document.createElement('i'));
+
+  // ---------- Tema ----------
+  function syncTheme() {
+    const cs = getComputedStyle(document.documentElement);
+    scene.background = new THREE.Color(cs.getPropertyValue('--stage').trim() || '#dfe6e9');
+    ground.material.opacity = scene.background.getHSL({}).l < 0.4 ? 0.35 : 0.16;
+  }
+  syncTheme();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', syncTheme);
+  new MutationObserver(syncTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- Eventos ----------
+  $('press').addEventListener('click', press);
+  $('xray').addEventListener('change', applyView);
+  $('capOn').addEventListener('change', applyView);
+  $('labelsOn').addEventListener('change', buildLabels);
+  // Tocar el botón rojo del modelo también pulsa.
+  const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(); let downAt = null;
+  canvas.addEventListener('pointerdown', (e) => { downAt = [e.clientX, e.clientY]; });
+  canvas.addEventListener('pointerup', (e) => {
+    if (!downAt || Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 5 || !buttonPart) return;
+    const r = canvas.getBoundingClientRect();
+    ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(ndc, camera);
+    if (ray.intersectObject(buttonPart.mesh).length) press();
+  });
+  function resize() {
+    const w = stageEl.clientWidth, h = stageEl.clientHeight;
+    renderer.setSize(w, h, false); camera.aspect = w / Math.max(1, h); camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resize).observe(stageEl); resize();
+
+  // ---------- Cámara inicial: de frente, a la altura del botón y la bandeja ----------
+  const T = [0, -25, 62], AZ = 28 * Math.PI / 180, EL = 18 * Math.PI / 180;
+  const aspect = Math.max(0.6, stageEl.clientWidth / Math.max(1, stageEl.clientHeight));
+  const D = 440 * (aspect < 1 ? 1.3 / aspect : 1);
+  controls.target.copy(cad2three(T));
+  camera.position.copy(cad2three(T).add(new THREE.Vector3(Math.sin(AZ) * Math.cos(EL), Math.sin(EL), Math.cos(AZ) * Math.cos(EL)).multiplyScalar(D)));
+
+  // ---------- Bucle ----------
+  const ease = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+  function tick() {
+    const now = performance.now();
+    if (anim) {
+      const t = (now - anim.t0) / 1000;
+      // botón: se hunde 2 mm y vuelve
+      if (buttonPart) { const k = Math.min(1, t / PRESS_DUR); buttonPart.mesh.position.y = 2 * Math.sin(Math.PI * k); }
+      const k = THREE.MathUtils.clamp((t - PRESS_DUR * 0.6) / ROT_DUR, 0, 1);
+      const a = anim.from + (anim.to - anim.from) * ease(k);
+      parts.forEach((p) => { if (p.rotor) p.mesh.rotation.z = THREE.MathUtils.degToRad(a); });
+      pills.forEach((p) => { p.pivot.rotation.z = THREE.MathUtils.degToRad(30 * p.k + a); });
+      $('angle').textContent = wrap(a).toFixed(0) + '°';
+      if (k >= 1) finishRotation();
+    }
+    pills.forEach((p) => {
+      if (!p.fadeIn) return;
+      const k = Math.min(1, (now - p.fadeIn) / 500); p.mesh.material.opacity = k;
+      if (k >= 1) { p.mesh.material.transparent = false; p.fadeIn = 0; }
+    });
+    if (falling) {
+      const t = (now - falling.t0) / 1000;
+      const [y, z, tilt] = pillPose(reduce ? 9 : t);
+      falling.mesh.position.set(0, y, z); falling.mesh.rotation.x = THREE.MathUtils.degToRad(tilt);
+      if (t >= 2.5 || reduce) {
+        resting = falling.mesh; falling = null; delivered += 1; renderStats();
+        $('status').textContent = 'Pastilla ' + delivered + ' en la bandeja. Pulsa otra vez para la siguiente.';
+      }
+    }
+    controls.update(); renderer.render(scene, camera); placeLabels();
+    requestAnimationFrame(tick);
+  }
+
+  loadData().then((buf) => {
+    build(decode(buf)); buildPills(); applyView(); buildLabels(); renderStats();
+    $('loading').hidden = true; tick();
+  }).catch(() => { $('loading').textContent = 'No se pudo cargar la geometría. Recarga la página.'; $('press').disabled = true; });
+})();
+</script>

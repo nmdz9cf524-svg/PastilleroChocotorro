@@ -1,19 +1,20 @@
 {
   "static_collisions_mm3_above_0_001": [],
   "continuous_rotor_sweep_collisions": [],
-  "minimum_nominal_rotor_clearance_mm": 0.2,
+  "minimum_nominal_rotor_clearance_mm": 0.299,
   "rotor_clearances_mm": {
     "01_carcasa_v4_patas_pedestal_integrados": 4.4,
     "02_placa_inferior_con_canal": 0.4,
     "07_reserva_con_barredor": 0.299,
-    "10_bancada_motor_32x25": 12.777,
-    "11_puente_motor": 7.0,
+    "10_bancada_28BYJ48": 3.5,
     "13_mordaza_fija_celda_tuercas": 48.212,
     "16_bandeja_pesaje_inclinada": 24.997,
     "21_tapa_cuadrada": 8.0,
+    "REF_ESP32_DevKit": 68.19,
     "REF_celda_50x15x7": 53.509,
-    "REF_eje_6x35": 0.2,
-    "REF_motor_32x25": 11.0,
+    "REF_driver_ULN2003": 76.101,
+    "REF_motor_28BYJ48": 0.7,
+    "REF_pulsador_12mm": 69.715,
     "TORNILLO_placas_-39.244_-39.244": 1.499,
     "TORNILLO_placas_-39.244_39.244": 1.499,
     "TORNILLO_placas_39.244_-39.244": 1.499,
@@ -22,8 +23,8 @@
     "TORNILLO_motor_base_-18.5_16": 69.224,
     "TORNILLO_motor_base_18.5_-16": 69.224,
     "TORNILLO_motor_base_18.5_16": 69.224,
-    "TORNILLO_puente_motor_-21": 9.749,
-    "TORNILLO_puente_motor_21": 9.749,
+    "TORNILLO_motor_oreja_-17.5": 6.448,
+    "TORNILLO_motor_oreja_17.5": 6.448,
     "TORNILLO_mordaza_fija_-51": 59.401,
     "TORNILLO_mordaza_fija_-27": 50.663,
     "TORNILLO_bandeja_prisionero": 50.103,
@@ -31,12 +32,12 @@
     "TUERCA_placas_-39.244_39.244": 6.0,
     "TUERCA_placas_39.244_-39.244": 6.0,
     "TUERCA_placas_39.244_39.244": 6.0,
-    "TUERCA_motor_base_-18.5_-16": 72.417,
-    "TUERCA_motor_base_-18.5_16": 72.417,
-    "TUERCA_motor_base_18.5_-16": 72.417,
-    "TUERCA_motor_base_18.5_16": 72.417,
-    "TUERCA_puente_motor_-21": 16.477,
-    "TUERCA_puente_motor_21": 16.477,
+    "TUERCA_motor_base_-18.5_-16": 69.851,
+    "TUERCA_motor_base_-18.5_16": 69.851,
+    "TUERCA_motor_base_18.5_-16": 69.851,
+    "TUERCA_motor_base_18.5_16": 69.851,
+    "TUERCA_motor_oreja_-17.5": 8.778,
+    "TUERCA_motor_oreja_17.5": 8.778,
     "TUERCA_mordaza_fija_-51": 59.0,
     "TUERCA_mordaza_fija_-27": 49.62,
     "TUERCA_bandeja_prisionero": 54.386
@@ -44,7 +45,7 @@
   "new_part_gaps_mm": {
     "bandeja_vs_01_carcasa_v4_patas_pedestal_integrados": 0.45,
     "bandeja_vs_13_mordaza_fija_celda_tuercas": 0.453,
-    "bandeja_vs_10_bancada_motor_32x25": 2.2,
+    "bandeja_vs_10_bancada_28BYJ48": 0.5,
     "bandeja_vs_02_placa_inferior_con_canal": 9.699,
     "bandeja_vs_TORNILLO_mordaza_fija_-51": 1.963,
     "bandeja_vs_TORNILLO_mordaza_fija_-27": 12.106,
@@ -52,7 +53,7 @@
     "tapa_vs_07_reserva_con_barredor": 0.3,
     "tapa_vs_TORNILLO_placas_39.244_39.244": 17.111,
     "tapa_vs_01_carcasa_v4_patas_pedestal_integrados": 0.0,
-    "barredor_vs_03_rotor_15x8_con_cubo": 0.4,
+    "barredor_vs_03_rotor_15x8_eje_D5": 0.4,
     "barredor_vs_06_cono_repartidor_punta_arriba": 0.411
   },
   "pill_release_path": [
@@ -121,7 +122,7 @@
   "meshes": [
     {
       "file": "01_carcasa_v4_patas_pedestal_integrados.stl",
-      "triangles": 15304,
+      "triangles": 15940,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0,
@@ -138,12 +139,12 @@
       "print_height_mm": 43.0
     },
     {
-      "file": "03_rotor_15x8_con_cubo.stl",
-      "triangles": 16372,
+      "file": "03_rotor_15x8_eje_D5.stl",
+      "triangles": 15864,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0208,
-      "volume_relative_error": 0.000292,
+      "volume_relative_error": 0.000291,
       "print_height_mm": 21.4
     },
     {
@@ -165,22 +166,13 @@
       "print_height_mm": 75.8
     },
     {
-      "file": "10_bancada_motor_32x25.stl",
-      "triangles": 13590,
+      "file": "10_bancada_28BYJ48.stl",
+      "triangles": 7166,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0,
-      "volume_relative_error": 0.00014,
-      "print_height_mm": 65.0
-    },
-    {
-      "file": "11_puente_motor.stl",
-      "triangles": 1920,
-      "bad_edges": 0,
-      "winding_errors": 0,
-      "dimension_max_error_mm": 0.0,
-      "volume_relative_error": 3.2e-05,
-      "print_height_mm": 4.0
+      "volume_relative_error": 1.9e-05,
+      "print_height_mm": 72.5
     },
     {
       "file": "13_mordaza_fija_celda_tuercas.stl",
@@ -212,13 +204,14 @@
   ],
   "fasteners": {
     "M3x30": 6,
-    "M3x12": 9,
+    "M3x12": 7,
+    "M3x8": 2,
     "prisionero M3x10": 1,
-    "prisionero M3x6": 2
+    "prisionero M3x8": 1
   },
-  "fastener_count": 18,
+  "fastener_count": 17,
   "nut_count": 18,
-  "unique_print_files": 10,
-  "printed_parts_in_assembly": 10,
+  "unique_print_files": 9,
+  "printed_parts_in_assembly": 9,
   "physical_validation": false
 }

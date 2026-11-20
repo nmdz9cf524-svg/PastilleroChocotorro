@@ -41,9 +41,11 @@ for x in [-C, C]:
         n = f'placas_{x}_{y}'; bolt(n, x, y, 109.8, 30); nut(n, x, y, 85.0)
 for x in [-18.5, 18.5]:
     for y in [-16, 16]:
-        n = f'motor_base_{x}_{y}'; bolt(n, x, y, 0, 12, True); nut(n, x, y, 6.1)
-for x in [-21, 21]:
-    n = f'puente_motor_{x}'; bolt(n, x, 0, 73, 12); nut(n, x, 0, 63.1)
+        n = f'motor_base_{x}_{y}'; bolt(n, x, y, 0, 12, True); nut(n, x, y, 8.7)
+# Motor 28BYJ-48 por sus orejas: M3x8 desde arriba, tuerca bajo la placa de la bancada.
+for x in [-params['motor_ear_x'], params['motor_ear_x']]:
+    n = f'motor_oreja_{x}'; bolt(n, x, params['motor_body_offset_y'], params['motor_top_z'], 8)
+    nut(n, x, params['motor_body_offset_y'], 71.6)
 for y in [-51, -27]:
     bolt(f'mordaza_fija_{y}', -18.5, y, 4.0, 30, True); nut(f'mordaza_fija_{y}', -18.5, y, 32.0)
 gx, gy = params['tray_grub_xy']
@@ -52,15 +54,12 @@ for k, (x, y) in enumerate(params['cone_bolts_xy']):
     bolt(f'cono_{k}', x, y, 95.4, 12, True); nut(f'cono_{k}', x, y, 104.1)
     nuts[f'cono_{k}'] = nuts[f'cono_{k}'].rotate((x, y, 0), (x, y, 1), 15)
 radial = {}
-for suffix in ['X', 'Y']:
-    pts = [(3.175 * math.cos(math.radians(30 + i * 60)), 3.175 * math.sin(math.radians(30 + i * 60))) for i in range(6)]
-    n = (cq.Workplane('YZ', origin=(5.9, 0, 84)).polyline(pts).close().extrude(2.4).val()
-         .cut(cq.Solid.makeCylinder(1.7, 3, V(5.7, 0, 84), V(1, 0, 0))))
-    ss = cq.Solid.makeCylinder(1.5, 6, V(3, 0, 84), V(1, 0, 0))
-    if suffix == 'Y':
-        n = n.rotate((0, 0, 0), (0, 0, 1), 90); ss = ss.rotate((0, 0, 0), (0, 0, 1), 90)
-    radial['tuerca_rotor_' + suffix] = n; radial['prisionero_rotor_' + suffix] = ss
-    bolt_schedule.append('prisionero M3x6')
+# Un prisionero M3x8 en el cubo, apretando contra el plano del eje (x = +1.5).
+pts = [(3.175 * math.cos(math.radians(30 + i * 60)), 3.175 * math.sin(math.radians(30 + i * 60))) for i in range(6)]
+radial['tuerca_rotor_X'] = (cq.Workplane('YZ', origin=(5.9, 0, 84)).polyline(pts).close().extrude(2.4).val()
+                            .cut(cq.Solid.makeCylinder(1.7, 3, V(5.7, 0, 84), V(1, 0, 0))))
+radial['prisionero_rotor_X'] = cq.Solid.makeCylinder(1.5, 8, V(1.55, 0, 84), V(1, 0, 0))
+bolt_schedule.append('prisionero M3x8')
 
 hardware = {**{'TORNILLO_' + n: s for n, s in fast.items()}, **{'TUERCA_' + n: s for n, s in nuts.items()}, **radial}
 
@@ -89,7 +88,7 @@ print('PAIRWISE', col, flush=True)
 # Holguras de piezas nuevas que no deben tocarse (la bandeja cuelga solo de la celda).
 gaps = {}
 tray = parts['16_bandeja_pesaje_inclinada']
-for n in ['01_carcasa_v4_patas_pedestal_integrados', '13_mordaza_fija_celda_tuercas', '10_bancada_motor_32x25',
+for n in ['01_carcasa_v4_patas_pedestal_integrados', '13_mordaza_fija_celda_tuercas', '10_bancada_28BYJ48',
           '02_placa_inferior_con_canal', 'TORNILLO_mordaza_fija_-51', 'TORNILLO_mordaza_fija_-27']:
     gaps['bandeja_vs_' + n] = round(tray.distance(allshapes[n]), 3)
 cap = parts['21_tapa_cuadrada']
@@ -98,7 +97,7 @@ for n in ['02_placa_inferior_con_canal', '07_reserva_con_barredor',
     gaps['tapa_vs_' + n] = round(cap.distance(allshapes[n]), 3)
 # Barredor y techo: la parte de la reserva que queda sobre el disco (z 100..105.7, r<51).
 sweeper = parts['07_reserva_con_barredor'].intersect(cq.Solid.makeCylinder(51, 5.7, V(0, 0, 100.0)))  # sin el pin (r=56)
-for n in ['03_rotor_15x8_con_cubo', '06_cono_repartidor_punta_arriba']:
+for n in ['03_rotor_15x8_eje_D5', '06_cono_repartidor_punta_arriba']:
     gaps['barredor_vs_' + n] = round(sweeper.distance(allshapes[n]), 3)
 print('GAPS', gaps, flush=True)
 assert all(g >= 0.4 for k, g in gaps.items() if k.startswith(('bandeja', 'barredor'))), gaps
@@ -107,7 +106,7 @@ assert all(g >= 0.25 for k, g in gaps.items() if k.startswith('tapa') and not k.
 # Barrido continuo del grupo giratorio.
 env = (cq.Solid.makeCylinder(52.5, 8, V(0, 0, 93.4)).fuse(cq.Solid.makeCylinder(10, 13.4, V(0, 0, 80)))
        .fuse(cq.Solid.makeCone(31, 1.5, 35, V(0, 0, 101.4))).cut(cq.Solid.makeCylinder(3.2, 25.5, V(0, 0, 79))))
-moving = {'03_rotor_15x8_con_cubo', '06_cono_repartidor_punta_arriba'} | set(radial) | \
+moving = {'03_rotor_15x8_eje_D5', '06_cono_repartidor_punta_arriba'} | set(radial) | \
     {n for n in allshapes if n.startswith(('TORNILLO_cono_', 'TUERCA_cono_'))}
 static = {n: s for n, s in {**allshapes, **{v: parts[v] for v in VARIANTS}}.items() if n not in moving}
 sweepbad, clearances = [], {}
@@ -156,7 +155,7 @@ for dx, dy, dz in path:
             insert_bad.append([dy, dz, round(v, 3)])
 # Después, la bancada y el motor bajan en vertical sin tocar la bandeja.
 for dz in [80, 40, 10, 2, 0.5]:
-    for n in ['10_bancada_motor_32x25']:
+    for n in ['10_bancada_28BYJ48']:
         v = assembly[n].translate((0, 0, dz)).intersect(allshapes['16_bandeja_pesaje_inclinada']).Volume()
         if v > .001:
             insert_bad.append([n, dz, round(v, 3)])

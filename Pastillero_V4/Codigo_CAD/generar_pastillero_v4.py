@@ -135,9 +135,16 @@ car = car.fuse(plat)
 car = car.cut(cq.Workplane('YZ', origin=(56, 0, 17)).slot2D(14, 8)
               .extrude(10).val())
 
+# Botón de entrega: pulsador de panel de 12 mm en la pared frontal, centrado
+# bajo la ventana, justo debajo del bolsillo de la bandeja. Detrás hay ~28 mm
+# libres (entre pedestal y tope de sobrecarga) para el cuerpo y la tuerca.
+BOTON_D, BOTON_XZ = 12.3, (0.0, 14.0)
+car = car.cut(cq.Solid.makeCylinder(BOTON_D / 2, 8, V(BOTON_XZ[0], -58.0, BOTON_XZ[1]), V(0, -1, 0)))
+
 add('01_carcasa_v4_patas_pedestal_integrados', car,
     'Carcasa V3 + patas nervadas, pedestal de celda reforzado, tope de '
-    'sobrecarga, plataforma electrónica y paso de cable. Sustituye 01, 12, 18, 19.')
+    'sobrecarga, plataforma electrónica, paso de cable y agujero de 12 mm para '
+    'el botón de entrega. Sustituye 01, 12, 18, 19.')
 
 # --------------------------------------------------- 02 placa + canal integrado
 plate = cyl(60, 4, z=89)
@@ -305,15 +312,73 @@ add('21_tapa_cuadrada', cap,
     'Tapa y embellecedor en una sola pieza (sustituye 21a, 21b y 09). Ceja '
     'circular que entra en la boca de la reserva. Imprimir boca abajo.')
 
+# ------------------------------------------------- motor 28BYJ-48 (referencia)
+# Medidas de la hoja de datos estándar: cuerpo Ø28 x 19, orejas con agujeros
+# Ø4.2 a 35 mm, eje Ø5 con dos planos (3 mm entre planos) descentrado 8 mm,
+# saliente Ø9 x 1.5 y eje ~10 mm sobre la cara superior. Comprueba tu motor.
+M_BODY_R, M_BODY_H, M_OFF = 14.0, 19.0, 8.0     # cuerpo en (0, +8): el eje queda en (0, 0)
+M_EAR_X, M_EAR_W, M_EAR_T = 17.5, 7.0, 1.0
+M_TOP = 77.5                            # cara superior del motor (orejas apoyadas en z=76.5)
+SHAFT_R, SHAFT_FLAT, SHAFT_TOP = 2.5, 3.0, 87.5
+motor = cyl(M_BODY_R, M_BODY_H, 0, M_OFF, M_TOP - M_BODY_H)
+ears = (cq.Workplane('XY', origin=(0, M_OFF, M_TOP - M_EAR_T)).slot2D(2 * M_EAR_X + M_EAR_W, M_EAR_W)
+        .extrude(M_EAR_T).val())
+for sx in (-1, 1):
+    ears = ears.cut(cyl(2.1, 3, sx * M_EAR_X, M_OFF, M_TOP - 2))
+motor = motor.fuse(ears).fuse(cyl(4.5, 1.5, 0, 0, M_TOP))
+motor = motor.fuse(box(-7.75, 7.75, M_OFF + 10, M_OFF + 17, M_TOP - 15, M_TOP - 1))   # caja de cables
+shaft = cyl(SHAFT_R, SHAFT_TOP - M_TOP - 1.5, 0, 0, M_TOP + 1.5).intersect(
+    box(-SHAFT_FLAT / 2, SHAFT_FLAT / 2, -5, 5, M_TOP, SHAFT_TOP + 1))
+refs_new = {'REF_motor_28BYJ48': motor.fuse(shaft).clean()}
+
+# ---------------------------------------------- 10 bancada para 28BYJ-48
+# Marco en U: 4 patas sobre los mismos agujeros del piso (M3x12 desde abajo,
+# tuerca en ranura lateral), dos paredes laterales y una placa superior. El
+# motor entra por arriba en la placa y se atornilla por sus dos orejas con
+# M3x8 y tuercas atrapadas debajo. Ya no hace falta el puente 11.
+PLATE_Z0, PLATE_Z1 = 71.5, 76.5
+ban = box(-25.5, 25.5, -21, 21, PLATE_Z0, PLATE_Z1)
+for sx in (-1, 1):
+    for sy in (-1, 1):
+        x, y = sx * 18.5, sy * 16
+        ban = ban.fuse(box(x - 5, x + 5, y - 5, y + 5, 4, PLATE_Z0))
+    ban = ban.fuse(box(min(sx * 20.5, sx * 23.5), max(sx * 20.5, sx * 23.5), -21, 21, 4, PLATE_Z0))
+ban = ban.cut(cyl(M_BODY_R + 0.5, 30, 0, M_OFF, PLATE_Z0 - 20))                 # cuerpo
+ban = ban.cut(box(-8.5, 8.5, M_OFF + 9, 30, PLATE_Z0 - 20, PLATE_Z1 + 1))       # caja de cables
+for sx in (-1, 1):
+    ban = ban.cut(cyl(1.7, 10, sx * M_EAR_X, M_OFF, PLATE_Z0 - 1))              # paso M3
+    ban = ban.cut(hexprism(sx * M_EAR_X, M_OFF, PLATE_Z0 - 0.01, 2.6))          # tuerca
+    for sy in (-1, 1):
+        x, y = sx * 18.5, sy * 16
+        ban = ban.cut(cyl(1.7, 20, x, y, 3))                                    # paso M3x12
+        ban = ban.cut(hexprism(x, y, 8.6, 2.6))                                 # tuerca
+        ban = ban.cut(box(min(x, x - sx * 8), max(x, x - sx * 8), y - 2.95, y + 2.95, 8.6, 11.2))  # ranura hacia dentro
+add('10_bancada_28BYJ48', ban,
+    'Bancada para motor 28BYJ-48: el eje queda centrado bajo el rotor. Se '
+    'atornilla al piso con 4 M3x12 y el motor por sus orejas con 2 M3x8. '
+    'Sustituye 10 y 11.')
+
+# Rotor V3 con cubo para eje Ø5 de doble plano: agujero en doble D (sin
+# holgura de giro) y un solo prisionero M3x8 que aprieta contra un plano.
+rot = v3('03_rotor_15x8_con_cubo')
+hub = cyl(10, 13.4, z=80)
+rot = rot.fuse(cyl(3.3, 13.4, z=80))                                             # tapar agujero Ø6.4
+rot = rot.fuse(cq.Solid.makeCylinder(1.75, 10.5, V(0, 0, 84), V(0, 1, 0)).intersect(hub))
+rot = rot.fuse(box(-3, 3, 5.8, 10.5, 80, 87.35).intersect(hub))                  # tapar ranura Y
+rot = rot.cut(cyl(2.6, 24, z=79).intersect(box(-1.6, 1.6, -5, 5, 78, 104)))      # doble D 5.2 / 3.2
+rot = rot.cut(cq.Solid.makeCylinder(1.7, 12, V(0, 0, 84), V(1, 0, 0)))          # paso del prisionero (+X)
+add('03_rotor_15x8_eje_D5', rot,
+    'Rotor V3 con cubo para el eje Ø5 de doble plano del 28BYJ-48 y un '
+    'prisionero M3x8. Imprimir boca abajo.')
+
 # ------------------------------------------------ piezas V3 sin cambios
-UNCHANGED = ['03_rotor_15x8_con_cubo', '06_cono_repartidor_punta_arriba',
-             '10_bancada_motor_32x25', '11_puente_motor']
+UNCHANGED = ['06_cono_repartidor_punta_arriba']
 for n in UNCHANGED:
     add(n, v3(n), 'Sin cambios respecto a V3.')
 
 # ------------------------------------------------------------- exportación
 # Orientación de impresión de cada STL (los STEP quedan en coordenadas de ensamble).
-FLIP_X = {'02_', '03_', '04_', '07_', '21_'}
+FLIP_X = {'02_', '03_', '04_', '07_', '10_', '21_'}  # boca abajo (la bancada: placa del motor sobre la cama)
 for d in ['STL', 'STEP_piezas', 'Referencias_NO_imprimir']:
     (OUT / d).mkdir(exist_ok=True)
 for n, s in sorted(parts.items()):
@@ -327,9 +392,23 @@ for n, s in sorted(parts.items()):
     cq.exporters.export(q, str(OUT / 'STL' / (n + '.stl')), tolerance=.025, angularTolerance=.08)
     cq.exporters.export(s, str(OUT / 'STEP_piezas' / (n + '.step')))
 REFS = V3
-for n in ['REF_motor_32x25', 'REF_eje_6x35', 'REF_celda_50x15x7']:
+for n in ['REF_celda_50x15x7']:
     cq.exporters.export(cq.importers.importStep(str(REFS / (n + '.step'))).val(),
                         str(OUT / 'Referencias_NO_imprimir' / (n + '.step')))
+# Electrónica de referencia (no se imprime): pulsador 12 mm, ULN2003 y ESP32.
+bx, bz = BOTON_XZ
+puls = (cq.Solid.makeCylinder(5.0, 4.0, V(bx, -62.5, bz), V(0, -1, 0))                      # botón
+        .fuse(cq.Solid.makeCylinder(7.5, 1.5, V(bx, -62.5, bz), V(0, -1, 0)))               # bisel
+        .fuse(cq.Solid.makeCylinder(6.0, 14.0, V(bx, -59.5, bz), V(0, 1, 0)))               # cuerpo
+        .fuse(cq.Workplane('XZ', origin=(bx, -59.5, bz)).polygon(6, 16).extrude(-2.5).val())  # tuerca
+        .fuse(box(bx - 4, bx + 4, -45.5, -40.5, bz - 2.5, bz + 2.5)))                         # terminales
+uln = box(-58.0, -26.0, -12.0, 23.0, 4.0, 5.6)                                       # PCB 32x35
+uln = uln.fuse(box(-45.5, -38.5, -6.0, 13.0, 5.6, 9.0))                             # ULN2003 DIP16
+uln = uln.fuse(box(-55.0, -49.0, 4.0, 16.0, 5.6, 12.6))                             # conector del motor
+esp = box(27.5, 55.5, -26.0, 26.0, 11.0, 12.6).fuse(box(32.0, 51.0, -26.0, -8.0, 12.6, 15.8))
+refs_new.update({'REF_pulsador_12mm': puls, 'REF_driver_ULN2003': uln, 'REF_ESP32_DevKit': esp})
+for n, sref in refs_new.items():
+    cq.exporters.export(sref, str(OUT / 'Referencias_NO_imprimir' / (n + '.step')))
 meta = {n: {'size_mm': [round(s.BoundingBox().xlen, 3), round(s.BoundingBox().ylen, 3),
                         round(s.BoundingBox().zlen, 3)],
             'volume_mm3': round(s.Volume(), 1), 'note': notes[n]}
@@ -340,7 +419,8 @@ v3params.update({'version': 'V4', 'tray_grub_xy': [GX, GY], 'overload_stop_gap_m
                  round(SZ0 - STOP_TOP, 2), 'feet_height_mm': FEET_H,
                  'sweeper': {'z_bottom': SWEEP_Z, 'r_in': R_IN, 'deg_attack_in': A_IN,
                              'deg_attack_out': A_OUT, 'deg_end': A_END},
-                 'reservoir_key_xy': list(KEY_XY), 'cap_top_z': TOP,
+                 'reservoir_key_xy': list(KEY_XY), 'button_xz': list(BOTON_XZ), 'button_hole_d': BOTON_D,
+                 'motor': '28BYJ-48', 'motor_top_z': M_TOP, 'motor_ear_x': M_EAR_X, 'motor_body_offset_y': M_OFF, 'cap_top_z': TOP,
                  'tray_slope_deg': 25, 'tray_floor': {'z_ref_at_y_-55': Z_REF, 'y_knee': Y_KNEE,
                  'z_pocket': round(Z_POCKET, 3), 'y_back': TY_BACK, 'y_front': TY_FRONT}})
 json.dump(v3params, open(OUT / 'Parametros_V4.json', 'w'), indent=2)

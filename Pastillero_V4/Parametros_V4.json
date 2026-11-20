@@ -57,6 +57,15 @@
     0.0,
     56.0
   ],
+  "button_xz": [
+    0.0,
+    14.0
+  ],
+  "button_hole_d": 12.3,
+  "motor": "28BYJ-48",
+  "motor_top_z": 77.5,
+  "motor_ear_x": 17.5,
+  "motor_body_offset_y": 8.0,
   "cap_top_z": 169.60000000000002,
   "tray_slope_deg": 25,
   "tray_floor": {

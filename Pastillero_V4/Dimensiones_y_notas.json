@@ -5,8 +5,8 @@
       125.0,
       92.0
     ],
-    "volume_mm3": 234161.4,
-    "note": "Carcasa V3 + patas nervadas, pedestal de celda reforzado, tope de sobrecarga, plataforma electrónica y paso de cable. Sustituye 01, 12, 18, 19."
+    "volume_mm3": 233804.9,
+    "note": "Carcasa V3 + patas nervadas, pedestal de celda reforzado, tope de sobrecarga, plataforma electrónica, paso de cable y agujero de 12 mm para el botón de entrega. Sustituye 01, 12, 18, 19."
   },
   "02_placa_inferior_con_canal": {
     "size_mm": [
@@ -17,14 +17,14 @@
     "volume_mm3": 53273.2,
     "note": "Placa inferior V3 con el canal 17 integrado (sin M3x8 ni tuercas). Imprimir con la cara superior de la placa sobre la cama."
   },
-  "03_rotor_15x8_con_cubo": {
+  "03_rotor_15x8_eje_D5": {
     "size_mm": [
       105.0,
       105.0,
       21.4
     ],
-    "volume_mm3": 59801.9,
-    "note": "Sin cambios respecto a V3."
+    "volume_mm3": 60165.0,
+    "note": "Rotor V3 con cubo para el eje Ø5 de doble plano del 28BYJ-48 y un prisionero M3x8. Imprimir boca abajo."
   },
   "06_cono_repartidor_punta_arriba": {
     "size_mm": [
@@ -44,23 +44,14 @@
     "volume_mm3": 106800.9,
     "note": "Reserva con barredor rígido, aro con techo y separadores integrados (sustituye a 04, 05 y al peine 20 de TPU). Poste de orientación hacia la placa 02. Imprimir boca abajo."
   },
-  "10_bancada_motor_32x25": {
+  "10_bancada_28BYJ48": {
     "size_mm": [
       51.0,
       42.0,
-      65.0
+      72.5
     ],
-    "volume_mm3": 23815.8,
-    "note": "Sin cambios respecto a V3."
-  },
-  "11_puente_motor": {
-    "size_mm": [
-      53.0,
-      12.0,
-      4.0
-    ],
-    "volume_mm3": 2270.3,
-    "note": "Sin cambios respecto a V3."
+    "volume_mm3": 42087.8,
+    "note": "Bancada para motor 28BYJ-48: el eje queda centrado bajo el rotor. Se atornilla al piso con 4 M3x12 y el motor por sus orejas con 2 M3x8. Sustituye 10 y 11."
   },
   "13_mordaza_fija_celda_tuercas": {
     "size_mm": [

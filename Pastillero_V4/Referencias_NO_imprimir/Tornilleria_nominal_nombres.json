@@ -7,8 +7,8 @@
 "TORNILLO_motor_base_-18.5_16",
 "TORNILLO_motor_base_18.5_-16",
 "TORNILLO_motor_base_18.5_16",
-"TORNILLO_puente_motor_-21",
-"TORNILLO_puente_motor_21",
+"TORNILLO_motor_oreja_-17.5",
+"TORNILLO_motor_oreja_17.5",
 "TORNILLO_mordaza_fija_-51",
 "TORNILLO_mordaza_fija_-27",
 "TORNILLO_bandeja_prisionero",
@@ -23,8 +23,8 @@
 "TUERCA_motor_base_-18.5_16",
 "TUERCA_motor_base_18.5_-16",
 "TUERCA_motor_base_18.5_16",
-"TUERCA_puente_motor_-21",
-"TUERCA_puente_motor_21",
+"TUERCA_motor_oreja_-17.5",
+"TUERCA_motor_oreja_17.5",
 "TUERCA_mordaza_fija_-51",
 "TUERCA_mordaza_fija_-27",
 "TUERCA_bandeja_prisionero",
@@ -32,7 +32,5 @@
 "TUERCA_cono_1",
 "TUERCA_cono_2",
 "tuerca_rotor_X",
-"prisionero_rotor_X",
-"tuerca_rotor_Y",
-"prisionero_rotor_Y"
+"prisionero_rotor_X"
 ]

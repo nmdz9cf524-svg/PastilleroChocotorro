@@ -13,7 +13,7 @@ __CSS__
   <header class="top">
     <h1>Ensamble Pastillero V4</h1>
     <span class="tag">STEP real · mm</span>
-    <p>Guía animada con la geometría del ensamble V4: 10 piezas impresas, 18 tornillos y prisioneros, 18 tuercas.</p>
+    <p>Guía animada con la geometría del ensamble V4 con motor 28BYJ-48 y botón: 9 piezas impresas, 17 tornillos y prisioneros, 18 tuercas.</p>
   </header>
   <main class="layout">
     <section class="stage" id="stage" aria-label="Vista 3D del ensamble">
@@ -59,7 +59,7 @@ __DATA__
   const COL = {
     shell: 0x8b979d, plate: 0x3d6079, rotor: 0xd39a3e, cone: 0x3aa898, hopper: 0xa9c6ca, lid: 0x97b8bd,
     mount: 0x8fa56d, tray: 0x4f8fc0, trim: 0xc9a25a, comb: 0xc86a4a, motor: 0x50565c, shaft: 0xcfd4d8,
-    cell: 0xb7bfc5, screw: 0xc3c9ce, nut: 0x98a1a8, pill: 0xf4f1ea,
+    cell: 0xb7bfc5, screw: 0xc3c9ce, nut: 0x98a1a8, pill: 0xf4f1ea, pcb: 0x2f6b4f, button: 0xd2463c,
   };
   const P = {};
   const def = (names, o) => [].concat(names).forEach((n) => (P[n] = Object.assign({ hw: false }, o)));
@@ -82,26 +82,28 @@ __DATA__
   BLOCK.forEach((n) => { P[n].lift = { steps: [2], v: LIFTED }; P[n].path = { step: 3, pts: [[0, 22, 0.6], [0, 0, 0.6]] }; });
   def(['TORNILLO_mordaza_fija_-51', 'TORNILLO_mordaza_fija_-27'], { hw: true, col: 'screw', ex: [0, 0, -45] });
 
-  def('10_bancada_motor_32x25', { label: '10 Bancada motor', col: 'mount', ex: [0, 0, 90] });
+  def('10_bancada_28BYJ48', { label: '10 Bancada 28BYJ-48', col: 'mount', ex: [0, 0, 90] });
   def(MB.map((s) => 'TORNILLO_motor_base_' + s), { hw: true, col: 'screw', ex: [0, 0, -35] });
   def(MB.map((s) => 'TUERCA_motor_base_' + s), { hw: true, col: 'nut', ex: [0, 0, 30] });
-  def('REF_motor_32x25', { label: 'Motor (ref. Ø32×25)', col: 'motor', ex: [0, 0, 70] });
-  def('REF_eje_6x35', { label: 'Eje Ø6', col: 'shaft', ex: [0, 0, 70] });
-  def('11_puente_motor', { label: '11 Puente motor', col: 'mount', ex: [0, 0, 45] });
-  def(['TORNILLO_puente_motor_-21', 'TORNILLO_puente_motor_21'], { hw: true, col: 'screw', ex: [0, 0, 30] });
-  def(['TUERCA_puente_motor_-21', 'TUERCA_puente_motor_21'], { hw: true, col: 'nut', ex: [0, -35, 0] });
+  const OREJAS = ['-17.5', '17.5'];
+  def('REF_motor_28BYJ48', { label: 'Motor 28BYJ-48', col: 'motor', ex: [0, 0, 70] });
+  def(OREJAS.map((s) => 'TORNILLO_motor_oreja_' + s), { hw: true, col: 'screw', ex: [0, 0, 30] });
+  def(OREJAS.map((s) => 'TUERCA_motor_oreja_' + s), { hw: true, col: 'nut', ex: [0, 0, -30] });
+  def('REF_pulsador_12mm', { label: 'Botón 12 mm', col: 'button', ex: [0, -40, 0] });
+  def('REF_driver_ULN2003', { label: 'Driver ULN2003', col: 'pcb', ex: [0, 0, 50] });
+  def('REF_ESP32_DevKit', { label: 'ESP32', col: 'pcb', ex: [0, 0, 50] });
 
   def('02_placa_inferior_con_canal', { label: '02 Placa con canal', col: 'plate', ex: [0, 0, 100], ghost: 'mech' });
 
   const ROTOR_GROUP = ['06_cono_repartidor_punta_arriba', 'TUERCA_cono_0', 'TUERCA_cono_1', 'TUERCA_cono_2',
-    '03_rotor_15x8_con_cubo', 'TORNILLO_cono_0', 'TORNILLO_cono_1', 'TORNILLO_cono_2',
-    'tuerca_rotor_X', 'tuerca_rotor_Y', 'prisionero_rotor_X', 'prisionero_rotor_Y'];
+    '03_rotor_15x8_eje_D5', 'TORNILLO_cono_0', 'TORNILLO_cono_1', 'TORNILLO_cono_2',
+    'tuerca_rotor_X', 'prisionero_rotor_X'];
   def('06_cono_repartidor_punta_arriba', { label: '06 Cono', col: 'cone', ex: [0, 0, 45] });
   def(['TUERCA_cono_0', 'TUERCA_cono_1', 'TUERCA_cono_2'], { hw: true, col: 'nut', radial: 28 });
-  def('03_rotor_15x8_con_cubo', { label: '03 Rotor', col: 'rotor', ex: [0, 0, -45] });
+  def('03_rotor_15x8_eje_D5', { label: '03 Rotor', col: 'rotor', ex: [0, 0, -45] });
   def(['TORNILLO_cono_0', 'TORNILLO_cono_1', 'TORNILLO_cono_2'], { hw: true, col: 'screw', ex: [0, 0, -35] });
-  def(['tuerca_rotor_X', 'tuerca_rotor_Y'], { hw: true, col: 'nut', radial: 22 });
-  def(['prisionero_rotor_X', 'prisionero_rotor_Y'], { hw: true, col: 'screw', radial: 22 });
+  def('tuerca_rotor_X', { hw: true, col: 'nut', ex: [22, 0, 0] });
+  def('prisionero_rotor_X', { hw: true, col: 'screw', ex: [22, 0, 0] });
   ROTOR_GROUP.forEach((n) => (P[n].lift = { steps: [7], v: [0, 0, 95] }));
 
 
@@ -116,7 +118,8 @@ __DATA__
       text: ['Así queda el Pastillero V4 terminado. Las animaciones usan la geometría real de Pastillero_V4_ensamble.step.',
              'Avanza con Siguiente o con las flechas del teclado. En cada paso solo se mueven las piezas nuevas; las montadas antes se quedan en su sitio.',
              'Imprime las piezas con las placas de Impresion_255x255 y limpia rebabas antes de armar.'],
-      parts: ['10 piezas impresas'], hw: ['M3×30 ×6', 'M3×12 ×9', 'Prisionero M3×6 ×2', 'Prisionero M3×10 ×1', 'Tuerca M3 ×18'],
+      parts: ['9 piezas impresas', 'Motor 28BYJ-48 + ULN2003', 'ESP32', 'Botón 12 mm'],
+      hw: ['M3×30 ×6', 'M3×12 ×7', 'M3×8 ×2', 'Prisionero M3×8 ×1', 'Prisionero M3×10 ×1', 'Tuerca M3 ×18'],
       note: 'Usa tornillos de cabeza de botón (Ø5.7 × 1.65 mm). Las cabezas cilíndricas altas pueden chocar con el rotor o con la bandeja.',
       view: { t: [0, -10, 92], az: 35, el: 24, d: 420 } },
     { title: 'Carcasa con patas integradas', stages: [['01_carcasa_v4_patas_pedestal_integrados']],
@@ -143,20 +146,28 @@ __DATA__
       note: 'Este bloque va antes que la bancada del motor. Con la bancada puesta ya no hay sitio para meterlo.',
       view: { t: [0, -30, 50], az: 38, el: 22, d: 300 } },
     { title: 'Bancada del motor', ghost: true,
-      stages: [['10_bancada_motor_32x25'], MB.map((s) => 'TORNILLO_motor_base_' + s), MB.map((s) => 'TUERCA_motor_base_' + s)],
+      stages: [['10_bancada_28BYJ48'], MB.map((s) => 'TORNILLO_motor_base_' + s), MB.map((s) => 'TUERCA_motor_base_' + s)],
       text: ['Baja la bancada (10) detrás de la bandeja.',
              'Fíjala al piso con cuatro M3×12 desde abajo. Las cabezas quedan dentro de las celdas de la base nervada.',
              'Comprueba que la bandeja no toque la bancada.'],
       parts: ['10 Bancada'], hw: ['M3×12 ×4', 'Tuerca M3 ×4'],
       view: { t: [0, -5, 35], az: 40, el: 34, d: 250 } },
-    { title: 'Motor y puente', ghost: true,
-      stages: [['REF_motor_32x25', 'REF_eje_6x35'], ['11_puente_motor'],
-               ['TORNILLO_puente_motor_-21', 'TORNILLO_puente_motor_21', 'TUERCA_puente_motor_-21', 'TUERCA_puente_motor_21']],
-      text: ['Baja el motor dentro de la bancada con el eje hacia arriba.',
-             'Ciérralo con el puente (11) y dos M3×12. Las tuercas entran por las ranuras de la bancada.'],
-      parts: ['Motor', '11 Puente'], hw: ['M3×12 ×2', 'Tuerca M3 ×2'],
-      note: 'Aquí se ve el motor de referencia del CAD (Ø32×25, eje Ø6 centrado). Con un 28BYJ-48 hay que adaptar la bancada, el puente y el cubo del rotor.',
-      view: { t: [0, 0, 55], az: 40, el: 28, d: 220 } },
+    { title: 'Motor 28BYJ-48', ghost: true,
+      stages: [['REF_motor_28BYJ48'], OREJAS.map((s) => 'TORNILLO_motor_oreja_' + s).concat(OREJAS.map((s) => 'TUERCA_motor_oreja_' + s))],
+      text: ['Mete dos tuercas M3 en los hexágonos de debajo de la placa de la bancada.',
+             'Baja el motor por el agujero de la placa con el eje hacia arriba y la caja de cables hacia atrás. Su eje queda justo en el centro.',
+             'Atorníllalo por sus dos orejas con dos M3×8.'],
+      parts: ['Motor 28BYJ-48'], hw: ['M3×8 ×2', 'Tuerca M3 ×2'],
+      note: 'Ya no hay puente: el motor se sujeta solo por sus orejas.',
+      view: { t: [0, 5, 65], az: 40, el: 30, d: 200 } },
+    { title: 'Botón y electrónica', ghost: true,
+      stages: [['REF_pulsador_12mm'], ['REF_driver_ULN2003'], ['REF_ESP32_DevKit']],
+      text: ['Mete el botón de 12 mm por el agujero de la pared frontal, debajo de la ventana, y apriétalo con su tuerca por dentro.',
+             'Pon la placa ULN2003 en el piso, a la izquierda de la bancada, y conecta el cable del motor.',
+             'Pon el ESP32 en la plataforma de la derecha. Cableado: IN1-IN4 a GPIO16-19, botón entre GPIO23 y GND, y 5 V aparte para el motor con GND común.'],
+      parts: ['Botón 12 mm', 'Driver ULN2003', 'ESP32'], hw: ['Bridas o cinta doble cara'],
+      note: 'El paso de cable de la pared derecha queda junto al ESP32 para la alimentación.',
+      view: { t: [-5, -20, 20], az: 20, el: 40, d: 270 } },
     { title: 'Placa inferior con canal', ghost: true, stages: [['02_placa_inferior_con_canal']],
       text: ['Asienta la placa (02) sobre las columnas, con la ventana de descarga al frente.',
              'El canal ya viene impreso con la placa. Su boca está cortada en diagonal, 10 mm sobre la rampa de la bandeja.',
@@ -165,16 +176,16 @@ __DATA__
       parts: ['02 Placa con canal'], hw: [], hwNone: 'Se fija en el paso de la reserva',
       view: { t: [0, -30, 65], az: 70, el: 14, d: 260 } },
     { title: 'Cono y rotor, fuera de la caja',
-      stages: [['06_cono_repartidor_punta_arriba'], ['TUERCA_cono_0', 'TUERCA_cono_1', 'TUERCA_cono_2'], ['03_rotor_15x8_con_cubo'],
-               ['TORNILLO_cono_0', 'TORNILLO_cono_1', 'TORNILLO_cono_2'], ['tuerca_rotor_X', 'tuerca_rotor_Y'], ['prisionero_rotor_X', 'prisionero_rotor_Y']],
+      stages: [['06_cono_repartidor_punta_arriba'], ['TUERCA_cono_0', 'TUERCA_cono_1', 'TUERCA_cono_2'], ['03_rotor_15x8_eje_D5'],
+               ['TORNILLO_cono_0', 'TORNILLO_cono_1', 'TORNILLO_cono_2'], ['tuerca_rotor_X'], ['prisionero_rotor_X']],
       text: ['Mete tres tuercas por las ranuras laterales del cono (06).',
              'Une el cono con el rotor (03) con tres M3×12 desde los rebajes de abajo del rotor. Las cabezas deben quedar hundidas.',
-             'Mete las dos tuercas del cubo y enrosca los prisioneros M3×6 sin apretar.'],
-      parts: ['06 Cono', '03 Rotor'], hw: ['M3×12 ×3', 'Prisionero M3×6 ×2', 'Tuerca M3 ×5'],
+             'Mete la tuerca del cubo y enrosca el prisionero M3×8 sin apretar. El agujero del cubo es en doble D, para el eje del 28BYJ-48.'],
+      parts: ['06 Cono', '03 Rotor'], hw: ['M3×12 ×3', 'Prisionero M3×8 ×1', 'Tuerca M3 ×4'],
       view: { t: [0, 0, 200], az: 30, el: 18, d: 220 } },
     { title: 'Rotor en el eje', ghost: true, stages: [ROTOR_GROUP],
-      text: ['Baja el conjunto rotor-cono sobre el eje; el cubo atraviesa la placa inferior.',
-             'Aprieta los dos prisioneros contra el eje.',
+      text: ['Baja el conjunto rotor-cono sobre el eje; el cubo atraviesa la placa inferior. El agujero en doble D solo entra con los planos del eje alineados.',
+             'Aprieta el prisionero contra el plano del eje.',
              'Gira el disco a mano: debe moverse libre, sin rozar la placa.'],
       parts: ['Conjunto rotor + cono'], hw: ['Llave Allen 1.5 mm'],
       view: { t: [0, 0, 92], az: 30, el: 30, d: 250 } },
@@ -192,8 +203,8 @@ __DATA__
              'Para rellenar pastillas levanta la tapa entera.'],
       parts: ['21 Tapa cuadrada'], hw: [], hwNone: 'Sin herramientas',
       view: { t: [0, -10, 92], az: 35, el: 22, d: 420 } },
-    { eyebrow: 'Prueba', title: 'Giro y salida de la pastilla', ghost: true, ghostTop: true, ghostMech: true, spin: true, pill: true, stages: [],
-      text: ['El disco gira en sentido antihorario visto desde arriba.',
+    { eyebrow: 'Prueba', title: 'Botón: una pastilla', ghost: true, ghostTop: true, ghostMech: true, spin: true, pill: true, stages: [],
+      text: ['Cada pulsación del botón gira el disco 30° en sentido antihorario visto desde arriba: una cavidad, una pastilla.',
              'La pastilla cae por el canal, se apoya en la rampa de 25° y resbala hasta el bolsillo, fuera de la caja. Sigue sobre la bandeja, así que la celda la pesa.',
              'Prueba primero sin pastillas y después con pastillas ficticias, antes de cargar medicamento.'],
       parts: [], hw: [], hwNone: 'Sin piezas nuevas',
