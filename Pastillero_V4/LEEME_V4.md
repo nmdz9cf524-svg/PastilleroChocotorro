@@ -9,6 +9,7 @@ V4 parte de V3. El mecanismo de dosificación no cambia: rotor, cono, peine, tec
 | Carpeta | Qué contiene |
 |---|---|
 | `Impresion_255x255/` | **Placas listas para imprimir** (.3mf, .stl y vista previa) y la guía de impresión |
+| `Guia_visual/` | **Guía animada de ensamble**: abre `Ensamble_Pastillero_V4.html` con doble clic (necesita internet para cargar three.js) |
 | `STL/` | Cada pieza suelta, ya orientada, por si hay que reimprimir una |
 | `STEP_piezas/` | Piezas en coordenadas de ensamble, para editar en CAD |
 | `Pastillero_V4_ensamble.step` | Ensamble completo, con tornillería y referencias |
@@ -112,6 +113,7 @@ pip install -r requirements.txt
 python generar_pastillero_v4.py   # crea STL/, STEP_piezas/ y los json
 python validar_v4.py              # choques, rotor, pastilla, montaje y mallas
 python armar_placas.py            # placas de 255x255 en ../Impresion_255x255
+python generar_guia_ensamble.py   # guía animada en ../Guia_visual
 ```
 
 Todo lo que necesitan los scripts está dentro de `Pastillero_V4/`; las piezas de V3 que se reutilizan están en `Codigo_CAD/fuentes_V3/`.

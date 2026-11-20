@@ -190,6 +190,7 @@ result = {'static_collisions_mm3_above_0_001': col, 'continuous_rotor_sweep_coll
 json.dump(result, open(R / 'Verificacion_CAD_y_STL.json', 'w'), indent=2, ensure_ascii=False)
 assert not col and not sweepbad
 cq.exporters.export(cq.Compound.makeCompound(list(hardware.values())), str(R / 'Referencias_NO_imprimir/Tornilleria_nominal.step'))
+json.dump(list(hardware.keys()), open(R / 'Referencias_NO_imprimir/Tornilleria_nominal_nombres.json', 'w'), indent=0)
 cq.exporters.export(cq.Compound.makeCompound(list(assembly.values()) + [parts['21a_embellecedor_corto']] +
                                              list(refs.values()) + list(hardware.values())),
                     str(R / 'Pastillero_V4_ensamble.step'))
