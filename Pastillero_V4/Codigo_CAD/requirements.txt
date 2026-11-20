@@ -1,0 +1,7 @@
+cadquery==2.7.0
+numpy
+trimesh
+shapely
+networkx
+lxml
+matplotlib

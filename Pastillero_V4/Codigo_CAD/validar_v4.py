@@ -47,7 +47,7 @@ for x in [-21, 21]:
 for y in [-51, -27]:
     bolt(f'mordaza_fija_{y}', -18.5, y, 4.0, 30, True); nut(f'mordaza_fija_{y}', -18.5, y, 32.0)
 gx, gy = params['tray_grub_xy']
-grub('bandeja_prisionero', gx, gy, 31.0, 6); nut('bandeja_prisionero', gx, gy, 32.1)
+grub('bandeja_prisionero', gx, gy, 31.0, 10); nut('bandeja_prisionero', gx, gy, 32.1)
 for k, (x, y) in enumerate(params['cone_bolts_xy']):
     bolt(f'cono_{k}', x, y, 95.4, 12, True); nut(f'cono_{k}', x, y, 104.1)
     nuts[f'cono_{k}'] = nuts[f'cono_{k}'].rotate((x, y, 0), (x, y, 1), 15)
@@ -90,7 +90,7 @@ print('PAIRWISE', col, flush=True)
 
 # Holguras de piezas nuevas que no deben tocarse (la bandeja cuelga solo de la celda).
 gaps = {}
-tray = parts['16_bandeja_pesaje_una_pieza']
+tray = parts['16_bandeja_pesaje_inclinada']
 for n in ['01_carcasa_v4_patas_pedestal_integrados', '13_mordaza_fija_celda_tuercas', '10_bancada_motor_32x25',
           '02_placa_inferior_con_canal', 'TORNILLO_mordaza_fija_-51', 'TORNILLO_mordaza_fija_-27']:
     gaps['bandeja_vs_' + n] = round(tray.distance(allshapes[n]), 3)
@@ -115,15 +115,50 @@ for n, s in static.items():
     clearances[n] = round(env.distance(s), 3)
 print('FULL_SWEEP', sweepbad, 'MIN_GAP', min(clearances.values()), flush=True)
 
-# Trayectoria de una pastilla acostada 15x8x6 desde la cavidad hasta la bandeja.
+# Trayectoria de una pastilla acostada 15x8x6: cae por el canal, se apoya en la
+# rampa de 25° y resbala hasta el bolsillo exterior. Nada debe estorbarla.
+tf = params['tray_floor']; slope = math.tan(math.radians(params['tray_slope_deg']))
+def floor_top(y):
+    return tf['z_ref_at_y_-55'] + (max(y, tf['y_knee']) + 55.0) * slope
 pill = cq.Workplane('XY').slot2D(15, 8, angle=90).extrude(6).edges('>Z or <Z').fillet(.8).val()
+# Pastilla inclinada como la rampa (eje largo según Y, que es la dirección de bajada).
+poses = [('cayendo', pill.translate((0, -40, z)), z) for z in [93, 89, 80, 70, 60, 55]]
+tilted = pill.rotate((0, 0, 0), (1, 0, 0), params['tray_slope_deg'])  # cara inferior paralela a la rampa
+for y in [-36, -40, -45, -50, -54]:          # apoyada en la rampa, bajando
+    poses.append(('rampa', tilted.translate((0, y, floor_top(y) + 0.15)), y))
+for y in [-70.0]:                             # en el bolsillo exterior
+    poses.append(('bolsillo', pill.translate((0, y, floor_top(-70) + 0.1)), y))
 trajectory = []
-for z in [93, 92, 89, 80, 60, 50, 47, 40, 37]:
-    s = pill.translate((0, -40, z))
-    bad = [[n, round(o.intersect(s).Volume(), 3)] for n, o in assembly.items()
-           if overlap(o, s) and o.intersect(s).Volume() > .001]
-    trajectory.append({'pill_bottom_z': z, 'intersections': bad})
+for kind, s_, key in poses:
+    bad = [[n, round(o.intersect(s_).Volume(), 3)] for n, o in {**assembly, **hardware}.items()
+           if overlap(o, s_) and o.intersect(s_).Volume() > .001]
+    trajectory.append({'pose': kind, 'pos': key, 'intersections': bad})
 assert all(not t['intersections'] for t in trajectory), trajectory
+# La pastilla del bolsillo queda fuera de la carcasa (se toma desde fuera).
+assert pill.translate((0, -70, 0)).BoundingBox().ymin < -62.5
+
+# Montaje: el bloque celda + mordaza + bandeja entra por arriba desplazado 22 mm
+# hacia atrás (el bolsillo pasa por dentro de la pared), baja y avanza por la
+# ventana hasta su sitio. Se monta ANTES que la bancada del motor.
+block = [allshapes['16_bandeja_pesaje_inclinada'], allshapes['13_mordaza_fija_celda_tuercas'],
+         refs['REF_celda_50x15x7']]
+path = [(0, 22, dz) for dz in [80, 60, 40, 30, 20, 10, 5, 2, 0.5]] + \
+       [(0, dy, 0.5) for dy in [20, 16, 12, 8, 4, 2, 0]] + [(0, 0, 0.25), (0, 0, 0)]
+insert_bad = []
+for dx, dy, dz in path:
+    for s_ in block:
+        t = s_.translate((dx, dy, dz))
+        v = t.intersect(assembly['01_carcasa_v4_patas_pedestal_integrados']).Volume()
+        if v > .001:
+            insert_bad.append([dy, dz, round(v, 3)])
+# Después, la bancada y el motor bajan en vertical sin tocar la bandeja.
+for dz in [80, 40, 10, 2, 0.5]:
+    for n in ['10_bancada_motor_32x25']:
+        v = assembly[n].translate((0, 0, dz)).intersect(allshapes['16_bandeja_pesaje_inclinada']).Volume()
+        if v > .001:
+            insert_bad.append([n, dz, round(v, 3)])
+print('MONTAJE', insert_bad, flush=True)
+assert not insert_bad
 
 # Mallas STL: cerradas, orientación coherente, misma envolvente y volumen que el CAD.
 mesh = []
@@ -148,7 +183,7 @@ for p in sorted((R / 'STL').glob('*.stl')):
 
 result = {'static_collisions_mm3_above_0_001': col, 'continuous_rotor_sweep_collisions': sweepbad,
           'minimum_nominal_rotor_clearance_mm': min(clearances.values()), 'rotor_clearances_mm': clearances,
-          'new_part_gaps_mm': gaps, 'pill_release_path': trajectory, 'meshes': mesh,
+          'new_part_gaps_mm': gaps, 'pill_release_path': trajectory, 'assembly_path_collisions': insert_bad, 'meshes': mesh,
           'fasteners': dict(collections.Counter(bolt_schedule)), 'fastener_count': len(bolt_schedule),
           'nut_count': len(nuts) + 2, 'unique_print_files': len(parts),
           'printed_parts_in_assembly': len(assembly) + 1, 'physical_validation': False}

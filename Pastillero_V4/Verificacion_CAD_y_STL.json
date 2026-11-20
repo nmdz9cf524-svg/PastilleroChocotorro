@@ -11,7 +11,7 @@
     "10_bancada_motor_32x25": 12.777,
     "11_puente_motor": 7.0,
     "13_mordaza_fija_celda_tuercas": 48.212,
-    "16_bandeja_pesaje_una_pieza": 34.946,
+    "16_bandeja_pesaje_inclinada": 24.997,
     "20_peine_flexible_TPU": 0.2,
     "REF_celda_50x15x7": 53.509,
     "REF_eje_6x35": 0.2,
@@ -28,7 +28,7 @@
     "TORNILLO_puente_motor_21": 9.749,
     "TORNILLO_mordaza_fija_-51": 59.401,
     "TORNILLO_mordaza_fija_-27": 50.663,
-    "TORNILLO_bandeja_prisionero": 53.276,
+    "TORNILLO_bandeja_prisionero": 50.103,
     "TORNILLO_peine_0": 0.4,
     "TORNILLO_peine_1": 0.4,
     "TUERCA_placas_-39.244_-39.244": 6.0,
@@ -51,11 +51,11 @@
   },
   "new_part_gaps_mm": {
     "bandeja_vs_01_carcasa_v4_patas_pedestal_integrados": 0.45,
-    "bandeja_vs_13_mordaza_fija_celda_tuercas": 0.5,
-    "bandeja_vs_10_bancada_motor_32x25": 0.5,
-    "bandeja_vs_02_placa_inferior_con_canal": 3.0,
-    "bandeja_vs_TORNILLO_mordaza_fija_-51": 1.0,
-    "bandeja_vs_TORNILLO_mordaza_fija_-27": 1.0,
+    "bandeja_vs_13_mordaza_fija_celda_tuercas": 0.453,
+    "bandeja_vs_10_bancada_motor_32x25": 2.2,
+    "bandeja_vs_02_placa_inferior_con_canal": 9.699,
+    "bandeja_vs_TORNILLO_mordaza_fija_-51": 1.963,
+    "bandeja_vs_TORNILLO_mordaza_fija_-27": 12.106,
     "21a_embellecedor_corto_vs_02_placa_inferior_con_canal": 0.5,
     "21a_embellecedor_corto_vs_04_aro_con_techo_y_separadores": 0.5,
     "21a_embellecedor_corto_vs_07_reserva_centrada": 0.5,
@@ -71,42 +71,67 @@
   },
   "pill_release_path": [
     {
-      "pill_bottom_z": 93,
+      "pose": "cayendo",
+      "pos": 93,
       "intersections": []
     },
     {
-      "pill_bottom_z": 92,
+      "pose": "cayendo",
+      "pos": 89,
       "intersections": []
     },
     {
-      "pill_bottom_z": 89,
+      "pose": "cayendo",
+      "pos": 80,
       "intersections": []
     },
     {
-      "pill_bottom_z": 80,
+      "pose": "cayendo",
+      "pos": 70,
       "intersections": []
     },
     {
-      "pill_bottom_z": 60,
+      "pose": "cayendo",
+      "pos": 60,
       "intersections": []
     },
     {
-      "pill_bottom_z": 50,
+      "pose": "cayendo",
+      "pos": 55,
       "intersections": []
     },
     {
-      "pill_bottom_z": 47,
+      "pose": "rampa",
+      "pos": -36,
       "intersections": []
     },
     {
-      "pill_bottom_z": 40,
+      "pose": "rampa",
+      "pos": -40,
       "intersections": []
     },
     {
-      "pill_bottom_z": 37,
+      "pose": "rampa",
+      "pos": -45,
+      "intersections": []
+    },
+    {
+      "pose": "rampa",
+      "pos": -50,
+      "intersections": []
+    },
+    {
+      "pose": "rampa",
+      "pos": -54,
+      "intersections": []
+    },
+    {
+      "pose": "bolsillo",
+      "pos": -70.0,
       "intersections": []
     }
   ],
+  "assembly_path_collisions": [],
   "meshes": [
     {
       "file": "01_carcasa_v4_patas_pedestal_integrados.stl",
@@ -119,11 +144,11 @@
     },
     {
       "file": "02_placa_inferior_con_canal.stl",
-      "triangles": 5760,
+      "triangles": 5856,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0221,
-      "volume_relative_error": 0.000225,
+      "volume_relative_error": 0.000222,
       "print_height_mm": 43.0
     },
     {
@@ -199,13 +224,13 @@
       "print_height_mm": 3.5
     },
     {
-      "file": "16_bandeja_pesaje_una_pieza.stl",
-      "triangles": 2008,
+      "file": "16_bandeja_pesaje_inclinada.stl",
+      "triangles": 1462,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0,
-      "volume_relative_error": 1.4e-05,
-      "print_height_mm": 49.5
+      "volume_relative_error": 1e-06,
+      "print_height_mm": 47.5
     },
     {
       "file": "20_peine_flexible_TPU.stl",
@@ -238,8 +263,9 @@
   "fasteners": {
     "M3x30": 6,
     "M3x12": 9,
-    "prisionero M3x6": 3,
-    "M3x8": 2
+    "prisionero M3x10": 1,
+    "M3x8": 2,
+    "prisionero M3x6": 2
   },
   "fastener_count": 20,
   "nut_count": 20,
