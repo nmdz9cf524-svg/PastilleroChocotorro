@@ -14,16 +14,16 @@
       120.0,
       50.277
     ],
-    "volume_mm3": 54993.9,
+    "volume_mm3": 54717.4,
     "note": "Placa inferior V3 con el canal 17 integrado (sin M3x8 ni tuercas). Imprimir con la cara superior de la placa sobre la cama."
   },
   "03_rotor_15x8_eje_D5": {
     "size_mm": [
-      105.0,
-      105.0,
+      103.6,
+      103.6,
       21.4
     ],
-    "volume_mm3": 60165.0,
+    "volume_mm3": 56263.3,
     "note": "Rotor V3 con cubo para el eje Ø5 de doble plano del 28BYJ-48 y un prisionero M3x8. Imprimir boca abajo."
   },
   "06_cono_repartidor_punta_arriba": {
@@ -41,7 +41,7 @@
       120.0,
       75.8
     ],
-    "volume_mm3": 106800.9,
+    "volume_mm3": 106743.9,
     "note": "Reserva con barredor rígido, aro con techo y separadores integrados (sustituye a 04, 05 y al peine 20 de TPU). Poste de orientación hacia la placa 02. Imprimir boca abajo."
   },
   "09_tapa_llenado": {

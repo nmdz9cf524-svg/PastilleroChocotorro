@@ -25,7 +25,7 @@ Cada pulsación del botón gira el rotor 30° y deja **una pastilla** en el bols
 |---|---|---|
 | 01 | **Carcasa** | Las patas vienen impresas como una base nervada bajo el piso. Lleva la plataforma del ESP32, el paso de cable de la pared derecha, y dos ranuras en el piso para la rampa. El frente queda limpio: el botón va arriba, en la tapa de servicio. |
 | 02 | **Placa inferior con canal** | El canal va integrado y baja hasta 10 mm sobre la rampa, con la boca cortada en diagonal, para guiar la caída. El agujero pequeño de arriba recibe el poste de la reserva. |
-| 03 | **Rotor** | 12 cavidades, una cada 30°. El cubo tiene agujero en doble D para el eje Ø5 del 28BYJ-48 y un prisionero M3×8. |
+| 03 | **Rotor** | 12 cavidades, una cada 30°. Disco de Ø103.6 × 7.6 mm (con asiento para el cono), con holgura de giro amplia. El cubo tiene agujero en doble D para el eje Ø5 del 28BYJ-48 y un prisionero M3×8. |
 | 06 | **Cono** | Igual que en V3. |
 | 07 | **Reserva** | Una sola pieza con el techo sobre la salida (así no caen pastillas de golpe), los cuatro separadores del disco y un barredor rígido justo antes del techo. Un poste entra en la placa 02, así que solo se monta en la posición correcta. |
 | 09 | **Tapa de llenado** | Disco redondo que encaja a ras en la tapa de servicio. Se levanta por la muesca del frente y se echan las pastillas por la boca de Ø91, directo a la reserva. |
@@ -81,7 +81,7 @@ Además: motor **28BYJ-48 + placa ULN2003**, **ESP32 DevKit**, **pulsador tácti
 4. **Placa y rotor:**
    1. Asienta la placa 02 sobre las columnas.
    2. Une cono y rotor con 3 M3×12 y bájalos sobre el eje. El agujero en doble D solo entra alineado con los planos del eje.
-   3. Aprieta el prisionero M3×8.
+   3. Pon debajo del disco un calce de 0.6 mm (6 hojas de papel de impresora o una tarjeta de plástico), apóyalo y aprieta el prisionero M3×8. Quita el calce: el disco queda centrado en altura, con 0.6 mm a la placa y 0.6 mm al techo.
 5. **Reserva:**
    1. Bájala girándola hasta que su poste entre en la placa.
    2. Cierra con los 4 M3×30.
@@ -110,8 +110,17 @@ Además: motor **28BYJ-48 + placa ULN2003**, **ESP32 DevKit**, **pulsador tácti
 `Codigo_CAD/validar_v4.py` comprobó lo siguiente (resultado en `Verificacion_CAD_y_STL.json`):
 
 - No hay choques entre piezas, referencias (motor, pulsador, ULN2003, ESP32) y tornillería con volumen mayor de 0.001 mm³.
-- El barrido completo del rotor y el cono no choca con nada. La holgura mínima es 0.30 mm.
-- El techo de la reserva queda a 0.4 mm del disco y tapa entera la ventana de salida. El barredor queda a 0.6 mm del disco.
+- El barrido completo del rotor y el cono no choca con nada. **Todas las holguras de giro son de al menos 0.6 mm**, pensadas para impresión FDM (±0.2 mm por pieza):
+
+  | Entre | Holgura |
+  |---|---|
+  | Borde del disco y separadores de la reserva | 1.0 mm |
+  | Disco y placa (abajo) | 0.6 mm |
+  | Disco y techo (arriba) | 0.6 mm |
+  | Cubo y agujero de la placa | 1.5 mm |
+  | Cono y borde del techo | 0.68 mm |
+  | Motor y rotor | 0.7 mm |
+- El techo de la reserva tapa entera la ventana de salida. El barredor queda a 0.8 mm del disco.
 - Una pastilla acostada de 15×8×6 cae por el canal, se apoya en la rampa y queda entera en el bolsillo exterior.
 - La rampa entra por arriba y por la ventana sin chocar, y después la bancada baja sin tocarla (0.5 mm).
 - **Ninguna pieza flota:** todas apoyan en otra y llegan hasta la carcasa.

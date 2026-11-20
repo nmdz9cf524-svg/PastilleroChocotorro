@@ -41,6 +41,7 @@ Las piezas sueltas también están en `../STL/`, por si hay que reimprimir solo 
 - **Rígidas:** boquilla 0.4, 3 perímetros, relleno 15–20 % en gyroid o rejilla y **sin soportes**. Para la carcasa basta con 2 perímetros si quieres ir aún más rápido.
 - **Rampa 16 (placa 1):** ponle un borde (*brim*) de 5 mm porque se imprime de pie sobre un costado. Las líneas de capa quedan a lo largo de la pendiente y ayudan a que la pastilla resbale.
 - **Tapa de servicio 21 (placa 2):** el alojamiento del pulsador 6×6 queda hacia arriba al imprimirla boca abajo. Comprueba que el pulsador entre justo; si queda flojo, una gota de pegamento lo fija.
+- **Rotor 03 y reserva 07:** activa la compensación de *pata de elefante* (0.15–0.2 mm) en el laminador. El disco tiene 1 mm de holgura a los separadores y 0.6 mm arriba y abajo; con esa compensación no debería rozar. Si aun así roza, lija el borde del disco.
 - **Antes de imprimir:** revisa en el laminador que ninguna pieza haya quedado flotando o girada. Los STL ya vienen apoyados en z = 0.
 
 ## Para regenerar las placas

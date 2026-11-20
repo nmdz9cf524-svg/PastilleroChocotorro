@@ -56,6 +56,12 @@
     0.0,
     56.0
   ],
+  "rotor": {
+    "r": 51.8,
+    "z0": 93.6,
+    "z1": 101.2,
+    "cone_seat_r": 30.8
+  },
   "button": {
     "type": "pulsador tactil 6x6x9.5",
     "xy": [

@@ -137,7 +137,7 @@ add('01_carcasa_v4', car,
 plate = cyl(60, 4, z=89)
 plate = plate.cut(cq.Workplane('XY', origin=(0, -40, 88)).slot2D(16.8, 9.6, angle=90)
                   .extrude(6).val())
-plate = plate.cut(cyl(10.5, 6, z=88))
+plate = plate.cut(cyl(11.5, 6, z=88))      # paso del cubo del rotor: 1.5 mm de holgura por si el eje queda algo descentrado
 # Agujero del poste de orientación de la reserva: solo entra en una posición,
 # con el techo encima de la ventana de salida.
 KEY_XY, KEY_R = (0.0, 56.0), 1.5
@@ -229,6 +229,10 @@ for x in (-C, C):
         res = res.cut(cyl(1.7, 30, x, y, 90))                        # paso M3x30 limpio
 # Poste de orientación: baja hasta la placa 02 y entra en su agujero.
 res = res.fuse(cyl(KEY_R, 101.8 - 91.0 + 0.01, KEY_XY[0], KEY_XY[1], 91.0))
+# Holgura cono-techo: el borde interior del techo (y la punta del barredor)
+# pasa de r=31.2 a r=31.55. La ventana de salida empieza en r=31.6, así que
+# sigue tapada entera.
+res = res.cut(cyl(31.55, 8, z=100.0))
 add('07_reserva_con_barredor', res,
     'Reserva con barredor rígido, aro con techo y separadores integrados '
     '(sustituye a 04, 05 y al peine 20 de TPU). Poste de orientación hacia la '
@@ -360,6 +364,16 @@ rot = rot.fuse(cq.Solid.makeCylinder(1.75, 10.5, V(0, 0, 84), V(0, 1, 0)).inters
 rot = rot.fuse(box(-3, 3, 5.8, 10.5, 80, 87.35).intersect(hub))                  # tapar ranura Y
 rot = rot.cut(cyl(2.6, 24, z=79).intersect(box(-1.6, 1.6, -5, 5, 78, 104)))      # doble D 5.2 / 3.2
 rot = rot.cut(cq.Solid.makeCylinder(1.7, 12, V(0, 0, 84), V(1, 0, 0)))          # paso del prisionero (+X)
+# Holguras para impresión FDM (±0.2 mm por pieza):
+#   * radio del disco 52.5 -> 51.8: 1.0 mm a los separadores de la reserva (antes 0.3).
+#     El borde sigue bajo el anillo de la reserva (r=51.8), así que no escapan pastillas.
+#   * disco 0.2 mm más fino por cada cara fuera del cono: 0.6 mm a la placa y al techo
+#     (antes 0.4). La pastilla acostada (6 mm) sigue quedando bajo la cara superior.
+ROTOR_R, ROTOR_Z0, ROTOR_Z1 = 51.8, 93.6, 101.2
+rot = rot.cut(cyl(60, 20, z=90).cut(cyl(ROTOR_R, 22, z=89)))                       # borde exterior
+rot = rot.cut(cyl(ROTOR_R + 1, ROTOR_Z0 - 93.0, z=93.0).cut(cyl(10.8, 2, z=92.9)))    # cara inferior (no toca el cubo)
+CONE_SEAT_R = 30.8                      # base del cono: r=30.67
+rot = rot.cut(cyl(ROTOR_R + 1, 1.0, z=ROTOR_Z1).cut(cyl(CONE_SEAT_R, 2, z=ROTOR_Z1 - 0.5)))  # cara superior (no toca el asiento del cono)
 add('03_rotor_15x8_eje_D5', rot,
     'Rotor V3 con cubo para el eje Ø5 de doble plano del 28BYJ-48 y un '
     'prisionero M3x8. Imprimir boca abajo.')
@@ -409,7 +423,7 @@ v3params = json.load(open(V3 / 'Parametros_V3.json'))
 v3params.update({'version': 'V4', 'feet_height_mm': FEET_H, 'ramp_rib_y': list(RIB_Y),
                  'sweeper': {'z_bottom': SWEEP_Z, 'r_in': R_IN, 'deg_attack_in': A_IN,
                              'deg_attack_out': A_OUT, 'deg_end': A_END},
-                 'reservoir_key_xy': list(KEY_XY), 'button': {'type': 'pulsador tactil 6x6x9.5', 'xy': list(BTN_XY), 'body_top_z': DECK0},
+                 'reservoir_key_xy': list(KEY_XY), 'rotor': {'r': ROTOR_R, 'z0': ROTOR_Z0, 'z1': ROTOR_Z1, 'cone_seat_r': CONE_SEAT_R}, 'button': {'type': 'pulsador tactil 6x6x9.5', 'xy': list(BTN_XY), 'body_top_z': DECK0},
                  'motor': '28BYJ-48', 'motor_top_z': M_TOP, 'motor_ear_x': M_EAR_X, 'motor_body_offset_y': M_OFF, 'cap_top_z': TOP,
                  'fill_lid_top_z': TOP, 'fill_lid_seat_r': SEAT_R,
                  'tray_slope_deg': 25, 'tray_floor': {'z_ref_at_y_-55': round(Z_REF, 4), 'y_knee': Y_KNEE,
