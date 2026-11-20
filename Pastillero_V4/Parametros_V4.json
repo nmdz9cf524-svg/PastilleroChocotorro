@@ -46,6 +46,18 @@
   ],
   "overload_stop_gap_mm": 0.45,
   "feet_height_mm": 3.0,
+  "sweeper": {
+    "z_bottom": 102.0,
+    "r_in": 31.5,
+    "deg_attack_in": 226.0,
+    "deg_attack_out": 214.0,
+    "deg_end": 233.5
+  },
+  "reservoir_pin_xy": [
+    0.0,
+    56.0
+  ],
+  "cap_top_z": 169.60000000000002,
   "tray_slope_deg": 25,
   "tray_floor": {
     "z_ref_at_y_-55": 37.0,

@@ -1,8 +1,8 @@
 # Pastillero V4: piezas simplificadas
 
-V4 parte de V3. El mecanismo de dosificación no cambia: rotor, cono, peine, techo, reserva y tapa son los mismos. Lo que cambia es la carcasa, la zona de la celda de carga y el número de piezas sueltas. Además se agrega un embellecedor y una bandeja inclinada que saca la pastilla por la ventana.
+V4 parte de V3. El rotor, el cono y el techo son los mismos. Lo que cambia es la carcasa, la zona de la celda de carga y el número de piezas sueltas. El peine de TPU se sustituye por un barredor rígido integrado en la reserva, la tapa pasa a ser una pieza cuadrada que cubre todo, y una bandeja inclinada saca la pastilla por la ventana.
 
-> **Para imprimir, ve directo a [`Impresion_255x255/`](Impresion_255x255/LEEME_IMPRESION.md).** Ahí están las 3 placas listas para una cama de 255 × 255.
+> **Para imprimir, ve directo a [`Impresion_255x255/`](Impresion_255x255/LEEME_IMPRESION.md).** Ahí están las 2 placas listas para una cama de 255 × 255.
 
 ## Carpetas
 
@@ -31,9 +31,11 @@ V4 parte de V3. El mecanismo de dosificación no cambia: rotor, cono, peine, tec
 | 17 canal | Boca del canal cortada en diagonal | Sigue la rampa con 10 mm de paso, para que la pastilla caiga y salga por debajo. |
 | 02 placa + 17 canal (2 M3×8) | **02 placa con canal** | Se imprime con la cara superior de la placa sobre la cama, así queda lisa para el disco. |
 | 04 aro + 05 separadores ×4 | **04 aro con separadores** | Se imprime boca abajo. Los separadores quedan alineados. |
-| no existía | **21 embellecedor** (corto o alto) | Tapa la franja entre la carcasa y la reserva (placa, disco, aro y tornillos M3×30). Queda a ras de la carcasa, se centra con 4 pestañas en las esquinas y se coloca bajándolo por encima de la reserva, sin herramientas. Elige **una** versión: **21a corto** (hasta z=114) o **21b alto** (cubre también la reserva y queda a ras de su borde, con la tapa 09 accesible). |
+| 20 peine TPU (2 M3×8) | **Barredor integrado en la reserva 07** | Un bloque rígido baja de la pared de la reserva hasta 0.6 mm del disco, justo antes del techo. Las pastillas metidas en su cavidad pasan por debajo y las que van encima se empujan hacia el cono. Su cara de ataque está inclinada para empujarlas hacia dentro y no contra la pared. Un pin en la reserva entra en un agujero del aro, así que la reserva solo se monta en la posición correcta. Ya no hace falta TPU. |
+| 07 reserva | **07 reserva con barredor** | Se imprime boca abajo. La pestaña lleva un chaflán de 45° para no necesitar soportes, con huecos para las cabezas de los M3×30. |
+| 09 tapa redonda | **21 tapa cuadrada de una pieza** | Sustituye a la tapa 09 y al embellecedor. Es una caja de 125 × 125 a ras de la carcasa que cubre placa, disco, aro y reserva y cierra arriba. Una ceja circular por dentro entra en la boca de la reserva, y 4 pestañas en las esquinas entran en la carcasa. Para rellenar se levanta entera. |
 
-Balance: de **25 piezas impresas → 13**, de **29 tornillos/prisioneros → 20** y de **29 tuercas → 20**.
+Balance: de **25 piezas impresas → 11**, de **29 tornillos/prisioneros → 18** y de **29 tuercas → 18**. Ya no hace falta filamento flexible.
 
 ## Piezas a imprimir
 
@@ -41,10 +43,8 @@ La forma más rápida es usar las **placas de [`Impresion_255x255/`](Impresion_2
 
 | Placa | Piezas | Capa |
 |---|---|---|
-| 1 · Estructura (PLA) | 01, 07, 09, 10, 11, 13, 16 | 0.28 mm |
-| 2 · Mecanismo (PLA) | 21a + 06 (dentro del embellecedor), 02, 04, 03 | 0.20 mm |
-| 2B · alternativa a la 2 | Igual, con el embellecedor alto 21b | 0.20 mm |
-| 3 · Peine (TPU 95A) | 20 | 0.20 mm |
+| 1 · Estructura (PLA) | 01, 07, 06, 10, 11, 13, 16 | 0.28 mm |
+| 2 · Mecanismo y tapa (PLA) | 21, 02, 04, 03 | 0.20 mm |
 
 Estas piezas sueltas en `STL/` necesitan una orientación concreta:
 
@@ -54,8 +54,8 @@ Estas piezas sueltas en `STL/` necesitan una orientación concreta:
 | 02 | Placa inferior con canal | Placa abajo, canal hacia arriba. |
 | 04 | Aro con techo y separadores | Boca abajo, separadores hacia arriba. |
 | 16 | Bandeja inclinada | De pie sobre la cara del manguito, con borde (*brim*). |
-| 21a / 21b | Embellecedor corto / alto | Boca abajo. Elige **uno**. |
-| 20 | Peine | **TPU 95A**. |
+| 07 | Reserva con barredor | Boca abajo (borde superior sobre la cama). |
+| 21 | Tapa cuadrada | Boca abajo (la cara de arriba sobre la cama). |
 
 ## Tornillería
 
@@ -63,10 +63,9 @@ Estas piezas sueltas en `STL/` necesitan una orientación concreta:
 |---|---|---|
 | M3×30 cabeza botón | 6 | 4 reserva/aro/placa/columnas; 2 mordaza 13 desde abajo de la carcasa |
 | M3×12 cabeza botón | 9 | 4 bancada al piso; 2 puente motor; 3 cono al rotor |
-| M3×8 cabeza botón | 2 | Peine flexible |
 | Prisionero M3×6 | 2 | Cubo del rotor |
 | Prisionero M3×10 | 1 | Bandeja 16 |
-| Tuerca M3 (5.5 entre caras × 2.4) | 20 | |
+| Tuerca M3 (5.5 entre caras × 2.4) | 18 | |
 
 ## Armado
 
@@ -83,23 +82,25 @@ Estas piezas sueltas en `STL/` necesitan una orientación concreta:
 3. **Motor:** baja la bancada 10 y fíjala al piso con 4 M3×12 desde abajo. Coloca el motor y el puente 11.
 4. **Comprueba que la bandeja cuelga libre:** debe tener holgura visible con el tope, la mordaza, la bancada y los bordes de la ventana.
 5. Pon la placa 02 (con su canal) y el conjunto rotor + cono, igual que en V3: cono y rotor con 3 M3×12, prisioneros al eje.
-6. Monta el peine 20 sobre el aro 04 (2 M3×8). Coloca el aro, la reserva 07 y los 4 M3×30.
-7. Baja el embellecedor 21 por encima de la reserva hasta que las pestañas entren en la carcasa. Pon la tapa 09.
+6. Coloca el aro 04 con el techo encima de la salida delantera.
+7. Pon la reserva 07 girándola hasta que su pin entre en el agujero del aro (solo entra en una posición). Así el barredor queda justo antes del techo. Ciérralo todo con los 4 M3×30 y gira el disco a mano: las cavidades deben pasar bajo el barredor sin rozar.
+8. Baja la tapa cuadrada 21 por encima de la reserva hasta que la ceja entre en la boca y las pestañas en la carcasa.
 
 ## Verificación (solo geometría)
 
 `Codigo_CAD/validar_v4.py` comprobó lo siguiente (resultado en `Verificacion_CAD_y_STL.json`):
 
-- No hay choques entre piezas, referencias (motor, eje, celda) y tornillería con volumen mayor de 0.001 mm³, incluidas las dos variantes del embellecedor.
+- No hay choques entre piezas, referencias (motor, eje, celda) y tornillería con volumen mayor de 0.001 mm³.
 - El barrido completo del rotor y el cono no choca con nada. La holgura mínima es 0.20 mm, igual que en V3.
 - Las holguras de la bandeja: 0.45 mm al tope de sobrecarga y a la mordaza, más de 2 mm a la bancada y a los bordes de la ventana.
 - El canal queda 10 mm por encima de la rampa.
-- El embellecedor queda a 0.5 mm de la placa, el aro y la reserva, y a 0.55 mm de las cabezas M3×30.
+- El barredor queda a 0.6 mm del disco, a 0.77 mm del cono y a 0.8 mm del techo.
+- La tapa cuadrada queda a 0.5 mm de la placa y el aro, y a 0.3 mm de la reserva.
 - Una pastilla acostada de 15×8×6 cae por el canal, se apoya en la rampa y baja libre hasta el bolsillo exterior.
-- Los 14 STL son mallas cerradas, con orientación coherente y el mismo volumen y envolvente que el CAD.
+- Los 11 STL son mallas cerradas, con orientación coherente y el mismo volumen y envolvente que el CAD.
 - El bloque celda + mordaza + bandeja entra por arriba y por la ventana sin chocar, y después la bancada baja sin tocar la bandeja.
 
-**Sin probar:** alimentación con carga, fricción, comportamiento del peine y calibración de la celda real. Los 25° de la rampa son una estimación para PLA contra un comprimido recubierto: si la pastilla no resbala, sube `SLOPE` en el generador. La celda 50×15×7 y el motor Ø32×25 siguen siendo referencias nominales. Confirma tu celda real antes de imprimir la bandeja y la mordaza.
+**Sin probar:** alimentación con carga, fricción y calibración de la celda real. El barredor es rígido: si una pastilla medio metida en su cavidad se atasca contra él, sube `SWEEP_Z` en el generador (más holgura) o vuelve al peine de TPU de la versión anterior (está en el historial de git). Los 25° de la rampa son una estimación para PLA contra un comprimido recubierto: si la pastilla no resbala, sube `SLOPE` en el generador. La celda 50×15×7 y el motor Ø32×25 siguen siendo referencias nominales. Confirma tu celda real antes de imprimir la bandeja y la mordaza.
 
 ## Pendiente conocido
 

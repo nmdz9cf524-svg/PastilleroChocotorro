@@ -6,13 +6,12 @@
     "01_carcasa_v4_patas_pedestal_integrados": 4.4,
     "02_placa_inferior_con_canal": 0.4,
     "04_aro_con_techo_y_separadores": 0.299,
-    "07_reserva_centrada": 4.4,
-    "09_tapa_reserva_centrada": 30.4,
+    "07_reserva_con_barredor": 0.6,
     "10_bancada_motor_32x25": 12.777,
     "11_puente_motor": 7.0,
     "13_mordaza_fija_celda_tuercas": 48.212,
     "16_bandeja_pesaje_inclinada": 24.997,
-    "20_peine_flexible_TPU": 0.2,
+    "21_tapa_cuadrada": 8.0,
     "REF_celda_50x15x7": 53.509,
     "REF_eje_6x35": 0.2,
     "REF_motor_32x25": 11.0,
@@ -29,8 +28,6 @@
     "TORNILLO_mordaza_fija_-51": 59.401,
     "TORNILLO_mordaza_fija_-27": 50.663,
     "TORNILLO_bandeja_prisionero": 50.103,
-    "TORNILLO_peine_0": 0.4,
-    "TORNILLO_peine_1": 0.4,
     "TUERCA_placas_-39.244_-39.244": 6.0,
     "TUERCA_placas_-39.244_39.244": 6.0,
     "TUERCA_placas_39.244_-39.244": 6.0,
@@ -43,11 +40,7 @@
     "TUERCA_puente_motor_21": 16.477,
     "TUERCA_mordaza_fija_-51": 59.0,
     "TUERCA_mordaza_fija_-27": 49.62,
-    "TUERCA_bandeja_prisionero": 54.386,
-    "TUERCA_peine_0": 0.5,
-    "TUERCA_peine_1": 0.5,
-    "21a_embellecedor_corto": 8.0,
-    "21b_embellecedor_alto": 8.0
+    "TUERCA_bandeja_prisionero": 54.386
   },
   "new_part_gaps_mm": {
     "bandeja_vs_01_carcasa_v4_patas_pedestal_integrados": 0.45,
@@ -56,18 +49,14 @@
     "bandeja_vs_02_placa_inferior_con_canal": 9.699,
     "bandeja_vs_TORNILLO_mordaza_fija_-51": 1.963,
     "bandeja_vs_TORNILLO_mordaza_fija_-27": 12.106,
-    "21a_embellecedor_corto_vs_02_placa_inferior_con_canal": 0.5,
-    "21a_embellecedor_corto_vs_04_aro_con_techo_y_separadores": 0.5,
-    "21a_embellecedor_corto_vs_07_reserva_centrada": 0.5,
-    "21a_embellecedor_corto_vs_09_tapa_reserva_centrada": 49.945,
-    "21a_embellecedor_corto_vs_20_peine_flexible_TPU": 4.295,
-    "21a_embellecedor_corto_vs_TORNILLO_placas_39.244_39.244": 0.55,
-    "21b_embellecedor_alto_vs_02_placa_inferior_con_canal": 0.5,
-    "21b_embellecedor_alto_vs_04_aro_con_techo_y_separadores": 0.5,
-    "21b_embellecedor_alto_vs_07_reserva_centrada": 0.5,
-    "21b_embellecedor_alto_vs_09_tapa_reserva_centrada": 0.5,
-    "21b_embellecedor_alto_vs_20_peine_flexible_TPU": 17.616,
-    "21b_embellecedor_alto_vs_TORNILLO_placas_39.244_39.244": 17.111
+    "tapa_vs_02_placa_inferior_con_canal": 0.5,
+    "tapa_vs_04_aro_con_techo_y_separadores": 0.5,
+    "tapa_vs_07_reserva_con_barredor": 0.3,
+    "tapa_vs_TORNILLO_placas_39.244_39.244": 17.111,
+    "tapa_vs_01_carcasa_v4_patas_pedestal_integrados": 0.0,
+    "barredor_vs_04_aro_con_techo_y_separadores": 0.825,
+    "barredor_vs_03_rotor_15x8_con_cubo": 0.6,
+    "barredor_vs_06_cono_repartidor_punta_arriba": 0.769
   },
   "pill_release_path": [
     {
@@ -162,11 +151,11 @@
     },
     {
       "file": "04_aro_con_techo_y_separadores.stl",
-      "triangles": 7672,
+      "triangles": 6976,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0237,
-      "volume_relative_error": 0.000265,
+      "volume_relative_error": 0.000262,
       "print_height_mm": 12.8
     },
     {
@@ -179,22 +168,13 @@
       "print_height_mm": 35.0
     },
     {
-      "file": "07_reserva_centrada.stl",
-      "triangles": 4440,
+      "file": "07_reserva_con_barredor.stl",
+      "triangles": 8444,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0237,
-      "volume_relative_error": 0.000263,
-      "print_height_mm": 61.0
-    },
-    {
-      "file": "09_tapa_reserva_centrada.stl",
-      "triangles": 5068,
-      "bad_edges": 0,
-      "winding_errors": 0,
-      "dimension_max_error_mm": 0.0206,
-      "volume_relative_error": 0.000264,
-      "print_height_mm": 15.0
+      "volume_relative_error": 0.000767,
+      "print_height_mm": 64.8
     },
     {
       "file": "10_bancada_motor_32x25.stl",
@@ -233,43 +213,24 @@
       "print_height_mm": 47.5
     },
     {
-      "file": "20_peine_flexible_TPU.stl",
-      "triangles": 1460,
+      "file": "21_tapa_cuadrada.stl",
+      "triangles": 6524,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0,
-      "volume_relative_error": 3.7e-05,
-      "print_height_mm": 8.0
-    },
-    {
-      "file": "21a_embellecedor_corto.stl",
-      "triangles": 3352,
-      "bad_edges": 0,
-      "winding_errors": 0,
-      "dimension_max_error_mm": 0.0,
-      "volume_relative_error": 0.000103,
-      "print_height_mm": 31.0
-    },
-    {
-      "file": "21b_embellecedor_alto.stl",
-      "triangles": 3352,
-      "bad_edges": 0,
-      "winding_errors": 0,
-      "dimension_max_error_mm": 0.0,
-      "volume_relative_error": 3e-05,
-      "print_height_mm": 83.8
+      "volume_relative_error": 2.3e-05,
+      "print_height_mm": 86.6
     }
   ],
   "fasteners": {
     "M3x30": 6,
     "M3x12": 9,
     "prisionero M3x10": 1,
-    "M3x8": 2,
     "prisionero M3x6": 2
   },
-  "fastener_count": 20,
-  "nut_count": 20,
-  "unique_print_files": 14,
-  "printed_parts_in_assembly": 13,
+  "fastener_count": 18,
+  "nut_count": 18,
+  "unique_print_files": 11,
+  "printed_parts_in_assembly": 11,
   "physical_validation": false
 }

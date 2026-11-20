@@ -28,41 +28,25 @@ BED, MARGIN, GAP = 255.0, 2.0, 4.0
 PLACAS = {
     'Placa_1_estructura_PLA_capa_0.28': {
         'capa': 0.28, 'material': 'PLA o PETG',
-        'nota': 'Piezas de estructura. Capa gruesa = impresión más rápida.',
+        'nota': 'Carcasa, reserva y piezas sin holguras finas. Capa gruesa = impresión más rápida.',
         'piezas': [
             ('01_carcasa_v4_patas_pedestal_integrados', 65.0, 65.0, 0),
-            ('07_reserva_centrada', 192.5, 62.5, 0),
-            ('09_tapa_reserva_centrada', 65.0, 192.5, 0),
+            ('07_reserva_con_barredor', 192.5, 62.5, 0),
+            ('06_cono_repartidor_punta_arriba', 65.0, 192.5, 0),
             ('10_bancada_motor_32x25', 160.0, 156.0, 0),
             ('16_bandeja_pesaje_inclinada', 215.0, 166.0, 0),
             ('11_puente_motor', 162.0, 200.0, 0),
             ('13_mordaza_fija_celda_tuercas', 215.0, 225.0, 90),
         ]},
-    'Placa_2_mecanismo_PLA_capa_0.20': {
+    'Placa_2_mecanismo_y_tapa_PLA_capa_0.20': {
         'capa': 0.20, 'material': 'PLA o PETG',
-        'nota': 'Piezas con holguras finas (disco, cono, aro, placa). El cono 06 va '
-                'dentro del hueco central del embellecedor.',
+        'nota': 'Disco, aro y placa (holguras finas) y la tapa cuadrada, que queda mejor a capa fina.',
         'piezas': [
-            ('21a_embellecedor_corto', 65.0, 65.0, 0),
-            ('06_cono_repartidor_punta_arriba', 65.0, 65.0, 0),
+            ('21_tapa_cuadrada', 65.0, 65.0, 0),
             ('02_placa_inferior_con_canal', 192.5, 62.5, 0),
             ('04_aro_con_techo_y_separadores', 65.0, 192.5, 0),
             ('03_rotor_15x8_con_cubo', 192.5, 192.5, 0),
         ]},
-    'Placa_2B_mecanismo_PLA_capa_0.20_embellecedor_ALTO': {
-        'capa': 0.20, 'material': 'PLA o PETG',
-        'nota': 'Igual que la placa 2, pero con el embellecedor alto. Imprime la 2 o la 2B, no las dos.',
-        'piezas': [
-            ('21b_embellecedor_alto', 65.0, 65.0, 0),
-            ('06_cono_repartidor_punta_arriba', 65.0, 65.0, 0),
-            ('02_placa_inferior_con_canal', 192.5, 62.5, 0),
-            ('04_aro_con_techo_y_separadores', 65.0, 192.5, 0),
-            ('03_rotor_15x8_con_cubo', 192.5, 192.5, 0),
-        ]},
-    'Placa_3_peine_TPU_95A': {
-        'capa': 0.20, 'material': 'TPU 95A',
-        'nota': 'Material flexible: placa aparte. Imprime lento (20-30 mm/s).',
-        'piezas': [('20_peine_flexible_TPU', 127.5, 127.5, 0)]},
 }
 
 
