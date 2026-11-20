@@ -5,8 +5,7 @@
   "rotor_clearances_mm": {
     "01_carcasa_v4_patas_pedestal_integrados": 4.4,
     "02_placa_inferior_con_canal": 0.4,
-    "04_aro_con_techo_y_separadores": 0.299,
-    "07_reserva_con_barredor": 0.6,
+    "07_reserva_con_barredor": 0.299,
     "10_bancada_motor_32x25": 12.777,
     "11_puente_motor": 7.0,
     "13_mordaza_fija_celda_tuercas": 48.212,
@@ -50,13 +49,11 @@
     "bandeja_vs_TORNILLO_mordaza_fija_-51": 1.963,
     "bandeja_vs_TORNILLO_mordaza_fija_-27": 12.106,
     "tapa_vs_02_placa_inferior_con_canal": 0.5,
-    "tapa_vs_04_aro_con_techo_y_separadores": 0.5,
     "tapa_vs_07_reserva_con_barredor": 0.3,
     "tapa_vs_TORNILLO_placas_39.244_39.244": 17.111,
     "tapa_vs_01_carcasa_v4_patas_pedestal_integrados": 0.0,
-    "barredor_vs_04_aro_con_techo_y_separadores": 0.825,
-    "barredor_vs_03_rotor_15x8_con_cubo": 0.6,
-    "barredor_vs_06_cono_repartidor_punta_arriba": 0.769
+    "barredor_vs_03_rotor_15x8_con_cubo": 0.4,
+    "barredor_vs_06_cono_repartidor_punta_arriba": 0.411
   },
   "pill_release_path": [
     {
@@ -133,7 +130,7 @@
     },
     {
       "file": "02_placa_inferior_con_canal.stl",
-      "triangles": 5856,
+      "triangles": 6488,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0221,
@@ -150,15 +147,6 @@
       "print_height_mm": 21.4
     },
     {
-      "file": "04_aro_con_techo_y_separadores.stl",
-      "triangles": 6976,
-      "bad_edges": 0,
-      "winding_errors": 0,
-      "dimension_max_error_mm": 0.0237,
-      "volume_relative_error": 0.000262,
-      "print_height_mm": 12.8
-    },
-    {
       "file": "06_cono_repartidor_punta_arriba.stl",
       "triangles": 17522,
       "bad_edges": 0,
@@ -169,12 +157,12 @@
     },
     {
       "file": "07_reserva_con_barredor.stl",
-      "triangles": 8444,
+      "triangles": 11714,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0237,
-      "volume_relative_error": 0.000767,
-      "print_height_mm": 64.8
+      "volume_relative_error": 0.000524,
+      "print_height_mm": 75.8
     },
     {
       "file": "10_bancada_motor_32x25.stl",
@@ -230,7 +218,7 @@
   },
   "fastener_count": 18,
   "nut_count": 18,
-  "unique_print_files": 11,
-  "printed_parts_in_assembly": 11,
+  "unique_print_files": 10,
+  "printed_parts_in_assembly": 10,
   "physical_validation": false
 }

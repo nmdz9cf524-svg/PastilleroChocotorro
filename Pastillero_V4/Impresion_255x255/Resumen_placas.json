@@ -2,10 +2,9 @@
   "Placa_1_estructura_PLA_capa_0.28": {
     "material": "PLA o PETG",
     "altura_capa_mm": 0.28,
-    "nota": "Carcasa, reserva y piezas sin holguras finas. Capa gruesa = impresión más rápida.",
+    "nota": "Carcasa y piezas sin holguras finas. Capa gruesa = impresión más rápida.",
     "piezas": [
       "01_carcasa_v4_patas_pedestal_integrados",
-      "07_reserva_con_barredor",
       "06_cono_repartidor_punta_arriba",
       "10_bancada_motor_32x25",
       "16_bandeja_pesaje_inclinada",
@@ -13,21 +12,21 @@
       "13_mordaza_fija_celda_tuercas"
     ],
     "altura_max_mm": 92.0,
-    "volumen_solido_cm3": 375.8,
-    "separacion_minima_mm": 5.0
+    "volumen_solido_cm3": 293.5,
+    "separacion_minima_mm": 7.5
   },
   "Placa_2_mecanismo_y_tapa_PLA_capa_0.20": {
     "material": "PLA o PETG",
     "altura_capa_mm": 0.2,
-    "nota": "Disco, aro y placa (holguras finas) y la tapa cuadrada, que queda mejor a capa fina.",
+    "nota": "Reserva (con techo y separadores), disco y placa: holguras finas. Y la tapa cuadrada.",
     "piezas": [
       "21_tapa_cuadrada",
+      "07_reserva_con_barredor",
       "02_placa_inferior_con_canal",
-      "04_aro_con_techo_y_separadores",
       "03_rotor_15x8_con_cubo"
     ],
     "altura_max_mm": 86.6,
-    "volumen_solido_cm3": 247.4,
+    "volumen_solido_cm3": 338.2,
     "separacion_minima_mm": 5.0
   }
 }

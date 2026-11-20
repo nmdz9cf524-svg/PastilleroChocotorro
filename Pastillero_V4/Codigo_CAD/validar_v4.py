@@ -93,12 +93,12 @@ for n in ['01_carcasa_v4_patas_pedestal_integrados', '13_mordaza_fija_celda_tuer
           '02_placa_inferior_con_canal', 'TORNILLO_mordaza_fija_-51', 'TORNILLO_mordaza_fija_-27']:
     gaps['bandeja_vs_' + n] = round(tray.distance(allshapes[n]), 3)
 cap = parts['21_tapa_cuadrada']
-for n in ['02_placa_inferior_con_canal', '04_aro_con_techo_y_separadores', '07_reserva_con_barredor',
+for n in ['02_placa_inferior_con_canal', '07_reserva_con_barredor',
           'TORNILLO_placas_39.244_39.244', '01_carcasa_v4_patas_pedestal_integrados']:
     gaps['tapa_vs_' + n] = round(cap.distance(allshapes[n]), 3)
-# Barredor: la parte de la reserva que baja del plano de apoyo (z<105.8).
+# Barredor y techo: la parte de la reserva que queda sobre el disco (z 100..105.7, r<51).
 sweeper = parts['07_reserva_con_barredor'].intersect(cq.Solid.makeCylinder(51, 5.7, V(0, 0, 100.0)))  # sin el pin (r=56)
-for n in ['04_aro_con_techo_y_separadores', '03_rotor_15x8_con_cubo', '06_cono_repartidor_punta_arriba']:
+for n in ['03_rotor_15x8_con_cubo', '06_cono_repartidor_punta_arriba']:
     gaps['barredor_vs_' + n] = round(sweeper.distance(allshapes[n]), 3)
 print('GAPS', gaps, flush=True)
 assert all(g >= 0.4 for k, g in gaps.items() if k.startswith(('bandeja', 'barredor'))), gaps

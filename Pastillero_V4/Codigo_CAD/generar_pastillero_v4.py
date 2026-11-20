@@ -144,6 +144,10 @@ plate = cyl(60, 4, z=89)
 plate = plate.cut(cq.Workplane('XY', origin=(0, -40, 88)).slot2D(16.8, 9.6, angle=90)
                   .extrude(6).val())
 plate = plate.cut(cyl(10.5, 6, z=88))
+# Agujero del poste de orientación de la reserva: solo entra en una posición,
+# con el techo encima de la ventana de salida.
+KEY_XY, KEY_R = (0.0, 56.0), 1.5
+plate = plate.cut(cyl(KEY_R + 0.2, 2.3, KEY_XY[0], KEY_XY[1], 93.0 - 2.2))
 for x in (-C, C):
     for y in (-C, C):
         plate = plate.cut(cyl(1.7, 6, x, y, 88))
@@ -168,7 +172,10 @@ add('02_placa_inferior_con_canal', plate.fuse(canal),
     'Placa inferior V3 con el canal 17 integrado (sin M3x8 ni tuercas). '
     'Imprimir con la cara superior de la placa sobre la cama.')
 
-# ------------------------------------------------------ 04 aro + separadores
+# ------------------------------- aro con techo + separadores (van dentro de 07)
+# Ya no se imprimen aparte: el aro con su techo y los separadores forman parte
+# de la reserva 07. El techo sigue tapando la salida para que no caigan
+# pastillas de golpe, y los separadores fijan el hueco del disco.
 aro = v3('04_aro_con_techo_descarga')
 sep = v3('05_separador_placas_x4')      # en (C, C)
 for x in (-C, C):
@@ -183,12 +190,6 @@ roof_wedge = cq.Workplane('XY').polyline([(0, 0), (100 * math.cos(a0), 100 * mat
 roof_zone = cyl(51.8, 4, z=101.8).cut(cyl(31.2, 6, z=101)).intersect(roof_wedge)
 for x, y in V3P['wiper_bolts_xy']:
     aro = aro.fuse(cyl(3.6, 4, x, y, 101.8).intersect(roof_zone))
-# Agujero para el pin de la reserva: solo entra en una orientación.
-PIN_XY, PIN_R = (0.0, 56.0), 1.5
-aro = aro.cut(cyl(PIN_R + 0.2, 2.5, PIN_XY[0], PIN_XY[1], 105.8 - 2.4))
-add('04_aro_con_techo_y_separadores', aro,
-    'Aro con techo V3 con los cuatro separadores integrados y agujero del pin '
-    'de orientación de la reserva. Imprimir boca abajo.')
 
 # ---------------------------------------- 07 reserva con barredor integrado
 # Reserva V3 (Ø98 interior, pestaña Ø120) + barredor rígido que sustituye al
@@ -217,10 +218,25 @@ env = (cq.Workplane('XZ').polyline([(R_IN, SWEEP_Z), (R_OUT, SWEEP_Z), (R_OUT, 1
                                     (49.0 + 0.01, 124.5), (R_IN, SWEEP_Z + 4.0 + 0.01)]).close()
        .revolve(360, (0, 0, 0), (0, 1, 0)).val())
 res = res.fuse(blade.intersect(env))
-res = res.fuse(cyl(PIN_R, 2.0, PIN_XY[0], PIN_XY[1], 105.8 - 2.0))   # pin de orientación
+# Aro, techo y separadores integrados.
+res = res.fuse(aro)
+# Relleno a 45° sobre el techo, por dentro de la reserva: hace imprimible el
+# techo boca abajo y la pastilla que cae encima resbala hacia el cono.
+hood = (cq.Workplane('XZ').polyline([(31.2, 105.8 - 0.01), (49.0 + 0.5, 105.8 - 0.01), (49.0 + 0.5, 124.1),
+                                     (49.0, 123.6), (31.2, 105.8 + 0.01)]).close()
+        .revolve(360, (0, 0, 0), (0, 1, 0)).val())
+roof_wedge_tall = cq.Workplane('XY').polyline([(0, 0), (100 * math.cos(a0), 100 * math.sin(a0)),
+                                               (100 * math.cos(a1), 100 * math.sin(a1))]).close().extrude(30).translate((0, 0, 101.8)).val()
+res = res.fuse(hood.intersect(roof_wedge_tall))
+for x in (-C, C):
+    for y in (-C, C):
+        res = res.cut(cyl(1.7, 30, x, y, 90))                        # paso M3x30 limpio
+# Poste de orientación: baja hasta la placa 02 y entra en su agujero.
+res = res.fuse(cyl(KEY_R, 101.8 - 91.0 + 0.01, KEY_XY[0], KEY_XY[1], 91.0))
 add('07_reserva_con_barredor', res,
-    'Reserva V3 con barredor rígido integrado (sustituye al peine 20 de TPU), '
-    'chaflán bajo la pestaña y pin de orientación. Imprimir boca abajo.')
+    'Reserva con barredor rígido, aro con techo y separadores integrados '
+    '(sustituye a 04, 05 y al peine 20 de TPU). Poste de orientación hacia la '
+    'placa 02. Imprimir boca abajo.')
 
 # ------------------------------------------ 16 bandeja inclinada, una pieza
 # Celda (referencia) 50x15x7: x -25..25, y -46.5..-31.5, z 24..31. Extremo
@@ -324,7 +340,7 @@ v3params.update({'version': 'V4', 'tray_grub_xy': [GX, GY], 'overload_stop_gap_m
                  round(SZ0 - STOP_TOP, 2), 'feet_height_mm': FEET_H,
                  'sweeper': {'z_bottom': SWEEP_Z, 'r_in': R_IN, 'deg_attack_in': A_IN,
                              'deg_attack_out': A_OUT, 'deg_end': A_END},
-                 'reservoir_pin_xy': list(PIN_XY), 'cap_top_z': TOP,
+                 'reservoir_key_xy': list(KEY_XY), 'cap_top_z': TOP,
                  'tray_slope_deg': 25, 'tray_floor': {'z_ref_at_y_-55': Z_REF, 'y_knee': Y_KNEE,
                  'z_pocket': round(Z_POCKET, 3), 'y_back': TY_BACK, 'y_front': TY_FRONT}})
 json.dump(v3params, open(OUT / 'Parametros_V4.json', 'w'), indent=2)

@@ -13,7 +13,7 @@ __CSS__
   <header class="top">
     <h1>Ensamble Pastillero V4</h1>
     <span class="tag">STEP real · mm</span>
-    <p>Guía animada con la geometría del ensamble V4: 11 piezas impresas, 18 tornillos y prisioneros, 18 tuercas.</p>
+    <p>Guía animada con la geometría del ensamble V4: 10 piezas impresas, 18 tornillos y prisioneros, 18 tuercas.</p>
   </header>
   <main class="layout">
     <section class="stage" id="stage" aria-label="Vista 3D del ensamble">
@@ -104,7 +104,6 @@ __DATA__
   def(['prisionero_rotor_X', 'prisionero_rotor_Y'], { hw: true, col: 'screw', radial: 22 });
   ROTOR_GROUP.forEach((n) => (P[n].lift = { steps: [7], v: [0, 0, 95] }));
 
-  def('04_aro_con_techo_y_separadores', { label: '04 Aro con separadores', col: 'plate', ex: [0, 0, 70], ghost: 'mech' });
 
   def('07_reserva_con_barredor', { label: '07 Reserva con barredor', col: 'hopper', ex: [0, 0, 90], ghost: 'top' });
   def(BOLT_PLACAS.map((s) => 'TORNILLO_placas_' + s), { hw: true, col: 'screw', ex: [0, 0, 60] });
@@ -117,7 +116,7 @@ __DATA__
       text: ['Así queda el Pastillero V4 terminado. Las animaciones usan la geometría real de Pastillero_V4_ensamble.step.',
              'Avanza con Siguiente o con las flechas del teclado. En cada paso solo se mueven las piezas nuevas; las montadas antes se quedan en su sitio.',
              'Imprime las piezas con las placas de Impresion_255x255 y limpia rebabas antes de armar.'],
-      parts: ['11 piezas impresas'], hw: ['M3×30 ×6', 'M3×12 ×9', 'Prisionero M3×6 ×2', 'Prisionero M3×10 ×1', 'Tuerca M3 ×18'],
+      parts: ['10 piezas impresas'], hw: ['M3×30 ×6', 'M3×12 ×9', 'Prisionero M3×6 ×2', 'Prisionero M3×10 ×1', 'Tuerca M3 ×18'],
       note: 'Usa tornillos de cabeza de botón (Ø5.7 × 1.65 mm). Las cabezas cilíndricas altas pueden chocar con el rotor o con la bandeja.',
       view: { t: [0, -10, 92], az: 35, el: 24, d: 420 } },
     { title: 'Carcasa con patas integradas', stages: [['01_carcasa_v4_patas_pedestal_integrados']],
@@ -161,7 +160,8 @@ __DATA__
     { title: 'Placa inferior con canal', ghost: true, stages: [['02_placa_inferior_con_canal']],
       text: ['Asienta la placa (02) sobre las columnas, con la ventana de descarga al frente.',
              'El canal ya viene impreso con la placa. Su boca está cortada en diagonal, 10 mm sobre la rampa de la bandeja.',
-             'Comprueba que el canal no toque la bandeja: la bandeja tiene que colgar libre de la celda.'],
+             'Comprueba que el canal no toque la bandeja: la bandeja tiene que colgar libre de la celda.',
+             'El agujero pequeño de la cara de arriba es para el poste de la reserva.'],
       parts: ['02 Placa con canal'], hw: [], hwNone: 'Se fija en el paso de la reserva',
       view: { t: [0, -30, 65], az: 70, el: 14, d: 260 } },
     { title: 'Cono y rotor, fuera de la caja',
@@ -178,16 +178,10 @@ __DATA__
              'Gira el disco a mano: debe moverse libre, sin rozar la placa.'],
       parts: ['Conjunto rotor + cono'], hw: ['Llave Allen 1.5 mm'],
       view: { t: [0, 0, 92], az: 30, el: 30, d: 250 } },
-    { title: 'Aro con techo', ghost: true, stages: [['04_aro_con_techo_y_separadores']],
-      text: ['Baja el aro (04) sobre la placa con el techo encima de la salida delantera.',
-             'Los cuatro separadores ya vienen impresos: apoyan en la placa y dejan el hueco exacto para el disco.',
-             'El agujero pequeño de la cara de arriba es para el pin de la reserva.'],
-      parts: ['04 Aro con separadores'], hw: [], hwNone: 'Se fija en el paso siguiente',
-      view: { t: [0, 0, 100], az: 25, el: 32, d: 260 } },
     { title: 'Reserva con barredor', ghost: true,
       stages: [['07_reserva_con_barredor'], BOLT_PLACAS.map((s) => 'TORNILLO_placas_' + s), BOLT_PLACAS.map((s) => 'TUERCA_placas_' + s)],
-      text: ['Gira la reserva (07) hasta que su pin entre en el agujero del aro. Solo entra en una posición.',
-             'Así el barredor queda justo antes del techo, a 0.6 mm del disco. Ya no hace falta el peine de TPU.',
+      text: ['La reserva (07) ya trae el techo, los cuatro separadores y el barredor: no hay aro ni peine sueltos.',
+             'Bájala sobre la placa girándola hasta que su poste entre en el agujero de la placa. Solo entra en una posición: el techo queda encima de la salida y el barredor justo antes.',
              'Cierra todo con cuatro M3×30 por los huecos de la pestaña; roscan en las tuercas de las columnas. Aprieta en cruz.'],
       parts: ['07 Reserva con barredor'], hw: ['M3×30 ×4', 'Tuerca M3 ×4'],
       note: 'Gira el disco a mano: las cavidades deben pasar bajo el barredor sin rozar.',
