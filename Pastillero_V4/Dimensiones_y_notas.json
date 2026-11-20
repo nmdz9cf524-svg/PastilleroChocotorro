@@ -14,7 +14,7 @@
       120.0,
       43.0
     ],
-    "volume_mm3": 54527.2,
+    "volume_mm3": 53293.1,
     "note": "Placa inferior V3 con el canal 17 integrado (sin M3x8 ni tuercas). Imprimir con la cara superior de la placa sobre la cama."
   },
   "03_rotor_15x8_con_cubo": {
@@ -89,14 +89,14 @@
     "volume_mm3": 1288.0,
     "note": "Mordaza superior del extremo fijo. Dos tuercas M3 en su cara superior; los M3x30 entran desde debajo de la carcasa."
   },
-  "16_bandeja_pesaje_una_pieza": {
+  "16_bandeja_pesaje_inclinada": {
     "size_mm": [
-      49.5,
-      35.0,
-      25.2
+      47.5,
+      58.5,
+      42.821
     ],
-    "volume_mm3": 9675.9,
-    "note": "Sustituye 14, 15 y 16. Manguito para el extremo móvil de la celda y un prisionero M3x6 con tuerca. Imprimir de pie sobre la cara +X."
+    "volume_mm3": 13568.2,
+    "note": "Sustituye 14, 15 y 16. Fondo a 25° hacia un bolsillo que sale por la ventana frontal. Manguito para el extremo móvil de la celda y prisionero M3x10 con tuerca. Imprimir de pie sobre la cara +X."
   },
   "20_peine_flexible_TPU": {
     "size_mm": [

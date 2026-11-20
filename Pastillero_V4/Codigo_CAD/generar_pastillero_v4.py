@@ -11,12 +11,12 @@ Cambios respecto a V3:
   21  Embellecedor nuevo entre la carcasa y la reserva (versión corta y alta).
 
 Uso: python generar_pastillero_v4.py [directorio_salida]
-Requiere Python 3.12, CadQuery 2.7 y la carpeta Pastillero_V3 junto a Pastillero_V4.
+Requiere Python 3.12 y CadQuery 2.7. Las piezas que vienen de V3 están en fuentes_V3/.
 """
-import cadquery as cq, pathlib, json, sys
+import cadquery as cq, pathlib, json, sys, math
 
 ROOT = pathlib.Path(__file__).resolve().parent
-V3 = ROOT.parents[1] / 'Pastillero_V3' / 'STEP_piezas'
+V3 = ROOT / 'fuentes_V3'                # copia de los STEP de V3 que se reutilizan
 OUT = pathlib.Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else ROOT.parent
 OUT.mkdir(parents=True, exist_ok=True)
 V = cq.Vector
@@ -46,6 +46,26 @@ def rrect(w, r, z0, h, inset=0.0):
 def hexprism(x, y, z, h, d=6.7):
     return cq.Workplane('XY', origin=(x, y, z)).polygon(6, d).extrude(h).val()
 
+
+def extr_yz(pts, x0, x1):
+    """Perfil (y, z) extruido en X entre x0 y x1."""
+    return cq.Workplane('YZ', origin=(x0, 0, 0)).polyline(pts).close().extrude(x1 - x0).val()
+
+
+# Geometría de la bandeja inclinada (16), compartida con el canal de la placa 02.
+SLOPE = math.tan(math.radians(25))      # fondo a 25°: la pastilla resbala sola
+FLOOR, TW, WALL_H, LIP_H = 2.0, 2.0, 12.0, 6.0
+TY_BACK, TY_FRONT = -21.5, -80.0        # bandeja de -21.5 a -80 (sale 17.5 mm)
+Y_KNEE = -62.0                          # fin de la rampa / inicio del bolsillo
+Z_REF = 37.0                            # cara superior del fondo en y=-55
+
+
+def floor_top(y):
+    return Z_REF + (y + 55.0) * SLOPE if y >= Y_KNEE else Z_REF + (Y_KNEE + 55.0) * SLOPE
+
+
+Z_POCKET = floor_top(Y_KNEE)
+CANAL_GAP = 10.0                        # hueco canal-rampa para que pase la pastilla
 
 parts, notes = {}, {}
 
@@ -140,6 +160,10 @@ for i in range(400):
     zf = z
 for x in (-14, 14):
     canal = canal.fuse(cyl(3.2, 89 - zf, x, -40, zf))
+# Boca del canal recortada en paralelo a la rampa de la bandeja, con 10 mm de
+# paso: la pastilla cae, resbala y sale por debajo de la pared frontal.
+canal = canal.cut(extr_yz([(-70, 0), (-70, floor_top(-70) + CANAL_GAP),
+                           (-15, floor_top(-15) + CANAL_GAP), (-15, 0)], -30, 30))
 add('02_placa_inferior_con_canal', plate.fuse(canal),
     'Placa inferior V3 con el canal 17 integrado (sin M3x8 ni tuercas). '
     'Imprimir con la cara superior de la placa sobre la cama.')
@@ -153,29 +177,37 @@ for x in (-C, C):
 add('04_aro_con_techo_y_separadores', aro,
     'Aro con techo V3 con los cuatro separadores integrados. Imprimir boca abajo.')
 
-# ------------------------------------------------- 16 bandeja de una pieza
+# ------------------------------------------ 16 bandeja inclinada, una pieza
 # Celda (referencia) 50x15x7: x -25..25, y -46.5..-31.5, z 24..31. Extremo
 # móvil en +X. La bandeja abraza el extremo con un manguito y se fija con un
-# prisionero M3x6 que se aprieta desde dentro de la bandeja.
+# prisionero M3x10 que se aprieta desde dentro de la bandeja.
+# El fondo baja a 25° hacia la ventana frontal y termina en un bolsillo que
+# sale por la ventana: la pastilla resbala sola y se toma desde fuera, sin
+# dejar de estar sobre la celda (se sigue pesando).
 CL = 0.2
-TX0, TX1 = -22.5, 27.0                  # bandeja
-TY0, TY1 = -56.5, -21.5
-TZ0, TZ1, FLOOR, TW = 35.0, 47.0, 2.0, 2.0
-tray = box(TX0, TX1, TY0, TY1, TZ0, TZ1)
-inner = (cq.Workplane('XY', origin=((TX0 + TX1) / 2, (TY0 + TY1) / 2, TZ0 + FLOOR))
-         .rect(TX1 - TX0 - 2 * TW, TY1 - TY0 - 2 * TW).extrude(TZ1).edges('|Z').fillet(4).val())
-tray = tray.cut(inner)
+TX0, TX1 = -22.5, 25.0                  # ventana de la carcasa: x -27..27
 SZ0 = 24 - CL - 2.0                     # fondo del manguito (21.8)
-sleeve = box(10, TX1, -46.5 - CL - 3, -31.5 + CL + 3, SZ0, TZ0 + 0.01)
-sleeve = sleeve.cut(box(9, 25 + 0.3, -46.5 - CL, -31.5 + CL, 24 - CL, 31 + CL))
-tray = tray.fuse(sleeve)
+sleeve = box(10, TX1, -46.5 - CL - 3, -31.5 + CL + 3, SZ0, 70)
+sleeve = sleeve.cut(box(9, TX1 + 1, -46.5 - CL, -31.5 + CL, 24 - CL, 31 + CL))
+tray = sleeve.intersect(extr_yz([(-90, 0), (-90, Z_POCKET), (Y_KNEE, Z_POCKET),
+                                 (TY_BACK, floor_top(TY_BACK)), (TY_BACK, 0)], TX0, TX1))
+outer = extr_yz([(TY_BACK, floor_top(TY_BACK) - FLOOR), (Y_KNEE, Z_POCKET - FLOOR),
+                 (TY_FRONT, Z_POCKET - FLOOR), (TY_FRONT, Z_POCKET + WALL_H),
+                 (Y_KNEE, Z_POCKET + WALL_H), (TY_BACK, floor_top(TY_BACK) + WALL_H)], TX0, TX1)
+cavity = extr_yz([(TY_BACK + TW, floor_top(TY_BACK + TW)), (Y_KNEE, Z_POCKET),
+                  (TY_FRONT + TW, Z_POCKET), (TY_FRONT + TW, 120), (TY_BACK + TW, 120)],
+                 TX0 + TW, TX1 - TW)
+tray = tray.fuse(outer).cut(cavity)
+# Labio frontal más bajo que las paredes para meter los dedos.
+tray = tray.cut(box(TX0 + TW, TX1 - TW, TY_FRONT - 1, TY_FRONT + TW + 0.01, Z_POCKET + LIP_H, 120))
 GX, GY = 18.0, -39.0
-tray = tray.cut(cyl(1.7, 20, GX, GY, 30))                         # prisionero
+tray = tray.cut(cyl(1.7, 30, GX, GY, 30))                         # prisionero
 tray = tray.cut(hexprism(GX, GY, 32.0, 2.6))                       # tuerca
 tray = tray.cut(box(GX, TX1 + 1, GY - 2.95, GY + 2.95, 32.0, 34.6))  # ranura
-add('16_bandeja_pesaje_una_pieza', tray,
-    'Sustituye 14, 15 y 16. Manguito para el extremo móvil de la celda y un '
-    'prisionero M3x6 con tuerca. Imprimir de pie sobre la cara +X.')
+add('16_bandeja_pesaje_inclinada', tray,
+    'Sustituye 14, 15 y 16. Fondo a 25° hacia un bolsillo que sale por la '
+    'ventana frontal. Manguito para el extremo móvil de la celda y prisionero '
+    'M3x10 con tuerca. Imprimir de pie sobre la cara +X.')
 
 # ------------------------------------------- 13 mordaza fija con tuercas
 # Misma envolvente que V3 (13x32x3.5). Tuercas M3 en alojamientos hexagonales
@@ -242,7 +274,7 @@ for n, s in sorted(parts.items()):
     q = q.translate((-(b.xmin + b.xmax) / 2, -(b.ymin + b.ymax) / 2, -b.zmin))
     cq.exporters.export(q, str(OUT / 'STL' / (n + '.stl')), tolerance=.025, angularTolerance=.08)
     cq.exporters.export(s, str(OUT / 'STEP_piezas' / (n + '.step')))
-REFS = pathlib.Path(V3).parent / 'Referencias_NO_imprimir'
+REFS = V3
 for n in ['REF_motor_32x25', 'REF_eje_6x35', 'REF_celda_50x15x7']:
     cq.exporters.export(cq.importers.importStep(str(REFS / (n + '.step'))).val(),
                         str(OUT / 'Referencias_NO_imprimir' / (n + '.step')))
@@ -251,8 +283,10 @@ meta = {n: {'size_mm': [round(s.BoundingBox().xlen, 3), round(s.BoundingBox().yl
             'volume_mm3': round(s.Volume(), 1), 'note': notes[n]}
         for n, s in sorted(parts.items())}
 json.dump(meta, open(OUT / 'Dimensiones_y_notas.json', 'w'), indent=2, ensure_ascii=False)
-v3params = json.load(open(pathlib.Path(V3).parent / 'Parametros_V3.json'))
+v3params = json.load(open(V3 / 'Parametros_V3.json'))
 v3params.update({'version': 'V4', 'tray_grub_xy': [GX, GY], 'overload_stop_gap_mm':
-                 round(SZ0 - STOP_TOP, 2), 'feet_height_mm': FEET_H})
+                 round(SZ0 - STOP_TOP, 2), 'feet_height_mm': FEET_H,
+                 'tray_slope_deg': 25, 'tray_floor': {'z_ref_at_y_-55': Z_REF, 'y_knee': Y_KNEE,
+                 'z_pocket': round(Z_POCKET, 3), 'y_back': TY_BACK, 'y_front': TY_FRONT}})
 json.dump(v3params, open(OUT / 'Parametros_V4.json', 'w'), indent=2)
 print('BUILT', len(parts), 'valid unique solids', flush=True)
