@@ -2,31 +2,30 @@
   "Placa_1_estructura_PLA_capa_0.28": {
     "material": "PLA o PETG",
     "altura_capa_mm": 0.28,
-    "nota": "Carcasa y piezas sin holguras finas. Capa gruesa = impresión más rápida.",
+    "nota": "Carcasa con botón, tapa de llenado, rampa, bancada y cono. Capa gruesa = impresión más rápida.",
     "piezas": [
-      "01_carcasa_v4_patas_pedestal_integrados",
-      "06_cono_repartidor_punta_arriba",
-      "10_bancada_motor_32x25",
-      "16_bandeja_pesaje_inclinada",
-      "11_puente_motor",
-      "13_mordaza_fija_celda_tuercas"
+      "01_carcasa_v4",
+      "09_tapa_llenado",
+      "16_rampa_salida",
+      "10_bancada_28BYJ48",
+      "06_cono_repartidor_punta_arriba"
     ],
     "altura_max_mm": 92.0,
-    "volumen_solido_cm3": 293.5,
-    "separacion_minima_mm": 7.5
+    "volumen_solido_cm3": 319.5,
+    "separacion_minima_mm": 12.8
   },
   "Placa_2_mecanismo_y_tapa_PLA_capa_0.20": {
     "material": "PLA o PETG",
     "altura_capa_mm": 0.2,
-    "nota": "Reserva (con techo y separadores), disco y placa: holguras finas. Y la tapa cuadrada.",
+    "nota": "Reserva (con techo, separadores y barredor), disco y placa: holguras finas. Y la tapa de servicio.",
     "piezas": [
       "21_tapa_cuadrada",
       "07_reserva_con_barredor",
       "02_placa_inferior_con_canal",
-      "03_rotor_15x8_con_cubo"
+      "03_rotor_15x8_eje_D5"
     ],
-    "altura_max_mm": 86.6,
-    "volumen_solido_cm3": 338.2,
+    "altura_max_mm": 88.1,
+    "volumen_solido_cm3": 332.9,
     "separacion_minima_mm": 5.0
   }
 }

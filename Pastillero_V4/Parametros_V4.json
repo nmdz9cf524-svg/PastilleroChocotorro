@@ -40,12 +40,11 @@
     305
   ],
   "version": "V4",
-  "tray_grub_xy": [
-    18.0,
-    -39.0
-  ],
-  "overload_stop_gap_mm": 0.45,
   "feet_height_mm": 3.0,
+  "ramp_rib_y": [
+    -50.0,
+    -30.0
+  ],
   "sweeper": {
     "z_bottom": 102.0,
     "r_in": 31.5,
@@ -57,13 +56,28 @@
     0.0,
     56.0
   ],
-  "cap_top_z": 169.60000000000002,
+  "button": {
+    "type": "pulsador tactil 6x6x9.5",
+    "xy": [
+      46.0,
+      -46.0
+    ],
+    "body_top_z": 167.10000000000002
+  },
+  "motor": "28BYJ-48",
+  "motor_top_z": 77.5,
+  "motor_ear_x": 17.5,
+  "motor_body_offset_y": 8.0,
+  "cap_top_z": 171.10000000000002,
+  "fill_lid_top_z": 171.10000000000002,
+  "fill_lid_seat_r": 52.5,
   "tray_slope_deg": 25,
   "tray_floor": {
-    "z_ref_at_y_-55": 37.0,
-    "y_knee": -62.0,
-    "z_pocket": 33.736,
+    "z_ref_at_y_-55": 29.3315,
+    "y_knee": -60.0,
+    "z_pocket": 27.0,
     "y_back": -21.5,
-    "y_front": -80.0
+    "y_front": -92.0,
+    "pocket_y_center": -75.0
   }
 }
