@@ -2,7 +2,7 @@
   PASTILLERO V4 - Firmware ESP32 (solo botón)
   ------------------------------------------------------------
   Cada vez que se pulsa el botón, el rotor avanza UNA cavidad (30°) y
-  cae UNA pastilla a la bandeja. No hay horarios, WiFi ni hora.
+  cae UNA pastilla al bolsillo de la rampa. No hay horarios, WiFi ni hora.
 
   Mecánica:
     - Rotor con 12 cavidades, una cada 30°.
@@ -13,7 +13,9 @@
     - ESP32 DevKit (Arduino core 2.x o 3.x). Sirve cualquier Arduino:
       solo cambia los pines.
     - Motor 28BYJ-48 (5 V) + placa driver ULN2003
-    - Pulsador de 12 mm en la carcasa (a GND, usa el pull-up interno)
+    - Pulsador táctil de 6x6 mm arriba, en la tapa de servicio (a GND, usa el
+      pull-up interno). Sus dos cables llevan un conector de 2 pines para poder
+      quitar la tapa.
     - LED (el integrado en GPIO2) y zumbador activo opcional
 
   Comandos por Monitor Serie (115200 baudios), para calibrar:
@@ -32,7 +34,7 @@ const int PIN_IN1    = 16;  // ULN2003 IN1
 const int PIN_IN2    = 17;  // ULN2003 IN2
 const int PIN_IN3    = 18;  // ULN2003 IN3
 const int PIN_IN4    = 19;  // ULN2003 IN4
-const int PIN_BOTON  = 23;  // pulsador a GND
+const int PIN_BOTON  = 23;  // pulsador táctil 6x6 a GND
 const int PIN_LED    = 2;   // LED integrado
 const int PIN_BUZZER = 21;  // zumbador activo (pon -1 si no usas)
 
@@ -50,9 +52,10 @@ const uint32_t US_PASO_LENTO    = 3500;      // µs por medio paso al arrancar y
 const int      PASOS_RAMPA      = 60;
 
 // --- Botón ---
-const uint32_t MS_ANTIREBOTE = 30;    // filtra el rebote del contacto
-const uint32_t MS_BLOQUEO    = 1500;  // tras una entrega, ignora pulsaciones durante este tiempo
-                                      // (evita dar dos pastillas por una pulsación doble)
+const uint32_t MS_ANTIREBOTE = 15;    // filtra el rebote del contacto (un pulsador táctil rebota < 10 ms)
+const uint32_t MS_BLOQUEO    = 800;   // tras terminar una entrega, ignora pulsaciones durante este tiempo.
+                                      // Mientras el rotor gira (~0.75 s) tampoco se leen. Así un doble
+                                      // toque no da dos pastillas, y se puede pedir otra a los ~1.6 s.
 
 // ===================================================
 
@@ -131,11 +134,11 @@ void entregarPastilla(const char* motivo) {
   digitalWrite(PIN_LED, HIGH);               // LED encendido mientras gira
   avanzarUnaCavidad();
   digitalWrite(PIN_LED, LOW);
+  finUltimaEntregaMs = millis();             // el bloqueo cuenta desde que el rotor se detiene
   entregas++;
   Serial.printf("[ENTREGA] %s -> pastilla %ld (cavidad %d de %d)\n",
                 motivo, entregas, cavidad == 0 ? CAVIDADES : cavidad, CAVIDADES);
-  pitido(1, 120);                            // aviso: la pastilla está en la bandeja
-  finUltimaEntregaMs = millis();
+  pitido(1, 120);                            // aviso: la pastilla está en el bolsillo
 }
 
 // ---------------- Botón ----------------
@@ -155,6 +158,7 @@ void revisarBoton() {
 
   if (entregas > 0 && millis() - finUltimaEntregaMs < MS_BLOQUEO) {
     Serial.println("[BOTON] ignorado: espera un momento entre pastillas");
+    digitalWrite(PIN_LED, HIGH); delay(60); digitalWrite(PIN_LED, LOW);   // aviso visual
     return;
   }
   entregarPastilla("boton");

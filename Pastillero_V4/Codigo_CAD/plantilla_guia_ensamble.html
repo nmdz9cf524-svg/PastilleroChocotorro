@@ -79,7 +79,7 @@ __DATA__
   def('REF_motor_28BYJ48', { label: 'Motor 28BYJ-48', col: 'motor', ex: [0, 0, 70] });
   def(OREJAS.map((s) => 'TORNILLO_motor_oreja_' + s), { hw: true, col: 'screw', ex: [0, 0, 30] });
   def(OREJAS.map((s) => 'TUERCA_motor_oreja_' + s), { hw: true, col: 'nut', ex: [0, 0, -30] });
-  def('REF_pulsador_12mm', { label: 'Botón 12 mm', col: 'button', ex: [0, -40, 0] });
+  def('REF_pulsador_6x6', { label: 'Pulsador 6×6', col: 'button', ex: [0, 0, -25] });
   def('REF_driver_ULN2003', { label: 'Driver ULN2003', col: 'pcb', ex: [0, 0, 50] });
   def('REF_ESP32_DevKit', { label: 'ESP32', col: 'pcb', ex: [0, 0, 50] });
 
@@ -109,7 +109,7 @@ __DATA__
       text: ['Así queda el Pastillero V4 terminado. Las animaciones usan la geometría real de Pastillero_V4_ensamble.step.',
              'Avanza con Siguiente o con las flechas del teclado. En cada paso solo se mueven las piezas nuevas; las montadas antes se quedan en su sitio.',
              'Imprime las piezas con las placas de Impresion_255x255 y limpia rebabas antes de armar.'],
-      parts: ['9 piezas impresas', 'Motor 28BYJ-48 + ULN2003', 'ESP32', 'Botón 12 mm'],
+      parts: ['9 piezas impresas', 'Motor 28BYJ-48 + ULN2003', 'ESP32', 'Pulsador táctil 6×6'],
       hw: ['M3×30 ×4', 'M3×12 ×7', 'M3×8 ×2', 'Prisionero M3×8 ×1', 'Tuerca M3 ×15'],
       note: 'Usa tornillos de cabeza de botón (Ø5.7 × 1.65 mm). Las cabezas cilíndricas altas pueden chocar con el rotor.',
       view: { t: [0, -10, 92], az: 35, el: 24, d: 420 } },
@@ -140,14 +140,14 @@ __DATA__
       parts: ['Motor 28BYJ-48'], hw: ['M3×8 ×2', 'Tuerca M3 ×2'],
       note: 'Ya no hay puente: el motor se sujeta solo por sus orejas.',
       view: { t: [0, 5, 65], az: 40, el: 30, d: 200 } },
-    { title: 'Botón y electrónica', ghost: true,
-      stages: [['REF_pulsador_12mm'], ['REF_driver_ULN2003'], ['REF_ESP32_DevKit']],
-      text: ['Mete el botón de 12 mm por el realce de la pared frontal, a la derecha de la ventana, y apriétalo con su tuerca por dentro.',
-             'Pon la placa ULN2003 en el piso, a la izquierda de la bancada, y conecta el cable del motor.',
-             'Pon el ESP32 en la plataforma de la derecha. Cableado: IN1-IN4 a GPIO16-19, botón entre GPIO23 y GND, y 5 V aparte para el motor con GND común.'],
-      parts: ['Botón 12 mm', 'Driver ULN2003', 'ESP32'], hw: ['Bridas o cinta doble cara'],
+    { title: 'Electrónica', ghost: true,
+      stages: [['REF_driver_ULN2003'], ['REF_ESP32_DevKit']],
+      text: ['Pon la placa ULN2003 en el piso, a la izquierda de la bancada, y conecta el cable del motor.',
+             'Pon el ESP32 en la plataforma de la derecha. Cableado: IN1-IN4 a GPIO16-19 y 5 V aparte para el motor, con GND común.',
+             'Deja preparado un cable de 2 hilos con conector para el pulsador: irá en la tapa de servicio, entre GPIO23 y GND.'],
+      parts: ['Driver ULN2003', 'ESP32'], hw: ['Bridas o cinta doble cara'],
       note: 'El paso de cable de la pared derecha queda junto al ESP32 para la alimentación.',
-      view: { t: [5, -25, 25], az: 25, el: 30, d: 300 } },
+      view: { t: [0, -5, 20], az: 25, el: 40, d: 300 } },
     { title: 'Placa inferior con canal', ghost: true, stages: [['02_placa_inferior_con_canal']],
       text: ['Asienta la placa (02) sobre las columnas, con la ventana de descarga al frente.',
              'El canal ya viene impreso con la placa y baja hasta 10 mm sobre la rampa, con la boca cortada en diagonal, para guiar la caída.',
@@ -176,11 +176,12 @@ __DATA__
       parts: ['07 Reserva con barredor'], hw: ['M3×30 ×4', 'Tuerca M3 ×4'],
       note: 'Gira el disco a mano: las cavidades deben pasar bajo el barredor sin rozar.',
       view: { t: [0, 0, 120], az: 35, el: 25, d: 330 } },
-    { title: 'Tapa de servicio', stages: [['21_tapa_cuadrada']],
-      text: ['Baja la tapa de servicio cuadrada (21) por encima de la reserva.',
-             'Su ceja circular entra en la boca de la reserva y las pestañas de las esquinas entran en la carcasa.',
-             'Solo se quita para mantenimiento: limpiar el disco, revisar el barredor o los tornillos.'],
-      parts: ['21 Tapa de servicio'], hw: [], hwNone: 'Sin herramientas',
+    { title: 'Tapa de servicio y pulsador', stages: [['21_tapa_cuadrada'], ['REF_pulsador_6x6']],
+      text: ['Mete el pulsador táctil de 6×6 por debajo de la tapa de servicio (21), en el alojamiento de la esquina frontal derecha, y fíjalo con una gota de pegamento. Su vástago asoma arriba.',
+             'Conecta sus dos cables al conector que dejaste preparado (GPIO23 y GND).',
+             'Baja la tapa por encima de la reserva: su ceja circular entra en la boca de la reserva y las pestañas en la carcasa.',
+             'Solo se quita para mantenimiento; antes, desconecta el pulsador.'],
+      parts: ['21 Tapa de servicio', 'Pulsador 6×6'], hw: ['Conector de 2 pines', 'Pegamento'],
       view: { t: [0, -10, 92], az: 35, el: 22, d: 420 } },
     { title: 'Tapa de llenado', stages: [['09_tapa_llenado']],
       text: ['Pon la tapa redonda de llenado (09) en el asiento de la tapa de servicio: queda a ras.',

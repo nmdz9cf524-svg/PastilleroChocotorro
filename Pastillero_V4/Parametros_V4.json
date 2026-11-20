@@ -56,11 +56,14 @@
     0.0,
     56.0
   ],
-  "button_xz": [
-    41.0,
-    40.0
-  ],
-  "button_hole_d": 12.3,
+  "button": {
+    "type": "pulsador tactil 6x6x9.5",
+    "xy": [
+      46.0,
+      -46.0
+    ],
+    "body_top_z": 167.10000000000002
+  },
   "motor": "28BYJ-48",
   "motor_top_z": 77.5,
   "motor_ear_x": 17.5,

@@ -84,8 +84,11 @@ print('PAIRWISE', col, flush=True)
 # Holguras que importan.
 gaps = {}
 ramp = parts['16_rampa_salida']
-for n in ['10_bancada_28BYJ48', '02_placa_inferior_con_canal', 'REF_pulsador_12mm', 'REF_ESP32_DevKit', 'REF_driver_ULN2003']:
+for n in ['10_bancada_28BYJ48', '02_placa_inferior_con_canal', 'REF_ESP32_DevKit', 'REF_driver_ULN2003']:
     gaps['rampa_vs_' + n] = round(ramp.distance(allshapes[n]), 3)
+# El pulsador va en la tapa de servicio: no debe tocar la reserva ni la tapa de llenado.
+for n in ['07_reserva_con_barredor', '09_tapa_llenado']:
+    gaps['pulsador_vs_' + n] = round(refs['REF_pulsador_6x6'].distance(allshapes[n]), 3)
 cap = parts['21_tapa_cuadrada']
 for n in ['02_placa_inferior_con_canal', '07_reserva_con_barredor',
           'TORNILLO_placas_39.244_39.244', '01_carcasa_v4']:
@@ -95,7 +98,7 @@ sweeper = parts['07_reserva_con_barredor'].intersect(cq.Solid.makeCylinder(51, 5
 for n in ['03_rotor_15x8_eje_D5', '06_cono_repartidor_punta_arriba']:
     gaps['barredor_vs_' + n] = round(sweeper.distance(allshapes[n]), 3)
 print('GAPS', gaps, flush=True)
-assert all(g >= 0.4 for k, g in gaps.items() if k.startswith(('rampa', 'barredor'))), gaps
+assert all(g >= 0.4 for k, g in gaps.items() if k.startswith(('rampa', 'barredor', 'pulsador'))), gaps
 assert all(g >= 0.25 for k, g in gaps.items() if k.startswith('tapa') and not k.endswith('01_carcasa_v4')), gaps  # la tapa apoya en la carcasa
 
 # Barrido continuo del grupo giratorio.
@@ -150,7 +153,7 @@ path = [(0, 35, dz) for dz in [80, 60, 40, 20, 10, 4, 2]] + \
 insert_bad = []
 for dx, dy, dz in path:
     t = ramp.translate((dx, dy, dz))
-    for n in ['01_carcasa_v4', 'REF_pulsador_12mm', 'REF_driver_ULN2003', 'REF_ESP32_DevKit']:
+    for n in ['01_carcasa_v4', 'REF_driver_ULN2003', 'REF_ESP32_DevKit']:
         v = t.intersect(allshapes[n]).Volume()
         if v > .001:
             insert_bad.append([n, dy, dz, round(v, 3)])

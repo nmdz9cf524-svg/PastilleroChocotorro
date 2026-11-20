@@ -129,26 +129,9 @@ car = car.fuse(plat)
 car = car.cut(cq.Workplane('YZ', origin=(56, 0, 17)).slot2D(14, 8)
               .extrude(10).val())
 
-# Botón de entrega a la vista: a la derecha de la ventana, a media altura,
-# sobre un realce en forma de gota (se imprime sin soportes) que sobresale
-# 5.5 mm. Por dentro, un rebaje de Ø20 deja 3.5 mm de panel para la tuerca del
-# pulsador de 12 mm, y el cuerpo queda lejos de la columna trasera.
-BOTON_D, BOTON_XZ = 12.3, (41.0, 40.0)
-BOSS_R, BOSS_FACE, PANEL_T = 12.0, -68.0, 3.5
-bx, bz = BOTON_XZ
-k45 = BOSS_R * math.sqrt(0.5)
-boss = (cq.Workplane('XZ', origin=(0, -62.5 + 0.01, 0)).center(bx, bz).circle(BOSS_R).extrude(-BOSS_FACE - 62.5 + 0.01)
-        .val().fuse(cq.Workplane('XZ', origin=(0, -62.5 + 0.01, 0))
-                    .polyline([(bx - k45, bz - k45), (bx + k45, bz - k45), (bx, bz - BOSS_R * math.sqrt(2))]).close()
-                    .extrude(-BOSS_FACE - 62.5 + 0.01).val()))
-car = car.fuse(boss)
-car = car.cut(cq.Solid.makeCylinder(BOTON_D / 2, 12, V(bx, -57.0, bz), V(0, -1, 0)))                 # paso del botón
-car = car.cut(cq.Solid.makeCylinder(10.0, -59.0 - (BOSS_FACE + PANEL_T), V(bx, -59.0, bz), V(0, -1, 0)))  # rebaje de la tuerca
-
 add('01_carcasa_v4', car,
-    'Carcasa V3 + patas nervadas, plataforma electrónica, paso de cable, '
-    'ranuras de la rampa y realce con el botón de entrega a la derecha de la '
-    'ventana. Sustituye 01, 12, 18, 19.')
+    'Carcasa V3 + patas nervadas, plataforma electrónica, paso de cable y '
+    'ranuras de la rampa. Sustituye 01, 12, 18, 19.')
 
 # --------------------------------------------------- 02 placa + canal integrado
 plate = cyl(60, 4, z=89)
@@ -291,6 +274,16 @@ cap = cap.fuse(cyl(RES_IN - 0.3, DECK0 - 163.8 + 0.01, z=163.8).cut(cyl(FILL_R, 
 cap = cap.cut(cyl(FILL_R, 10, z=DECK0 - 1))                                        # boca de llenado
 cap = cap.cut(cyl(SEAT_R, SEAT_D + 1, z=TOP - SEAT_D))                              # asiento a ras
 cap = cap.cut(cyl(8.0, 4, 0, -SEAT_R, TOP - 3.0))                                   # muesca para el dedo
+# Botón de entrega arriba: pulsador táctil de 6x6 mm en la esquina frontal
+# derecha de la tapa de servicio, fuera de la tapa de llenado. El cuerpo entra
+# por debajo en un alojamiento cuadrado (tope contra la cara inferior) y el
+# vástago asoma ~2 mm por un agujero de Ø4.2 con un rebaje para el dedo.
+BTN_XY, BTN_BODY, BTN_H, BTN_STEM = (46.0, -46.0), 6.0, 3.5, 6.0   # 6x6x9.5 mm
+bx, by = BTN_XY
+cap = cap.fuse(box(bx - 5, bx + 5, by - 5, by + 5, DECK0 - 4.0, DECK0 + 0.01))          # alojamiento
+cap = cap.cut(box(bx - 3.05, bx + 3.05, by - 3.05, by + 3.05, DECK0 - 4.5, DECK0))      # hueco del cuerpo
+cap = cap.cut(cyl(2.1, 10, bx, by, DECK0 - 1))                                          # paso del vástago
+cap = cap.cut(cyl(5.0, 2, bx, by, TOP - 1.0))                                           # rebaje para el dedo
 tabs = rrect(W, RC, 83, 6.01, inset=WALL + 0.25).cut(rrect(W, RC, 82, 8, inset=WALL + 0.25 + 1.6))
 ledge = rrect(W, RC, 89, 2.0).cut(rrect(W, RC, 88, 4, inset=WALL + 0.25 + 1.6))
 keep = None
@@ -302,7 +295,7 @@ cap = cap.fuse(tabs.fuse(ledge).intersect(keep))
 add('21_tapa_cuadrada', cap,
     'Tapa de servicio cuadrada: cubre placa, disco y reserva y se levanta '
     'entera para mantenimiento. Lleva la boca de llenado con asiento para la '
-    'tapa 09. Imprimir boca abajo.')
+    'tapa 09 y el pulsador de entrega de 6x6 en la esquina. Imprimir boca abajo.')
 
 lid = cyl(SEAT_R - 0.3, SEAT_D, z=TOP - SEAT_D)
 lid = lid.fuse(cyl(FILL_R - 0.3, DECK_T - SEAT_D + 1.5 + 0.01, z=DECK0 - 1.5).cut(cyl(FILL_R - 2.3, 10, z=DECK0 - 2)))
@@ -392,19 +385,19 @@ for n, s in sorted(parts.items()):
     cq.exporters.export(q, str(OUT / 'STL' / (n + '.stl')), tolerance=.025, angularTolerance=.08)
     cq.exporters.export(s, str(OUT / 'STEP_piezas' / (n + '.step')))
 REFS = V3
-# Electrónica de referencia (no se imprime): pulsador 12 mm, ULN2003 y ESP32.
-bx, bz = BOTON_XZ
-yb = BOSS_FACE + PANEL_T                                                           # cara interior del panel
-puls = (cq.Solid.makeCylinder(5.0, 4.0, V(bx, BOSS_FACE - 1.5, bz), V(0, -1, 0))        # botón
-        .fuse(cq.Solid.makeCylinder(7.5, 1.5, V(bx, BOSS_FACE, bz), V(0, -1, 0)))       # bisel
-        .fuse(cq.Solid.makeCylinder(5.9, 18.0 + PANEL_T, V(bx, BOSS_FACE, bz), V(0, 1, 0)))  # cuerpo roscado
-        .fuse(cq.Workplane('XZ', origin=(0, yb, 0)).center(bx, bz).polygon(6, 16).extrude(-2.5).val())  # tuerca
-        .fuse(box(bx - 4, bx + 4, yb + 16.0, yb + 18.0, bz - 2.5, bz + 2.5)))           # terminales
+# Electrónica de referencia (no se imprime): pulsador táctil 6x6, ULN2003 y ESP32.
+h = BTN_BODY / 2
+puls = (box(bx - h, bx + h, by - h, by + h, DECK0 - BTN_H, DECK0)                           # cuerpo
+        .fuse(cyl(1.75, BTN_STEM, bx, by, DECK0)))                                          # vástago
+for sx in (-1, 1):
+    for sy in (-1, 1):
+        puls = puls.fuse(box(bx + sx * 2.25 - 0.35, bx + sx * 2.25 + 0.35, by + sy * (h - 0.3) - 0.3,
+                             by + sy * (h - 0.3) + 0.3, DECK0 - BTN_H - 3.5, DECK0 - BTN_H))  # patas, bajo el cuerpo
 uln = box(-58.0, -26.0, -12.0, 23.0, 4.0, 5.6)                                       # PCB 32x35
 uln = uln.fuse(box(-45.5, -38.5, -6.0, 13.0, 5.6, 9.0))                             # ULN2003 DIP16
 uln = uln.fuse(box(-55.0, -49.0, 4.0, 16.0, 5.6, 12.6))                             # conector del motor
 esp = box(27.5, 55.5, -26.0, 26.0, 11.0, 12.6).fuse(box(32.0, 51.0, -26.0, -8.0, 12.6, 15.8))
-refs_new.update({'REF_pulsador_12mm': puls, 'REF_driver_ULN2003': uln, 'REF_ESP32_DevKit': esp})
+refs_new.update({'REF_pulsador_6x6': puls, 'REF_driver_ULN2003': uln, 'REF_ESP32_DevKit': esp})
 for n, sref in refs_new.items():
     cq.exporters.export(sref, str(OUT / 'Referencias_NO_imprimir' / (n + '.step')))
 meta = {n: {'size_mm': [round(s.BoundingBox().xlen, 3), round(s.BoundingBox().ylen, 3),
@@ -416,7 +409,7 @@ v3params = json.load(open(V3 / 'Parametros_V3.json'))
 v3params.update({'version': 'V4', 'feet_height_mm': FEET_H, 'ramp_rib_y': list(RIB_Y),
                  'sweeper': {'z_bottom': SWEEP_Z, 'r_in': R_IN, 'deg_attack_in': A_IN,
                              'deg_attack_out': A_OUT, 'deg_end': A_END},
-                 'reservoir_key_xy': list(KEY_XY), 'button_xz': list(BOTON_XZ), 'button_hole_d': BOTON_D,
+                 'reservoir_key_xy': list(KEY_XY), 'button': {'type': 'pulsador tactil 6x6x9.5', 'xy': list(BTN_XY), 'body_top_z': DECK0},
                  'motor': '28BYJ-48', 'motor_top_z': M_TOP, 'motor_ear_x': M_EAR_X, 'motor_body_offset_y': M_OFF, 'cap_top_z': TOP,
                  'fill_lid_top_z': TOP, 'fill_lid_seat_r': SEAT_R,
                  'tray_slope_deg': 25, 'tray_floor': {'z_ref_at_y_-55': round(Z_REF, 4), 'y_knee': Y_KNEE,

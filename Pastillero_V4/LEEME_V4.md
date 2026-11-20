@@ -14,7 +14,7 @@ Cada pulsación del botón gira el rotor 30° y deja **una pastilla** en el bols
 | `STL/` | Cada pieza suelta, ya orientada, por si hay que reimprimir una |
 | `STEP_piezas/` | Piezas en coordenadas de ensamble, para editar en CAD |
 | `Pastillero_V4_ensamble.step` | Ensamble completo, con tornillería y referencias |
-| `Referencias_NO_imprimir/` | Motor 28BYJ-48, botón, ULN2003, ESP32 y tornillería. **No se imprimen.** |
+| `Referencias_NO_imprimir/` | Motor 28BYJ-48, pulsador 6×6, ULN2003, ESP32 y tornillería. **No se imprimen.** |
 | `Codigo_CAD/` | Scripts que generan, validan y arman las placas, más `fuentes_V3/` con las piezas de V3 que se reutilizan |
 
 ![Vista V4](Vista_pastillero_V4.png)
@@ -23,7 +23,7 @@ Cada pulsación del botón gira el rotor 30° y deja **una pastilla** en el bols
 
 | N.º | Pieza | Qué hace |
 |---|---|---|
-| 01 | **Carcasa** | Las patas vienen impresas como una base nervada bajo el piso. Lleva la plataforma del ESP32, el paso de cable de la pared derecha, dos ranuras en el piso para la rampa y un realce en el frente con el **botón a la derecha de la ventana**, a media altura. |
+| 01 | **Carcasa** | Las patas vienen impresas como una base nervada bajo el piso. Lleva la plataforma del ESP32, el paso de cable de la pared derecha, y dos ranuras en el piso para la rampa. El frente queda limpio: el botón va arriba, en la tapa de servicio. |
 | 02 | **Placa inferior con canal** | El canal va integrado y baja hasta 10 mm sobre la rampa, con la boca cortada en diagonal, para guiar la caída. El agujero pequeño de arriba recibe el poste de la reserva. |
 | 03 | **Rotor** | 12 cavidades, una cada 30°. El cubo tiene agujero en doble D para el eje Ø5 del 28BYJ-48 y un prisionero M3×8. |
 | 06 | **Cono** | Igual que en V3. |
@@ -31,7 +31,7 @@ Cada pulsación del botón gira el rotor 30° y deja **una pastilla** en el bols
 | 09 | **Tapa de llenado** | Disco redondo que encaja a ras en la tapa de servicio. Se levanta por la muesca del frente y se echan las pastillas por la boca de Ø91, directo a la reserva. |
 | 10 | **Bancada del 28BYJ-48** | Deja el eje del motor justo bajo el centro del rotor. El motor se atornilla por sus orejas. |
 | 16 | **Rampa de salida** | Fondo a 25°. El bolsillo mide 30 mm y sale **29.5 mm** de la caja: caben varias pastillas y se toman con los dedos. No tiene tornillos: apoya en el borde inferior de la ventana y en dos nervios encajados en el piso. |
-| 21 | **Tapa de servicio** | Caja cuadrada a ras de la carcasa. Cubre placa, disco y reserva y se levanta entera para mantenimiento. Su ceja circular entra en la reserva y sus pestañas en la carcasa. |
+| 21 | **Tapa de servicio** | Caja cuadrada a ras de la carcasa. Cubre placa, disco y reserva y se levanta entera para mantenimiento. Su ceja circular entra en la reserva y sus pestañas en la carcasa. En su esquina frontal derecha lleva el **pulsador de entrega**: un táctil de 6×6 alojado por debajo, con el vástago asomando 2 mm por un agujero con rebaje para el dedo. |
 
 **La caja se abre en dos secciones:** la tapa redonda 09 para llenar y la cuadrada 21 para mantenimiento.
 
@@ -61,7 +61,7 @@ Balance: de **25 piezas impresas → 9**, de **29 tornillos/prisioneros → 14**
 | Prisionero M3×8 | 1 | Cubo del rotor, contra el plano del eje |
 | Tuerca M3 (5.5 entre caras × 2.4) | 15 | |
 
-Además: motor **28BYJ-48 + placa ULN2003**, **ESP32 DevKit**, **pulsador de panel de 12 mm** normalmente abierto, fuente de **5 V ≥ 1 A** y zumbador activo opcional. Las conexiones y el firmware están en [`Firmware_ESP32/LEEME_FIRMWARE.md`](../Firmware_ESP32/LEEME_FIRMWARE.md).
+Además: motor **28BYJ-48 + placa ULN2003**, **ESP32 DevKit**, **pulsador táctil de 6×6×9.5 mm** (el común de 4 patas) con un **conector de 2 pines**, fuente de **5 V ≥ 1 A** y zumbador activo opcional. Las conexiones y el firmware están en [`Firmware_ESP32/LEEME_FIRMWARE.md`](../Firmware_ESP32/LEEME_FIRMWARE.md).
 
 ## Armado
 
@@ -74,11 +74,10 @@ Además: motor **28BYJ-48 + placa ULN2003**, **ESP32 DevKit**, **pulsador de pan
    2. Mete dos tuercas en los hexágonos de debajo de su placa.
    3. Baja el 28BYJ-48 con el eje arriba y la caja de cables hacia atrás.
    4. Atorníllalo por sus orejas con 2 M3×8.
-3. **Botón y electrónica:**
-   1. Mete el botón de 12 mm por el realce del frente y apriétalo con su tuerca por dentro.
-   2. Pon la placa ULN2003 en el piso, a la izquierda de la bancada.
-   3. Pon el ESP32 en la plataforma de la derecha.
-   4. Cablea según el LEEME del firmware.
+3. **Electrónica:**
+   1. Pon la placa ULN2003 en el piso, a la izquierda de la bancada.
+   2. Pon el ESP32 en la plataforma de la derecha.
+   3. Cablea según el LEEME del firmware. Deja un cable de 2 hilos con conector para el pulsador (GPIO23 y GND).
 4. **Placa y rotor:**
    1. Asienta la placa 02 sobre las columnas.
    2. Une cono y rotor con 3 M3×12 y bájalos sobre el eje. El agujero en doble D solo entra alineado con los planos del eje.
@@ -87,28 +86,30 @@ Además: motor **28BYJ-48 + placa ULN2003**, **ESP32 DevKit**, **pulsador de pan
    1. Bájala girándola hasta que su poste entre en la placa.
    2. Cierra con los 4 M3×30.
    3. Gira el disco a mano: debe pasar libre bajo el barredor y el techo.
-6. **Tapas:**
-   1. Baja la tapa de servicio 21.
-   2. Pon la tapa de llenado 09 en su asiento.
+6. **Tapas y pulsador:**
+   1. Mete el pulsador 6×6 por debajo de la tapa de servicio 21, en su alojamiento de la esquina, y fíjalo con una gota de pegamento.
+   2. Conéctalo al conector de 2 pines.
+   3. Baja la tapa de servicio.
+   4. Pon la tapa de llenado 09 en su asiento.
 
 ## Revisión de coherencia con lo pedido
 
 | Pedido | Cómo se cumple | Comprobado con |
 |---|---|---|
-| Botón que entregue una pastilla al momento | Pulsador en GPIO23; el firmware gira al detectar la pulsación, sin esperar a soltar | Firmware compilado con sustitutos de Arduino |
+| Botón que entregue una pastilla al momento | Pulsador en GPIO23; el firmware gira al detectar la pulsación, sin esperar a soltar. Un doble toque, pulsar mientras gira o mantener pulsado no dan pastillas de más | `Firmware_ESP32/prueba_logica`: 10 casos con rebote simulado, TODO OK |
 | 30° por pulsación, una sola pastilla | 12 cavidades a 30°. Cada pulsación da 339 o 340 medios pasos y el objetivo se calcula desde el arranque, así que no hay deriva. El techo tapa toda la ventana de salida, así que no cae una segunda pastilla desde la reserva | 12 pulsaciones = 1 vuelta y error de 0.02° tras 1000 vueltas; ventana descubierta 0 mm³ |
 | Motor 28BYJ-48 | Bancada con el eje descentrado bajo el centro del rotor; rotor con agujero en doble D | Sin choques; motor a 0.7 mm del rotor |
 | Sin sistema de peso | Se eliminaron celda, mordaza, pedestal, tope y manguito | Ninguna pieza ni tornillo los menciona |
 | Rampa más larga, pastilla fácil de sacar | El bolsillo sale 29.5 mm de la caja y mide 30 mm; la pastilla queda entera fuera | Trayectoria de la pastilla sin choques hasta el bolsillo |
 | Tapa en dos secciones | Tapa de llenado 09 a ras sobre la tapa de servicio 21 | Encaje a ras: 0.0 mm de desnivel y contacto 0.0 mm |
-| Botón más visible | En el frente, a la derecha de la ventana, a media altura, sobre un realce; sobresale 11 mm de la caja | Sin choques con columna, ventana ni rampa |
-| Ninguna pieza flotando | Cada pieza apoya en otra y todas llegan hasta la carcasa. La rampa apoya en la ventana y en el piso, la tapa de llenado en la de servicio, el motor en la bancada y el rotor en el eje por su prisionero | Comprobación de contactos en `validar_v4.py` (`supports` en el JSON) |
+| Botón arriba y pequeño | Pulsador táctil 6×6 en la esquina frontal derecha de la tapa de servicio; asoma 2 mm sobre un rebaje para el dedo | Apoya en la tapa (contacto 0.0 mm), sin choques; queda a más de 8 mm de la reserva y de la tapa de llenado |
+| Ninguna pieza flotando | Cada pieza apoya en otra y todas llegan hasta la carcasa. La rampa apoya en la ventana y en el piso, la tapa de llenado y el pulsador en la tapa de servicio, el motor en la bancada y el rotor en el eje por su prisionero | Comprobación de contactos en `validar_v4.py` (`supports` en el JSON) |
 
 ## Verificación (solo geometría)
 
 `Codigo_CAD/validar_v4.py` comprobó lo siguiente (resultado en `Verificacion_CAD_y_STL.json`):
 
-- No hay choques entre piezas, referencias (motor, botón, ULN2003, ESP32) y tornillería con volumen mayor de 0.001 mm³.
+- No hay choques entre piezas, referencias (motor, pulsador, ULN2003, ESP32) y tornillería con volumen mayor de 0.001 mm³.
 - El barrido completo del rotor y el cono no choca con nada. La holgura mínima es 0.30 mm.
 - El techo de la reserva queda a 0.4 mm del disco y tapa entera la ventana de salida. El barredor queda a 0.6 mm del disco.
 - Una pastilla acostada de 15×8×6 cae por el canal, se apoya en la rampa y queda entera en el bolsillo exterior.

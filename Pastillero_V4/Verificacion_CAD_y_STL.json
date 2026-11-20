@@ -13,7 +13,7 @@
     "REF_ESP32_DevKit": 68.19,
     "REF_driver_ULN2003": 76.101,
     "REF_motor_28BYJ48": 0.7,
-    "REF_pulsador_12mm": 48.392,
+    "REF_pulsador_6x6": 59.326,
     "TORNILLO_placas_-39.244_-39.244": 1.499,
     "TORNILLO_placas_-39.244_39.244": 1.499,
     "TORNILLO_placas_39.244_-39.244": 1.499,
@@ -38,9 +38,10 @@
   "new_part_gaps_mm": {
     "rampa_vs_10_bancada_28BYJ48": 0.5,
     "rampa_vs_02_placa_inferior_con_canal": 9.858,
-    "rampa_vs_REF_pulsador_12mm": 9.566,
     "rampa_vs_REF_ESP32_DevKit": 4.717,
     "rampa_vs_REF_driver_ULN2003": 16.688,
+    "pulsador_vs_07_reserva_con_barredor": 8.811,
+    "pulsador_vs_09_tapa_llenado": 8.84,
     "tapa_vs_02_placa_inferior_con_canal": 0.5,
     "tapa_vs_07_reserva_con_barredor": 0.3,
     "tapa_vs_TORNILLO_placas_39.244_39.244": 17.111,
@@ -120,8 +121,7 @@
       "16_rampa_salida",
       "21_tapa_cuadrada",
       "REF_ESP32_DevKit",
-      "REF_driver_ULN2003",
-      "REF_pulsador_12mm"
+      "REF_driver_ULN2003"
     ],
     "02_placa_inferior_con_canal": [
       "01_carcasa_v4",
@@ -149,7 +149,8 @@
     ],
     "21_tapa_cuadrada": [
       "01_carcasa_v4",
-      "09_tapa_llenado"
+      "09_tapa_llenado",
+      "REF_pulsador_6x6"
     ],
     "REF_ESP32_DevKit": [
       "01_carcasa_v4"
@@ -161,8 +162,8 @@
       "10_bancada_28BYJ48",
       "prisionero_rotor_X"
     ],
-    "REF_pulsador_12mm": [
-      "01_carcasa_v4"
+    "REF_pulsador_6x6": [
+      "21_tapa_cuadrada"
     ],
     "prisionero_rotor_X": [
       "03_rotor_15x8_eje_D5",
@@ -172,7 +173,7 @@
   "meshes": [
     {
       "file": "01_carcasa_v4.stl",
-      "triangles": 14512,
+      "triangles": 12764,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0,
@@ -244,7 +245,7 @@
     },
     {
       "file": "21_tapa_cuadrada.stl",
-      "triangles": 5116,
+      "triangles": 6416,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0,

@@ -6,8 +6,8 @@ Con **2 placas** se imprime todo el pastillero, y todo en PLA o PETG: ya no hay 
 
 | Placa | Piezas | Material | Capa | Alto máx. |
 |---|---|---|---|---|
-| ![](Placa_1_estructura_PLA_capa_0.28.png) **1 · Estructura** | 01 carcasa (con realce del botón), 09 tapa de llenado, 16 rampa de salida, 10 bancada del 28BYJ-48, 06 cono | PLA / PETG | **0.28 mm** | 92 mm |
-| ![](Placa_2_mecanismo_y_tapa_PLA_capa_0.20.png) **2 · Mecanismo y tapa** | 21 tapa de servicio, 07 reserva (con techo, separadores y barredor), 02 placa con canal, 03 rotor para eje D5 | PLA / PETG | **0.20 mm** | 88 mm |
+| ![](Placa_1_estructura_PLA_capa_0.28.png) **1 · Estructura** | 01 carcasa, 09 tapa de llenado, 16 rampa de salida, 10 bancada del 28BYJ-48, 06 cono | PLA / PETG | **0.28 mm** | 92 mm |
+| ![](Placa_2_mecanismo_y_tapa_PLA_capa_0.20.png) **2 · Mecanismo y tapa** | 21 tapa de servicio (con alojamiento del pulsador), 07 reserva (con techo, separadores y barredor), 02 placa con canal, 03 rotor para eje D5 | PLA / PETG | **0.20 mm** | 88 mm |
 
 ## Si ya imprimiste V3: `Solo_piezas_nuevas/`
 
@@ -40,7 +40,7 @@ Las piezas sueltas también están en `../STL/`, por si hay que reimprimir solo 
 
 - **Rígidas:** boquilla 0.4, 3 perímetros, relleno 15–20 % en gyroid o rejilla y **sin soportes**. Para la carcasa basta con 2 perímetros si quieres ir aún más rápido.
 - **Rampa 16 (placa 1):** ponle un borde (*brim*) de 5 mm porque se imprime de pie sobre un costado. Las líneas de capa quedan a lo largo de la pendiente y ayudan a que la pastilla resbale.
-- **Realce del botón (carcasa 01):** tiene forma de gota para imprimirse sin soportes. El agujero de 12 mm y el rebaje de la tuerca son horizontales; si salen un poco cerrados, pásales una broca de 12 mm.
+- **Tapa de servicio 21 (placa 2):** el alojamiento del pulsador 6×6 queda hacia arriba al imprimirla boca abajo. Comprueba que el pulsador entre justo; si queda flojo, una gota de pegamento lo fija.
 - **Antes de imprimir:** revisa en el laminador que ninguna pieza haya quedado flotando o girada. Los STL ya vienen apoyados en z = 0.
 
 ## Para regenerar las placas

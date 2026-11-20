@@ -11,7 +11,7 @@
       "06_cono_repartidor_punta_arriba"
     ],
     "altura_max_mm": 92.0,
-    "volumen_solido_cm3": 320.2,
+    "volumen_solido_cm3": 319.5,
     "separacion_minima_mm": 12.8
   },
   "Placa_2_mecanismo_y_tapa_PLA_capa_0.20": {
@@ -25,7 +25,7 @@
       "03_rotor_15x8_eje_D5"
     ],
     "altura_max_mm": 88.1,
-    "volumen_solido_cm3": 332.8,
+    "volumen_solido_cm3": 332.9,
     "separacion_minima_mm": 5.0
   }
 }

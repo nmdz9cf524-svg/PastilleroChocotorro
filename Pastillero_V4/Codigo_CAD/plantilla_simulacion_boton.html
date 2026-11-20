@@ -51,7 +51,7 @@ __CSS__
         <span class="badge" id="badge">Cavidad 1 de 12 · 0°</span>
         <label class="toggle" for="xray"><input type="checkbox" id="xray" checked> Ver por dentro</label>
       </div>
-      <div class="hint">Arrastra para girar · rueda para acercar · toca el botón rojo</div>
+      <div class="hint">Arrastra para girar · rueda para acercar · toca el pulsador rojo de arriba</div>
       <div class="loading" id="loading">Cargando geometría…</div>
     </section>
     <aside class="panel" aria-live="polite">
@@ -59,7 +59,7 @@ __CSS__
         <div class="eyebrow">Simulación</div>
         <h2>Pulsa el botón</h2>
       </div>
-      <p style="margin:0">El firmware solo espera el botón, a la derecha de la ventana. Al pulsarlo, el motor gira el rotor una cavidad (30°, antihorario visto desde arriba). La pastilla que llega a la salida cae por el canal y resbala por la rampa hasta el bolsillo, fuera de la caja.</p>
+      <p style="margin:0">El firmware solo espera el pulsador de arriba, en la esquina de la tapa de servicio. Al pulsarlo, el motor gira el rotor una cavidad (30°, antihorario visto desde arriba). La pastilla que llega a la salida cae por el canal y resbala por la rampa hasta el bolsillo, fuera de la caja.</p>
       <button class="press" id="press" type="button"><span class="dot"></span>Pulsar botón</button>
       <div class="status" id="status">Listo. El rotor arranca alineado con la salida.</div>
       <div class="stats">
@@ -78,7 +78,7 @@ __CSS__
       <div class="group"><h3>Conexiones</h3>
         <table class="pins">
           <tr><td>GPIO16–19</td><td>ULN2003 IN1–IN4</td></tr>
-          <tr><td>GPIO23</td><td>Botón 12 mm → GND (pull-up interno)</td></tr>
+          <tr><td>GPIO23</td><td>Pulsador 6×6 de la tapa → GND (pull-up interno), con conector de 2 pines</td></tr>
           <tr><td>GPIO21</td><td>Zumbador activo (opcional)</td></tr>
           <tr><td>5 V aparte</td><td>Motor y ULN2003, GND común con el ESP32</td></tr>
         </table>
@@ -109,15 +109,15 @@ __DATA__
   const colorOf = (n) => n.startsWith('01_') ? 'shell' : n.startsWith('02_') ? 'plate' : n.startsWith('03_') ? 'rotor'
     : n.startsWith('06_') ? 'cone' : n.startsWith('07_') ? 'hopper' : n.startsWith('21_') ? 'trim' : n.startsWith('09_') ? 'lid'
     : n.startsWith('10_') ? 'mount' : n.startsWith('16_') ? 'tray'
-    : n === 'REF_motor_28BYJ48' ? 'motor' : n === 'REF_pulsador_12mm' ? 'button'
+    : n === 'REF_motor_28BYJ48' ? 'motor' : n === 'REF_pulsador_6x6' ? 'button'
     : n.startsWith('REF_driver') || n.startsWith('REF_ESP32') ? 'pcb' : n.startsWith('TUERCA') || n.startsWith('tuerca') ? 'nut' : 'screw';
   const LABELS = {
-    REF_pulsador_12mm: 'Botón 12 mm', REF_motor_28BYJ48: 'Motor 28BYJ-48', REF_driver_ULN2003: 'Driver ULN2003',
+    REF_pulsador_6x6: 'Pulsador 6×6', REF_motor_28BYJ48: 'Motor 28BYJ-48', REF_driver_ULN2003: 'Driver ULN2003',
     REF_ESP32_DevKit: 'ESP32', '16_rampa_salida': 'Rampa de salida', '09_tapa_llenado': 'Tapa de llenado', '03_rotor_15x8_eje_D5': 'Rotor (12 cavidades)',
     '07_reserva_con_barredor': 'Reserva',
   };
   // Punto de anclaje de algunas etiquetas (marco CAD, mm) para que no se encimen.
-  const ANCHOR = { '16_rampa_salida': [0, -82, 40], REF_driver_ULN2003: [-42, 5, 24], '09_tapa_llenado': [0, 0, 172] };
+  const ANCHOR = { '16_rampa_salida': [0, -82, 40], REF_driver_ULN2003: [-42, 5, 24], '09_tapa_llenado': [0, 0, 172], REF_pulsador_6x6: [46, -46, 178] };
   const LEGEND = [['Botón', 'button'], ['Motor 28BYJ-48', 'motor'], ['ULN2003 / ESP32', 'pcb'], ['Rotor', 'rotor'],
                   ['Cono', 'cone'], ['Rampa', 'tray'], ['Reserva', 'hopper'], ['Tapa de servicio', 'trim'], ['Tapa de llenado', 'lid']];
   const ROTOR = n => n.startsWith('03_') || n.startsWith('06_') || /cono_|rotor_X/.test(n);
@@ -181,7 +181,7 @@ __DATA__
       const c = new THREE.Vector3(); g.boundingBox.getCenter(c);
       const p = { name, mesh, mat, center: c, rotor: ROTOR(name) };
       parts.push(p);
-      if (name === 'REF_pulsador_12mm') buttonPart = p;
+      if (name === 'REF_pulsador_6x6') buttonPart = p;
     });
   }
 
@@ -272,7 +272,7 @@ __DATA__
     const xr = $('xray').checked, cap = $('capOn').checked;
     parts.forEach((p) => {
       const key = Object.keys(GHOST).find((k) => p.name.startsWith(k));
-      if (key === '21_') p.mesh.visible = cap;
+      if (key === '21_' || p.name === 'REF_pulsador_6x6') p.mesh.visible = cap;   // el pulsador va en la tapa
       if (key === '09_') { p.mesh.visible = cap; p.mesh.position.set(0, 0, $('lidOpen').checked ? 45 : 0); }
       const on = xr && !!key;
       p.mat.transparent = on; p.mat.opacity = on ? GHOST[key] : 1; p.mat.depthWrite = !on; p.mesh.castShadow = !on; p.mat.needsUpdate = true;
@@ -284,7 +284,7 @@ __DATA__
     if (!$('labelsOn').checked) return;
     parts.forEach((p) => {
       if (!LABELS[p.name]) return;
-      const d = document.createElement('div'); d.className = 'lbl' + (p.name === 'REF_pulsador_12mm' ? ' btn' : '');
+      const d = document.createElement('div'); d.className = 'lbl' + (p.name === 'REF_pulsador_6x6' ? ' btn' : '');
       d.textContent = LABELS[p.name]; labelsEl.appendChild(d);
       labels.push({ p, d, at: ANCHOR[p.name] ? new THREE.Vector3(...ANCHOR[p.name]) : p.center });
     });
@@ -330,16 +330,23 @@ __DATA__
     ray.setFromCamera(ndc, camera);
     if (ray.intersectObject(buttonPart.mesh).length) press();
   });
+  // Posición en pantalla del vástago del pulsador (la usan las pruebas automáticas).
+  window.__btnScreen = () => {
+    if (!buttonPart || !buttonPart.mesh.visible) return null;
+    const v = new THREE.Vector3(46, -46, 172.6); buttonPart.mesh.localToWorld(v); v.project(camera);
+    const r = canvas.getBoundingClientRect();
+    return { x: r.left + (v.x + 1) / 2 * r.width, y: r.top + (1 - v.y) / 2 * r.height };
+  };
   function resize() {
     const w = stageEl.clientWidth, h = stageEl.clientHeight;
     renderer.setSize(w, h, false); camera.aspect = w / Math.max(1, h); camera.updateProjectionMatrix();
   }
   new ResizeObserver(resize).observe(stageEl); resize();
 
-  // ---------- Cámara inicial: de frente, a la altura del botón y la rampa ----------
-  const T = [0, -25, 62], AZ = 28 * Math.PI / 180, EL = 18 * Math.PI / 180;
+  // ---------- Cámara inicial: de frente y algo elevada, para ver el pulsador de arriba y la rampa ----------
+  const T = [0, -25, 90], AZ = 28 * Math.PI / 180, EL = 26 * Math.PI / 180;
   const aspect = Math.max(0.6, stageEl.clientWidth / Math.max(1, stageEl.clientHeight));
-  const D = 440 * (aspect < 1 ? 1.3 / aspect : 1);
+  const D = 480 * (aspect < 1 ? 1.3 / aspect : 1);
   controls.target.copy(cad2three(T));
   camera.position.copy(cad2three(T).add(new THREE.Vector3(Math.sin(AZ) * Math.cos(EL), Math.sin(EL), Math.cos(AZ) * Math.cos(EL)).multiplyScalar(D)));
 
@@ -350,7 +357,7 @@ __DATA__
     if (anim) {
       const t = (now - anim.t0) / 1000;
       // botón: se hunde 2 mm y vuelve
-      if (buttonPart) { const k = Math.min(1, t / PRESS_DUR); buttonPart.mesh.position.y = 2 * Math.sin(Math.PI * k); }
+      if (buttonPart) { const k = Math.min(1, t / PRESS_DUR); buttonPart.mesh.position.z = -1.5 * Math.sin(Math.PI * k); }
       const k = THREE.MathUtils.clamp((t - PRESS_DUR * 0.6) / ROT_DUR, 0, 1);
       const a = anim.from + (anim.to - anim.from) * ease(k);
       parts.forEach((p) => { if (p.rotor) p.mesh.rotation.z = THREE.MathUtils.degToRad(a); });

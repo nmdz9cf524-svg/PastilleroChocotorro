@@ -30,7 +30,7 @@ for p in sorted((ROOT / 'STEP_piezas').glob('*.step')):
     if p.stem == '21b_embellecedor_alto':
         continue  # la guía muestra el embellecedor corto; el alto se monta igual
     meshes.append((p.stem, load(p)))
-for n in ['REF_motor_28BYJ48', 'REF_pulsador_12mm', 'REF_driver_ULN2003', 'REF_ESP32_DevKit']:
+for n in ['REF_motor_28BYJ48', 'REF_pulsador_6x6', 'REF_driver_ULN2003', 'REF_ESP32_DevKit']:
     meshes.append((n, load(ROOT / 'Referencias_NO_imprimir' / (n + '.step'))))
 hw_names = json.load(open(ROOT / 'Referencias_NO_imprimir' / 'Tornilleria_nominal_nombres.json'))
 hw = load(ROOT / 'Referencias_NO_imprimir' / 'Tornilleria_nominal.step').Solids()
