@@ -9,6 +9,17 @@ Con **2 placas** se imprime todo el pastillero, y todo en PLA o PETG: ya no hay 
 | ![](Placa_1_estructura_PLA_capa_0.28.png) **1 · Estructura** | 01 carcasa, 06 cono, 10 bancada, 16 bandeja inclinada, 11 puente, 13 mordaza | PLA / PETG | **0.28 mm** | 92 mm |
 | ![](Placa_2_mecanismo_y_tapa_PLA_capa_0.20.png) **2 · Mecanismo y tapa** | 21 tapa cuadrada, 07 reserva (con techo, separadores y barredor), 02 placa con canal, 03 rotor | PLA / PETG | **0.20 mm** | 87 mm |
 
+## Si ya imprimiste V3: `Solo_piezas_nuevas/`
+
+El rotor 03, el cono 06, la bancada 10 y el puente 11 son idénticos en V3 y V4, así que no hace falta reimprimirlos. En la carpeta [`Solo_piezas_nuevas/`](Solo_piezas_nuevas/) están las mismas 2 placas sin esas piezas:
+
+| Placa | Piezas | Capa | Alto máx. |
+|---|---|---|---|
+| ![](Solo_piezas_nuevas/Placa_1_nuevas_estructura_PLA_capa_0.28.png) **1 · Estructura** | 01 carcasa, 16 bandeja inclinada, 13 mordaza | **0.28 mm** | 92 mm |
+| ![](Solo_piezas_nuevas/Placa_2_nuevas_reserva_placa_y_tapa_PLA_capa_0.20.png) **2 · Reserva, placa y tapa** | 21 tapa cuadrada, 07 reserva con barredor, 02 placa con canal | **0.20 mm** | 87 mm |
+
+No reutilices de V3 la placa 02, el canal 17, la mordaza 13 ni las piezas 14, 15 y 16: cambiaron y no encajan con la bandeja inclinada.
+
 ## Archivos de cada placa
 
 - **`.3mf`** (recomendado): cada pieza es un objeto independiente y ya está colocado. Ábrelo en Bambu Studio, OrcaSlicer, PrusaSlicer o Cura. Si el programa pregunta, elige cargar solo la geometría.

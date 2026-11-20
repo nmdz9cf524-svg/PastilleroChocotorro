@@ -1,6 +1,10 @@
 """Agrupa los STL de V4 en placas de impresión de 255x255 mm.
 
-Para cada placa genera, en ../Impresion_255x255/:
+Hay dos juegos de placas:
+  ../Impresion_255x255/                     todas las piezas (imprimir desde cero)
+  ../Impresion_255x255/Solo_piezas_nuevas/  solo las que cambian respecto a V3
+                                            (rotor, cono, bancada y puente de V3 se reutilizan)
+Para cada placa genera:
   * .3mf  con cada pieza como objeto independiente, ya colocada en la cama
   * .stl  con todas las piezas en un solo archivo (posiciones relativas)
   * .png  vista superior con la distribución
@@ -48,6 +52,27 @@ PLACAS = {
         ]},
 }
 
+# Solo las piezas que no existen en V3 o que cambiaron. Se reutilizan de V3:
+# 03 rotor, 06 cono, 10 bancada y 11 puente (geometría idéntica).
+PLACAS_NUEVAS = {
+    'Placa_1_nuevas_estructura_PLA_capa_0.28': {
+        'capa': 0.28, 'material': 'PLA o PETG',
+        'nota': 'Carcasa, bandeja inclinada y mordaza. Capa gruesa = impresión más rápida.',
+        'piezas': [
+            ('01_carcasa_v4_patas_pedestal_integrados', 65.0, 65.0, 0),
+            ('16_bandeja_pesaje_inclinada', 190.0, 62.0, 0),
+            ('13_mordaza_fija_celda_tuercas', 190.0, 120.0, 90),
+        ]},
+    'Placa_2_nuevas_reserva_placa_y_tapa_PLA_capa_0.20': {
+        'capa': 0.20, 'material': 'PLA o PETG',
+        'nota': 'Reserva (con techo, separadores y barredor) y placa con canal: holguras finas. Y la tapa cuadrada.',
+        'piezas': [
+            ('21_tapa_cuadrada', 65.0, 65.0, 0),
+            ('07_reserva_con_barredor', 192.5, 62.5, 0),
+            ('02_placa_inferior_con_canal', 65.0, 192.5, 0),
+        ]},
+}
+
 
 def footprint(mesh):
     """Silueta exacta vista desde arriba (unión de triángulos proyectados)."""
@@ -66,51 +91,57 @@ def placed(name, x, y, rot):
     return m
 
 
-resumen = {}
-for placa, cfg in PLACAS.items():
-    meshes, fps = [], []
-    for name, x, y, rot in cfg['piezas']:
-        m = placed(name, x, y, rot)
-        meshes.append((name, m)); fps.append((name, footprint(m)))
-    # Comprobaciones de cama y separación.
-    bed_ok = sbox(MARGIN, MARGIN, BED - MARGIN, BED - MARGIN)
-    for name, fp in fps:
-        assert bed_ok.contains(fp), (placa, name, 'se sale de la cama', fp.bounds)
-    gaps = {}
-    for i in range(len(fps)):
-        for j in range(i + 1, len(fps)):
-            d = fps[i][1].distance(fps[j][1])
-            gaps[f'{fps[i][0]} / {fps[j][0]}'] = round(d, 1)
-            assert d >= GAP, (placa, fps[i][0], fps[j][0], d)
-    # 3MF con objetos separados y STL combinado.
-    scene = trimesh.Scene()
-    for name, m in meshes:
-        scene.add_geometry(m, node_name=name, geom_name=name)
-    (OUT / (placa + '.3mf')).write_bytes(trimesh.exchange.threemf.export_3MF(scene))
-    trimesh.util.concatenate([m for _, m in meshes]).export(OUT / (placa + '.stl'))
-    # Vista superior.
-    fig, ax = plt.subplots(figsize=(6, 6.6))
-    ax.add_patch(plt.Rectangle((0, 0), BED, BED, fill=False, lw=2, ec='#333'))
-    colors = ['#5b9bd5', '#d8a657', '#8a97a8', '#6a8fa8', '#c96f4a', '#7a9a6a', '#a6c', '#3b5b73']
-    for k, (name, fp) in enumerate(fps):
-        geoms = getattr(fp, 'geoms', [fp])
-        for g in geoms:
-            ax.fill(*g.exterior.xy, color=colors[k % len(colors)], alpha=.85, lw=0)
-            for hole in g.interiors:
-                ax.fill(*hole.xy, color='white', lw=0)
-        c = fp.representative_point() if name.startswith('21') else fp.centroid
-        if name.startswith('21'):
-            c = type(c)(fp.bounds[0] + 14, fp.bounds[1] + 8)
-        ax.text(c.x, c.y, name.split('_')[0], ha='center', va='center', fontsize=11, weight='bold', color='white')
-    ax.set_xlim(-5, BED + 5); ax.set_ylim(-5, BED + 5); ax.set_aspect('equal')
-    ax.set_title(f"{placa}\n{cfg['material']} · capa {cfg['capa']} mm · cama {BED:.0f}x{BED:.0f}", fontsize=10)
-    ax.set_xticks([0, 64, 128, 192, 255]); ax.set_yticks([0, 64, 128, 192, 255])
-    fig.savefig(OUT / (placa + '.png'), dpi=110, bbox_inches='tight'); plt.close(fig)
-    resumen[placa] = {
-        'material': cfg['material'], 'altura_capa_mm': cfg['capa'], 'nota': cfg['nota'],
-        'piezas': [n for n, *_ in cfg['piezas']],
-        'altura_max_mm': round(max(m.bounds[1][2] for _, m in meshes), 1),
-        'volumen_solido_cm3': round(sum(m.volume for _, m in meshes) / 1000, 1),
-        'separacion_minima_mm': min(gaps.values()) if gaps else None}
-    print(placa, 'OK', resumen[placa]['piezas'], 'sep. mín.', resumen[placa]['separacion_minima_mm'], flush=True)
-json.dump(resumen, open(OUT / 'Resumen_placas.json', 'w'), indent=2, ensure_ascii=False)
+def armar(placas, out):
+  out.mkdir(parents=True, exist_ok=True)
+  resumen = {}
+  for placa, cfg in placas.items():
+      meshes, fps = [], []
+      for name, x, y, rot in cfg['piezas']:
+          m = placed(name, x, y, rot)
+          meshes.append((name, m)); fps.append((name, footprint(m)))
+      # Comprobaciones de cama y separación.
+      bed_ok = sbox(MARGIN, MARGIN, BED - MARGIN, BED - MARGIN)
+      for name, fp in fps:
+          assert bed_ok.contains(fp), (placa, name, 'se sale de la cama', fp.bounds)
+      gaps = {}
+      for i in range(len(fps)):
+          for j in range(i + 1, len(fps)):
+              d = fps[i][1].distance(fps[j][1])
+              gaps[f'{fps[i][0]} / {fps[j][0]}'] = round(d, 1)
+              assert d >= GAP, (placa, fps[i][0], fps[j][0], d)
+      # 3MF con objetos separados y STL combinado.
+      scene = trimesh.Scene()
+      for name, m in meshes:
+          scene.add_geometry(m, node_name=name, geom_name=name)
+      (out / (placa + '.3mf')).write_bytes(trimesh.exchange.threemf.export_3MF(scene))
+      trimesh.util.concatenate([m for _, m in meshes]).export(out / (placa + '.stl'))
+      # Vista superior.
+      fig, ax = plt.subplots(figsize=(6, 6.6))
+      ax.add_patch(plt.Rectangle((0, 0), BED, BED, fill=False, lw=2, ec='#333'))
+      colors = ['#5b9bd5', '#d8a657', '#8a97a8', '#6a8fa8', '#c96f4a', '#7a9a6a', '#a6c', '#3b5b73']
+      for k, (name, fp) in enumerate(fps):
+          geoms = getattr(fp, 'geoms', [fp])
+          for g in geoms:
+              ax.fill(*g.exterior.xy, color=colors[k % len(colors)], alpha=.85, lw=0)
+              for hole in g.interiors:
+                  ax.fill(*hole.xy, color='white', lw=0)
+          c = fp.representative_point() if name.startswith('21') else fp.centroid
+          if name.startswith('21'):
+              c = type(c)(fp.bounds[0] + 14, fp.bounds[1] + 8)
+          ax.text(c.x, c.y, name.split('_')[0], ha='center', va='center', fontsize=11, weight='bold', color='white')
+      ax.set_xlim(-5, BED + 5); ax.set_ylim(-5, BED + 5); ax.set_aspect('equal')
+      ax.set_title(f"{placa}\n{cfg['material']} · capa {cfg['capa']} mm · cama {BED:.0f}x{BED:.0f}", fontsize=10)
+      ax.set_xticks([0, 64, 128, 192, 255]); ax.set_yticks([0, 64, 128, 192, 255])
+      fig.savefig(out / (placa + '.png'), dpi=110, bbox_inches='tight'); plt.close(fig)
+      resumen[placa] = {
+          'material': cfg['material'], 'altura_capa_mm': cfg['capa'], 'nota': cfg['nota'],
+          'piezas': [n for n, *_ in cfg['piezas']],
+          'altura_max_mm': round(max(m.bounds[1][2] for _, m in meshes), 1),
+          'volumen_solido_cm3': round(sum(m.volume for _, m in meshes) / 1000, 1),
+          'separacion_minima_mm': min(gaps.values()) if gaps else None}
+      print(placa, 'OK', resumen[placa]['piezas'], 'sep. mín.', resumen[placa]['separacion_minima_mm'], flush=True)
+  json.dump(resumen, open(out / 'Resumen_placas.json', 'w'), indent=2, ensure_ascii=False)
+
+
+armar(PLACAS, OUT)
+armar(PLACAS_NUEVAS, OUT / 'Solo_piezas_nuevas')
