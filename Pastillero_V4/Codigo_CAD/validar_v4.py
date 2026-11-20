@@ -12,7 +12,7 @@ parts = {p.stem: cq.importers.importStep(str(p)).val() for p in sorted((R / 'STE
 refs = {p.stem: cq.importers.importStep(str(p)).val() for p in sorted((R / 'Referencias_NO_imprimir').glob('REF*.step'))}
 C = 39.244
 # Las dos variantes del embellecedor ocupan el mismo sitio: se comprueba cada una por separado.
-VARIANTS = ['21a_embellecedor_corto', '21b_embellecedor_alto']
+VARIANTS = []  # piezas alternativas que ocupan el mismo sitio (ninguna en esta versión)
 assembly = {n: s for n, s in parts.items() if n not in VARIANTS}
 
 fast, nuts, bolt_schedule = {}, {}, []
@@ -51,8 +51,6 @@ grub('bandeja_prisionero', gx, gy, 31.0, 10); nut('bandeja_prisionero', gx, gy, 
 for k, (x, y) in enumerate(params['cone_bolts_xy']):
     bolt(f'cono_{k}', x, y, 95.4, 12, True); nut(f'cono_{k}', x, y, 104.1)
     nuts[f'cono_{k}'] = nuts[f'cono_{k}'].rotate((x, y, 0), (x, y, 1), 15)
-for k, (x, y) in enumerate(params['wiper_bolts_xy']):
-    bolt(f'peine_{k}', x, y, 109.8, 8); nut(f'peine_{k}', x, y, 101.9)
 radial = {}
 for suffix in ['X', 'Y']:
     pts = [(3.175 * math.cos(math.radians(30 + i * 60)), 3.175 * math.sin(math.radians(30 + i * 60))) for i in range(6)]
@@ -94,12 +92,17 @@ tray = parts['16_bandeja_pesaje_inclinada']
 for n in ['01_carcasa_v4_patas_pedestal_integrados', '13_mordaza_fija_celda_tuercas', '10_bancada_motor_32x25',
           '02_placa_inferior_con_canal', 'TORNILLO_mordaza_fija_-51', 'TORNILLO_mordaza_fija_-27']:
     gaps['bandeja_vs_' + n] = round(tray.distance(allshapes[n]), 3)
-for nv in VARIANTS:
-    for n in ['02_placa_inferior_con_canal', '04_aro_con_techo_y_separadores', '07_reserva_centrada',
-              '09_tapa_reserva_centrada', '20_peine_flexible_TPU', 'TORNILLO_placas_39.244_39.244']:
-        gaps[nv + '_vs_' + n] = round(parts[nv].distance(allshapes[n]), 3)
+cap = parts['21_tapa_cuadrada']
+for n in ['02_placa_inferior_con_canal', '07_reserva_con_barredor',
+          'TORNILLO_placas_39.244_39.244', '01_carcasa_v4_patas_pedestal_integrados']:
+    gaps['tapa_vs_' + n] = round(cap.distance(allshapes[n]), 3)
+# Barredor y techo: la parte de la reserva que queda sobre el disco (z 100..105.7, r<51).
+sweeper = parts['07_reserva_con_barredor'].intersect(cq.Solid.makeCylinder(51, 5.7, V(0, 0, 100.0)))  # sin el pin (r=56)
+for n in ['03_rotor_15x8_con_cubo', '06_cono_repartidor_punta_arriba']:
+    gaps['barredor_vs_' + n] = round(sweeper.distance(allshapes[n]), 3)
 print('GAPS', gaps, flush=True)
-assert all(g >= 0.4 for k, g in gaps.items() if k.startswith('bandeja')), gaps
+assert all(g >= 0.4 for k, g in gaps.items() if k.startswith(('bandeja', 'barredor'))), gaps
+assert all(g >= 0.25 for k, g in gaps.items() if k.startswith('tapa') and not k.endswith('01_carcasa_v4_patas_pedestal_integrados')), gaps  # la tapa apoya en la carcasa
 
 # Barrido continuo del grupo giratorio.
 env = (cq.Solid.makeCylinder(52.5, 8, V(0, 0, 93.4)).fuse(cq.Solid.makeCylinder(10, 13.4, V(0, 0, 80)))
@@ -186,12 +189,12 @@ result = {'static_collisions_mm3_above_0_001': col, 'continuous_rotor_sweep_coll
           'new_part_gaps_mm': gaps, 'pill_release_path': trajectory, 'assembly_path_collisions': insert_bad, 'meshes': mesh,
           'fasteners': dict(collections.Counter(bolt_schedule)), 'fastener_count': len(bolt_schedule),
           'nut_count': len(nuts) + 2, 'unique_print_files': len(parts),
-          'printed_parts_in_assembly': len(assembly) + 1, 'physical_validation': False}
+          'printed_parts_in_assembly': len(assembly), 'physical_validation': False}
 json.dump(result, open(R / 'Verificacion_CAD_y_STL.json', 'w'), indent=2, ensure_ascii=False)
 assert not col and not sweepbad
 cq.exporters.export(cq.Compound.makeCompound(list(hardware.values())), str(R / 'Referencias_NO_imprimir/Tornilleria_nominal.step'))
 json.dump(list(hardware.keys()), open(R / 'Referencias_NO_imprimir/Tornilleria_nominal_nombres.json', 'w'), indent=0)
-cq.exporters.export(cq.Compound.makeCompound(list(assembly.values()) + [parts['21a_embellecedor_corto']] +
+cq.exporters.export(cq.Compound.makeCompound(list(assembly.values()) +
                                              list(refs.values()) + list(hardware.values())),
                     str(R / 'Pastillero_V4_ensamble.step'))
 print('OK', len(parts), 'STL;', result['printed_parts_in_assembly'], 'piezas a imprimir;',

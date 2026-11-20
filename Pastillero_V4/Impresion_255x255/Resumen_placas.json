@@ -2,59 +2,31 @@
   "Placa_1_estructura_PLA_capa_0.28": {
     "material": "PLA o PETG",
     "altura_capa_mm": 0.28,
-    "nota": "Piezas de estructura. Capa gruesa = impresión más rápida.",
+    "nota": "Carcasa y piezas sin holguras finas. Capa gruesa = impresión más rápida.",
     "piezas": [
       "01_carcasa_v4_patas_pedestal_integrados",
-      "07_reserva_centrada",
-      "09_tapa_reserva_centrada",
+      "06_cono_repartidor_punta_arriba",
       "10_bancada_motor_32x25",
       "16_bandeja_pesaje_inclinada",
       "11_puente_motor",
       "13_mordaza_fija_celda_tuercas"
     ],
     "altura_max_mm": 92.0,
-    "volumen_solido_cm3": 382.4,
-    "separacion_minima_mm": 5.0
+    "volumen_solido_cm3": 293.5,
+    "separacion_minima_mm": 7.5
   },
-  "Placa_2_mecanismo_PLA_capa_0.20": {
+  "Placa_2_mecanismo_y_tapa_PLA_capa_0.20": {
     "material": "PLA o PETG",
     "altura_capa_mm": 0.2,
-    "nota": "Piezas con holguras finas (disco, cono, aro, placa). El cono 06 va dentro del hueco central del embellecedor.",
+    "nota": "Reserva (con techo y separadores), disco y placa: holguras finas. Y la tapa cuadrada.",
     "piezas": [
-      "21a_embellecedor_corto",
-      "06_cono_repartidor_punta_arriba",
+      "21_tapa_cuadrada",
+      "07_reserva_con_barredor",
       "02_placa_inferior_con_canal",
-      "04_aro_con_techo_y_separadores",
       "03_rotor_15x8_con_cubo"
     ],
-    "altura_max_mm": 43.0,
-    "volumen_solido_cm3": 184.8,
+    "altura_max_mm": 86.6,
+    "volumen_solido_cm3": 338.2,
     "separacion_minima_mm": 5.0
-  },
-  "Placa_2B_mecanismo_PLA_capa_0.20_embellecedor_ALTO": {
-    "material": "PLA o PETG",
-    "altura_capa_mm": 0.2,
-    "nota": "Igual que la placa 2, pero con el embellecedor alto. Imprime la 2 o la 2B, no las dos.",
-    "piezas": [
-      "21b_embellecedor_alto",
-      "06_cono_repartidor_punta_arriba",
-      "02_placa_inferior_con_canal",
-      "04_aro_con_techo_y_separadores",
-      "03_rotor_15x8_con_cubo"
-    ],
-    "altura_max_mm": 83.8,
-    "volumen_solido_cm3": 235.5,
-    "separacion_minima_mm": 5.0
-  },
-  "Placa_3_peine_TPU_95A": {
-    "material": "TPU 95A",
-    "altura_capa_mm": 0.2,
-    "nota": "Material flexible: placa aparte. Imprime lento (20-30 mm/s).",
-    "piezas": [
-      "20_peine_flexible_TPU"
-    ],
-    "altura_max_mm": 8.0,
-    "volumen_solido_cm3": 0.5,
-    "separacion_minima_mm": null
   }
 }

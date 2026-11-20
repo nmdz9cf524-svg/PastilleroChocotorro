@@ -13,7 +13,7 @@ __CSS__
   <header class="top">
     <h1>Ensamble Pastillero V4</h1>
     <span class="tag">STEP real · mm</span>
-    <p>Guía animada con la geometría del ensamble V4: 13 piezas impresas, 20 tornillos y prisioneros, 20 tuercas.</p>
+    <p>Guía animada con la geometría del ensamble V4: 10 piezas impresas, 18 tornillos y prisioneros, 18 tuercas.</p>
   </header>
   <main class="layout">
     <section class="stage" id="stage" aria-label="Vista 3D del ensamble">
@@ -104,18 +104,11 @@ __DATA__
   def(['prisionero_rotor_X', 'prisionero_rotor_Y'], { hw: true, col: 'screw', radial: 22 });
   ROTOR_GROUP.forEach((n) => (P[n].lift = { steps: [7], v: [0, 0, 95] }));
 
-  const ARO_GROUP = ['04_aro_con_techo_y_separadores', '20_peine_flexible_TPU', 'TORNILLO_peine_0', 'TORNILLO_peine_1', 'TUERCA_peine_0', 'TUERCA_peine_1'];
-  def('04_aro_con_techo_y_separadores', { label: '04 Aro con separadores', col: 'plate', ex: [0, 0, 45], ghost: 'mech' });
-  def('20_peine_flexible_TPU', { label: '20 Peine TPU', col: 'comb', ex: [0, 0, 28] });
-  def(['TORNILLO_peine_0', 'TORNILLO_peine_1'], { hw: true, col: 'screw', ex: [0, 0, 25] });
-  def(['TUERCA_peine_0', 'TUERCA_peine_1'], { hw: true, col: 'nut', ex: [0, 0, -20] });
-  ARO_GROUP.forEach((n) => (P[n].lift = { steps: [9], v: [0, 0, 80] }));
 
-  def('07_reserva_centrada', { label: '07 Reserva', col: 'hopper', ex: [0, 0, 90], ghost: 'top' });
+  def('07_reserva_con_barredor', { label: '07 Reserva con barredor', col: 'hopper', ex: [0, 0, 90], ghost: 'top' });
   def(BOLT_PLACAS.map((s) => 'TORNILLO_placas_' + s), { hw: true, col: 'screw', ex: [0, 0, 60] });
   def(BOLT_PLACAS.map((s) => 'TUERCA_placas_' + s), { hw: true, col: 'nut', radial: 25 });
-  def('21a_embellecedor_corto', { label: '21 Embellecedor', col: 'trim', ex: [0, 0, 120], ghost: 'top' });
-  def('09_tapa_reserva_centrada', { label: '09 Tapa', col: 'lid', ex: [0, 0, 60], ghost: 'top' });
+  def('21_tapa_cuadrada', { label: '21 Tapa cuadrada', col: 'trim', ex: [0, 0, 130], ghost: 'top' });
 
   // ---------- Pasos ----------
   const STEPS = [
@@ -123,7 +116,7 @@ __DATA__
       text: ['Así queda el Pastillero V4 terminado. Las animaciones usan la geometría real de Pastillero_V4_ensamble.step.',
              'Avanza con Siguiente o con las flechas del teclado. En cada paso solo se mueven las piezas nuevas; las montadas antes se quedan en su sitio.',
              'Imprime las piezas con las placas de Impresion_255x255 y limpia rebabas antes de armar.'],
-      parts: ['13 piezas impresas'], hw: ['M3×30 ×6', 'M3×12 ×9', 'M3×8 ×2', 'Prisionero M3×6 ×2', 'Prisionero M3×10 ×1', 'Tuerca M3 ×20'],
+      parts: ['10 piezas impresas'], hw: ['M3×30 ×6', 'M3×12 ×9', 'Prisionero M3×6 ×2', 'Prisionero M3×10 ×1', 'Tuerca M3 ×18'],
       note: 'Usa tornillos de cabeza de botón (Ø5.7 × 1.65 mm). Las cabezas cilíndricas altas pueden chocar con el rotor o con la bandeja.',
       view: { t: [0, -10, 92], az: 35, el: 24, d: 420 } },
     { title: 'Carcasa con patas integradas', stages: [['01_carcasa_v4_patas_pedestal_integrados']],
@@ -167,7 +160,8 @@ __DATA__
     { title: 'Placa inferior con canal', ghost: true, stages: [['02_placa_inferior_con_canal']],
       text: ['Asienta la placa (02) sobre las columnas, con la ventana de descarga al frente.',
              'El canal ya viene impreso con la placa. Su boca está cortada en diagonal, 10 mm sobre la rampa de la bandeja.',
-             'Comprueba que el canal no toque la bandeja: la bandeja tiene que colgar libre de la celda.'],
+             'Comprueba que el canal no toque la bandeja: la bandeja tiene que colgar libre de la celda.',
+             'El agujero pequeño de la cara de arriba es para el poste de la reserva.'],
       parts: ['02 Placa con canal'], hw: [], hwNone: 'Se fija en el paso de la reserva',
       view: { t: [0, -30, 65], az: 70, el: 14, d: 260 } },
     { title: 'Cono y rotor, fuera de la caja',
@@ -184,32 +178,20 @@ __DATA__
              'Gira el disco a mano: debe moverse libre, sin rozar la placa.'],
       parts: ['Conjunto rotor + cono'], hw: ['Llave Allen 1.5 mm'],
       view: { t: [0, 0, 92], az: 30, el: 30, d: 250 } },
-    { title: 'Peine en el aro, fuera de la caja',
-      stages: [['04_aro_con_techo_y_separadores'], ['20_peine_flexible_TPU'], ['TORNILLO_peine_0', 'TORNILLO_peine_1', 'TUERCA_peine_0', 'TUERCA_peine_1']],
-      text: ['El aro (04) ya trae los cuatro separadores impresos.',
-             'Monta el peine de TPU (20) sobre el techo del aro con dos M3×8 y sus tuercas.',
-             'El peine queda justo antes del techo en el giro antihorario.'],
-      parts: ['04 Aro con separadores', '20 Peine TPU'], hw: ['M3×8 ×2', 'Tuerca M3 ×2'],
-      view: { t: [0, -15, 182], az: 15, el: 38, d: 210 } },
-    { title: 'Aro en su sitio', ghost: true, stages: [ARO_GROUP],
-      text: ['Baja el aro sobre la placa con el techo encima de la salida delantera.',
-             'Los separadores apoyan en la placa y dejan el hueco exacto para el disco.'],
-      parts: ['Conjunto aro + peine'], hw: [], hwNone: 'Se fija en el paso siguiente',
-      view: { t: [0, 0, 100], az: 25, el: 32, d: 260 } },
-    { title: 'Reserva y tornillos', ghost: true,
-      stages: [['07_reserva_centrada'], BOLT_PLACAS.map((s) => 'TORNILLO_placas_' + s), BOLT_PLACAS.map((s) => 'TUERCA_placas_' + s)],
-      text: ['Pon la reserva (07) centrada sobre el aro.',
-             'Cierra todo con cuatro M3×30: atraviesan reserva, aro, separadores y placa, y roscan en las tuercas de las columnas.',
-             'Aprieta en cruz y con moderación.'],
-      parts: ['07 Reserva'], hw: ['M3×30 ×4', 'Tuerca M3 ×4'],
+    { title: 'Reserva con barredor', ghost: true,
+      stages: [['07_reserva_con_barredor'], BOLT_PLACAS.map((s) => 'TORNILLO_placas_' + s), BOLT_PLACAS.map((s) => 'TUERCA_placas_' + s)],
+      text: ['La reserva (07) ya trae el techo, los cuatro separadores y el barredor: no hay aro ni peine sueltos.',
+             'Bájala sobre la placa girándola hasta que su poste entre en el agujero de la placa. Solo entra en una posición: el techo queda encima de la salida y el barredor justo antes.',
+             'Cierra todo con cuatro M3×30 por los huecos de la pestaña; roscan en las tuercas de las columnas. Aprieta en cruz.'],
+      parts: ['07 Reserva con barredor'], hw: ['M3×30 ×4', 'Tuerca M3 ×4'],
+      note: 'Gira el disco a mano: las cavidades deben pasar bajo el barredor sin rozar.',
       view: { t: [0, 0, 120], az: 35, el: 25, d: 330 } },
-    { title: 'Embellecedor y tapa',
-      stages: [['21a_embellecedor_corto'], ['09_tapa_reserva_centrada']],
-      text: ['Baja el embellecedor (21) por encima de la reserva hasta que sus pestañas entren en la carcasa.',
-             'Pon la tapa (09).'],
-      parts: ['21 Embellecedor', '09 Tapa'], hw: [], hwNone: 'Sin herramientas',
-      note: 'Aquí se ve el embellecedor corto (21a). El alto (21b) se monta igual y cubre también la reserva.',
-      view: { t: [0, -10, 92], az: 35, el: 22, d: 400 } },
+    { title: 'Tapa cuadrada', stages: [['21_tapa_cuadrada']],
+      text: ['Baja la tapa (21) por encima de la reserva.',
+             'Su ceja circular entra en la boca de la reserva y las pestañas de las esquinas entran en la carcasa.',
+             'Para rellenar pastillas levanta la tapa entera.'],
+      parts: ['21 Tapa cuadrada'], hw: [], hwNone: 'Sin herramientas',
+      view: { t: [0, -10, 92], az: 35, el: 22, d: 420 } },
     { eyebrow: 'Prueba', title: 'Giro y salida de la pastilla', ghost: true, ghostTop: true, ghostMech: true, spin: true, pill: true, stages: [],
       text: ['El disco gira en sentido antihorario visto desde arriba.',
              'La pastilla cae por el canal, se apoya en la rampa de 25° y resbala hasta el bolsillo, fuera de la caja. Sigue sobre la bandeja, así que la celda la pesa.',
