@@ -1,20 +1,20 @@
 {
-  "01_carcasa_v4_patas_pedestal_integrados": {
+  "01_carcasa_v4": {
     "size_mm": [
       125.0,
-      125.0,
+      130.5,
       92.0
     ],
-    "volume_mm3": 233804.9,
-    "note": "Carcasa V3 + patas nervadas, pedestal de celda reforzado, tope de sobrecarga, plataforma electrónica, paso de cable y agujero de 12 mm para el botón de entrega. Sustituye 01, 12, 18, 19."
+    "volume_mm3": 221317.4,
+    "note": "Carcasa V3 + patas nervadas, plataforma electrónica, paso de cable, ranuras de la rampa y realce con el botón de entrega a la derecha de la ventana. Sustituye 01, 12, 18, 19."
   },
   "02_placa_inferior_con_canal": {
     "size_mm": [
       120.0,
       120.0,
-      43.0
+      50.277
     ],
-    "volume_mm3": 53273.2,
+    "volume_mm3": 54993.9,
     "note": "Placa inferior V3 con el canal 17 integrado (sin M3x8 ni tuercas). Imprimir con la cara superior de la placa sobre la cama."
   },
   "03_rotor_15x8_eje_D5": {
@@ -44,6 +44,15 @@
     "volume_mm3": 106800.9,
     "note": "Reserva con barredor rígido, aro con techo y separadores integrados (sustituye a 04, 05 y al peine 20 de TPU). Poste de orientación hacia la placa 02. Imprimir boca abajo."
   },
+  "09_tapa_llenado": {
+    "size_mm": [
+      104.4,
+      104.4,
+      5.5
+    ],
+    "volume_mm3": 19048.4,
+    "note": "Tapa redonda de llenado, encajada a ras en la tapa de servicio. Se levanta por la muesca del frente. Imprimir boca abajo."
+  },
   "10_bancada_28BYJ48": {
     "size_mm": [
       51.0,
@@ -53,31 +62,22 @@
     "volume_mm3": 42087.8,
     "note": "Bancada para motor 28BYJ-48: el eje queda centrado bajo el rotor. Se atornilla al piso con 4 M3x12 y el motor por sus orejas con 2 M3x8. Sustituye 10 y 11."
   },
-  "13_mordaza_fija_celda_tuercas": {
+  "16_rampa_salida": {
     "size_mm": [
-      13.0,
-      32.0,
-      3.5
+      47.0,
+      70.5,
+      54.453
     ],
-    "volume_mm3": 1288.0,
-    "note": "Mordaza superior del extremo fijo. Dos tuercas M3 en su cara superior; los M3x30 entran desde debajo de la carcasa."
-  },
-  "16_bandeja_pesaje_inclinada": {
-    "size_mm": [
-      47.5,
-      58.5,
-      42.821
-    ],
-    "volume_mm3": 13568.2,
-    "note": "Sustituye 14, 15 y 16. Fondo a 25° hacia un bolsillo que sale por la ventana frontal. Manguito para el extremo móvil de la celda y prisionero M3x10 con tuerca. Imprimir de pie sobre la cara +X."
+    "volume_mm3": 19288.0,
+    "note": "Rampa fija a 25° con bolsillo largo que sale 29.5 mm por la ventana. Apoya en la ventana y en dos nervios encajados en el piso. Sustituye a la bandeja de pesaje 16, la mordaza 13 y la celda. Imprimir de pie sobre un costado."
   },
   "21_tapa_cuadrada": {
     "size_mm": [
       125.0,
       125.0,
-      86.6
+      88.1
     ],
-    "volume_mm3": 118368.2,
-    "note": "Tapa y embellecedor en una sola pieza (sustituye 21a, 21b y 09). Ceja circular que entra en la boca de la reserva. Imprimir boca abajo."
+    "volume_mm3": 110912.0,
+    "note": "Tapa de servicio cuadrada: cubre placa, disco y reserva y se levanta entera para mantenimiento. Lleva la boca de llenado con asiento para la tapa 09. Imprimir boca abajo."
   }
 }

@@ -33,7 +33,7 @@ Alimenta el ULN2003 y el motor con **5 V aparte** (≥ 1 A), no desde el pin 3V3
 
 ## Montaje mecánico (ya está en el CAD V4)
 
-- **Botón:** pulsador de panel de **12 mm**, normalmente abierto. Va en el agujero de la pared frontal de la carcasa 01, centrado bajo la ventana de la bandeja, y se aprieta con su tuerca por dentro. Detrás hay unos 28 mm libres para el cuerpo y los cables.
+- **Botón:** pulsador de panel de **12 mm**, normalmente abierto. Va en el realce del frente de la carcasa 01, **a la derecha de la ventana y a media altura**, bien a la vista. Se aprieta con su tuerca por dentro: el realce deja 3.5 mm de panel. El cuerpo puede medir hasta unos 18 mm detrás del panel.
 - **Motor:** el 28BYJ-48 entra por arriba en la bancada 10 nueva y se atornilla por sus dos orejas con **2 M3×8** y tuercas atrapadas debajo. Su eje queda justo bajo el centro del rotor. El puente 11 ya no hace falta.
 - **Rotor:** el rotor 03 nuevo tiene el agujero en doble D para el eje Ø5 de doble plano y **un prisionero M3×8** que aprieta contra un plano. El rotor de V3 (agujero redondo Ø6.4) no sirve con este motor.
 - **Electrónica:** la placa ULN2003 va en el piso, a la izquierda de la bancada; el cable del motor sale por detrás. El ESP32 va en la plataforma de la derecha, junto al paso de cable.
@@ -53,5 +53,5 @@ Las medidas del motor son las de la hoja de datos estándar: cuerpo Ø28 × 19 m
 ## Limitaciones
 
 - **Sin sensor de origen:** si el motor pierde pasos (un atasco), el disco queda desalineado y el firmware no lo nota. Para corregirlo, añade un sensor hall A3144 con un imán en el rotor.
-- **Sin confirmación de entrega:** la celda de carga y el HX711 todavía no se usan.
+- **Sin confirmación de entrega:** se quitó el sistema de pesaje, así que el firmware no sabe si de verdad cayó una pastilla. Revisa el bolsillo.
 - Prototipo sin validación física. No lo uses como único medio para administrar medicación.

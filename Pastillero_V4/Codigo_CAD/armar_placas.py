@@ -32,17 +32,17 @@ BED, MARGIN, GAP = 255.0, 2.0, 4.0
 PLACAS = {
     'Placa_1_estructura_PLA_capa_0.28': {
         'capa': 0.28, 'material': 'PLA o PETG',
-        'nota': 'Carcasa y piezas sin holguras finas. Capa gruesa = impresión más rápida.',
+        'nota': 'Carcasa con botón, tapa de llenado, rampa, bancada y cono. Capa gruesa = impresión más rápida.',
         'piezas': [
-            ('01_carcasa_v4_patas_pedestal_integrados', 65.0, 65.0, 0),
-            ('06_cono_repartidor_punta_arriba', 192.5, 62.5, 0),
-            ('10_bancada_28BYJ48', 32.0, 156.0, 0),
-            ('16_bandeja_pesaje_inclinada', 95.0, 165.0, 0),
-            ('13_mordaza_fija_celda_tuercas', 35.0, 215.0, 90),
+            ('01_carcasa_v4', 65.0, 68.0, 0),
+            ('09_tapa_llenado', 192.5, 62.5, 0),
+            ('16_rampa_salida', 35.0, 192.0, 0),
+            ('10_bancada_28BYJ48', 100.0, 192.0, 90),
+            ('06_cono_repartidor_punta_arriba', 192.5, 192.0, 0),
         ]},
     'Placa_2_mecanismo_y_tapa_PLA_capa_0.20': {
         'capa': 0.20, 'material': 'PLA o PETG',
-        'nota': 'Reserva (con techo y separadores), disco y placa: holguras finas. Y la tapa cuadrada.',
+        'nota': 'Reserva (con techo, separadores y barredor), disco y placa: holguras finas. Y la tapa de servicio.',
         'piezas': [
             ('21_tapa_cuadrada', 65.0, 65.0, 0),
             ('07_reserva_con_barredor', 192.5, 62.5, 0),
@@ -51,21 +51,21 @@ PLACAS = {
         ]},
 }
 
-# Solo las piezas que no existen en V3 o que cambiaron. Con el motor 28BYJ-48
-# también cambian la bancada 10 y el rotor 03; de V3 solo se reutiliza el cono 06.
+# Solo las piezas que no existen en V3 o que cambiaron. De V3 solo se reutiliza
+# el cono 06 (idéntico); todo lo demás cambió con el motor 28BYJ-48, la rampa y las tapas.
 PLACAS_NUEVAS = {
     'Placa_1_nuevas_estructura_PLA_capa_0.28': {
         'capa': 0.28, 'material': 'PLA o PETG',
-        'nota': 'Carcasa con botón, bancada del 28BYJ-48, bandeja inclinada y mordaza. Capa gruesa = impresión más rápida.',
+        'nota': 'Carcasa con botón, tapa de llenado, rampa y bancada. Capa gruesa = impresión más rápida.',
         'piezas': [
-            ('01_carcasa_v4_patas_pedestal_integrados', 65.0, 65.0, 0),
-            ('16_bandeja_pesaje_inclinada', 190.0, 62.0, 0),
-            ('13_mordaza_fija_celda_tuercas', 190.0, 120.0, 90),
-            ('10_bancada_28BYJ48', 65.0, 185.0, 0),
+            ('01_carcasa_v4', 65.0, 68.0, 0),
+            ('09_tapa_llenado', 192.5, 62.5, 0),
+            ('16_rampa_salida', 35.0, 192.0, 0),
+            ('10_bancada_28BYJ48', 100.0, 192.0, 90),
         ]},
     'Placa_2_nuevas_reserva_placa_rotor_y_tapa_PLA_capa_0.20': {
         'capa': 0.20, 'material': 'PLA o PETG',
-        'nota': 'Reserva (con techo, separadores y barredor), placa con canal y rotor para eje D5: holguras finas. Y la tapa cuadrada.',
+        'nota': 'Reserva (con techo, separadores y barredor), placa con canal y rotor para eje D5: holguras finas. Y la tapa de servicio.',
         'piezas': [
             ('21_tapa_cuadrada', 65.0, 65.0, 0),
             ('07_reserva_con_barredor', 192.5, 62.5, 0),

@@ -3,18 +3,17 @@
   "continuous_rotor_sweep_collisions": [],
   "minimum_nominal_rotor_clearance_mm": 0.299,
   "rotor_clearances_mm": {
-    "01_carcasa_v4_patas_pedestal_integrados": 4.4,
+    "01_carcasa_v4": 4.4,
     "02_placa_inferior_con_canal": 0.4,
     "07_reserva_con_barredor": 0.299,
+    "09_tapa_llenado": 32.7,
     "10_bancada_28BYJ48": 3.5,
-    "13_mordaza_fija_celda_tuercas": 48.212,
-    "16_bandeja_pesaje_inclinada": 24.997,
+    "16_rampa_salida": 30.782,
     "21_tapa_cuadrada": 8.0,
     "REF_ESP32_DevKit": 68.19,
-    "REF_celda_50x15x7": 53.509,
     "REF_driver_ULN2003": 76.101,
     "REF_motor_28BYJ48": 0.7,
-    "REF_pulsador_12mm": 69.715,
+    "REF_pulsador_12mm": 48.392,
     "TORNILLO_placas_-39.244_-39.244": 1.499,
     "TORNILLO_placas_-39.244_39.244": 1.499,
     "TORNILLO_placas_39.244_-39.244": 1.499,
@@ -25,9 +24,6 @@
     "TORNILLO_motor_base_18.5_16": 69.224,
     "TORNILLO_motor_oreja_-17.5": 6.448,
     "TORNILLO_motor_oreja_17.5": 6.448,
-    "TORNILLO_mordaza_fija_-51": 59.401,
-    "TORNILLO_mordaza_fija_-27": 50.663,
-    "TORNILLO_bandeja_prisionero": 50.103,
     "TUERCA_placas_-39.244_-39.244": 6.0,
     "TUERCA_placas_-39.244_39.244": 6.0,
     "TUERCA_placas_39.244_-39.244": 6.0,
@@ -37,22 +33,18 @@
     "TUERCA_motor_base_18.5_-16": 69.851,
     "TUERCA_motor_base_18.5_16": 69.851,
     "TUERCA_motor_oreja_-17.5": 8.778,
-    "TUERCA_motor_oreja_17.5": 8.778,
-    "TUERCA_mordaza_fija_-51": 59.0,
-    "TUERCA_mordaza_fija_-27": 49.62,
-    "TUERCA_bandeja_prisionero": 54.386
+    "TUERCA_motor_oreja_17.5": 8.778
   },
   "new_part_gaps_mm": {
-    "bandeja_vs_01_carcasa_v4_patas_pedestal_integrados": 0.45,
-    "bandeja_vs_13_mordaza_fija_celda_tuercas": 0.453,
-    "bandeja_vs_10_bancada_28BYJ48": 0.5,
-    "bandeja_vs_02_placa_inferior_con_canal": 9.699,
-    "bandeja_vs_TORNILLO_mordaza_fija_-51": 1.963,
-    "bandeja_vs_TORNILLO_mordaza_fija_-27": 12.106,
+    "rampa_vs_10_bancada_28BYJ48": 0.5,
+    "rampa_vs_02_placa_inferior_con_canal": 9.858,
+    "rampa_vs_REF_pulsador_12mm": 9.566,
+    "rampa_vs_REF_ESP32_DevKit": 4.717,
+    "rampa_vs_REF_driver_ULN2003": 16.688,
     "tapa_vs_02_placa_inferior_con_canal": 0.5,
     "tapa_vs_07_reserva_con_barredor": 0.3,
     "tapa_vs_TORNILLO_placas_39.244_39.244": 17.111,
-    "tapa_vs_01_carcasa_v4_patas_pedestal_integrados": 0.0,
+    "tapa_vs_01_carcasa_v4": 0.0,
     "barredor_vs_03_rotor_15x8_eje_D5": 0.4,
     "barredor_vs_06_cono_repartidor_punta_arriba": 0.411
   },
@@ -114,29 +106,87 @@
     },
     {
       "pose": "bolsillo",
-      "pos": -70.0,
+      "pos": -75.0,
       "intersections": []
     }
   ],
   "assembly_path_collisions": [],
+  "floating_parts": [],
+  "exit_window_uncovered_mm3": 0.0,
+  "supports": {
+    "01_carcasa_v4": [
+      "02_placa_inferior_con_canal",
+      "10_bancada_28BYJ48",
+      "16_rampa_salida",
+      "21_tapa_cuadrada",
+      "REF_ESP32_DevKit",
+      "REF_driver_ULN2003",
+      "REF_pulsador_12mm"
+    ],
+    "02_placa_inferior_con_canal": [
+      "01_carcasa_v4",
+      "07_reserva_con_barredor"
+    ],
+    "03_rotor_15x8_eje_D5": [
+      "06_cono_repartidor_punta_arriba",
+      "prisionero_rotor_X"
+    ],
+    "06_cono_repartidor_punta_arriba": [
+      "03_rotor_15x8_eje_D5"
+    ],
+    "07_reserva_con_barredor": [
+      "02_placa_inferior_con_canal"
+    ],
+    "09_tapa_llenado": [
+      "21_tapa_cuadrada"
+    ],
+    "10_bancada_28BYJ48": [
+      "01_carcasa_v4",
+      "REF_motor_28BYJ48"
+    ],
+    "16_rampa_salida": [
+      "01_carcasa_v4"
+    ],
+    "21_tapa_cuadrada": [
+      "01_carcasa_v4",
+      "09_tapa_llenado"
+    ],
+    "REF_ESP32_DevKit": [
+      "01_carcasa_v4"
+    ],
+    "REF_driver_ULN2003": [
+      "01_carcasa_v4"
+    ],
+    "REF_motor_28BYJ48": [
+      "10_bancada_28BYJ48",
+      "prisionero_rotor_X"
+    ],
+    "REF_pulsador_12mm": [
+      "01_carcasa_v4"
+    ],
+    "prisionero_rotor_X": [
+      "03_rotor_15x8_eje_D5",
+      "REF_motor_28BYJ48"
+    ]
+  },
   "meshes": [
     {
-      "file": "01_carcasa_v4_patas_pedestal_integrados.stl",
-      "triangles": 15940,
+      "file": "01_carcasa_v4.stl",
+      "triangles": 14512,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0,
-      "volume_relative_error": 4.7e-05,
+      "volume_relative_error": 5.1e-05,
       "print_height_mm": 92.0
     },
     {
       "file": "02_placa_inferior_con_canal.stl",
-      "triangles": 6488,
+      "triangles": 6472,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0221,
-      "volume_relative_error": 0.000222,
-      "print_height_mm": 43.0
+      "volume_relative_error": 0.000217,
+      "print_height_mm": 50.28
     },
     {
       "file": "03_rotor_15x8_eje_D5.stl",
@@ -166,6 +216,15 @@
       "print_height_mm": 75.8
     },
     {
+      "file": "09_tapa_llenado.stl",
+      "triangles": 4436,
+      "bad_edges": 0,
+      "winding_errors": 0,
+      "dimension_max_error_mm": 0.0206,
+      "volume_relative_error": 0.000264,
+      "print_height_mm": 5.5
+    },
+    {
       "file": "10_bancada_28BYJ48.stl",
       "triangles": 7166,
       "bad_edges": 0,
@@ -175,42 +234,32 @@
       "print_height_mm": 72.5
     },
     {
-      "file": "13_mordaza_fija_celda_tuercas.stl",
-      "triangles": 1332,
+      "file": "16_rampa_salida.stl",
+      "triangles": 84,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0,
-      "volume_relative_error": 3e-06,
-      "print_height_mm": 3.5
-    },
-    {
-      "file": "16_bandeja_pesaje_inclinada.stl",
-      "triangles": 1462,
-      "bad_edges": 0,
-      "winding_errors": 0,
-      "dimension_max_error_mm": 0.0,
-      "volume_relative_error": 1e-06,
-      "print_height_mm": 47.5
+      "volume_relative_error": 0.0,
+      "print_height_mm": 47.0
     },
     {
       "file": "21_tapa_cuadrada.stl",
-      "triangles": 6524,
+      "triangles": 5116,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0,
-      "volume_relative_error": 2.3e-05,
-      "print_height_mm": 86.6
+      "volume_relative_error": 3.3e-05,
+      "print_height_mm": 88.1
     }
   ],
   "fasteners": {
-    "M3x30": 6,
+    "M3x30": 4,
     "M3x12": 7,
     "M3x8": 2,
-    "prisionero M3x10": 1,
     "prisionero M3x8": 1
   },
-  "fastener_count": 17,
-  "nut_count": 18,
+  "fastener_count": 14,
+  "nut_count": 15,
   "unique_print_files": 9,
   "printed_parts_in_assembly": 9,
   "physical_validation": false

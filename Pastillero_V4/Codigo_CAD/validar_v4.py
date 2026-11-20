@@ -46,10 +46,6 @@ for x in [-18.5, 18.5]:
 for x in [-params['motor_ear_x'], params['motor_ear_x']]:
     n = f'motor_oreja_{x}'; bolt(n, x, params['motor_body_offset_y'], params['motor_top_z'], 8)
     nut(n, x, params['motor_body_offset_y'], 71.6)
-for y in [-51, -27]:
-    bolt(f'mordaza_fija_{y}', -18.5, y, 4.0, 30, True); nut(f'mordaza_fija_{y}', -18.5, y, 32.0)
-gx, gy = params['tray_grub_xy']
-grub('bandeja_prisionero', gx, gy, 31.0, 10); nut('bandeja_prisionero', gx, gy, 32.1)
 for k, (x, y) in enumerate(params['cone_bolts_xy']):
     bolt(f'cono_{k}', x, y, 95.4, 12, True); nut(f'cono_{k}', x, y, 104.1)
     nuts[f'cono_{k}'] = nuts[f'cono_{k}'].rotate((x, y, 0), (x, y, 1), 15)
@@ -58,7 +54,7 @@ radial = {}
 pts = [(3.175 * math.cos(math.radians(30 + i * 60)), 3.175 * math.sin(math.radians(30 + i * 60))) for i in range(6)]
 radial['tuerca_rotor_X'] = (cq.Workplane('YZ', origin=(5.9, 0, 84)).polyline(pts).close().extrude(2.4).val()
                             .cut(cq.Solid.makeCylinder(1.7, 3, V(5.7, 0, 84), V(1, 0, 0))))
-radial['prisionero_rotor_X'] = cq.Solid.makeCylinder(1.5, 8, V(1.55, 0, 84), V(1, 0, 0))
+radial['prisionero_rotor_X'] = cq.Solid.makeCylinder(1.5, 8, V(1.5, 0, 84), V(1, 0, 0))   # punta contra el plano del eje
 bolt_schedule.append('prisionero M3x8')
 
 hardware = {**{'TORNILLO_' + n: s for n, s in fast.items()}, **{'TUERCA_' + n: s for n, s in nuts.items()}, **radial}
@@ -85,23 +81,22 @@ for nv in VARIANTS:
                 col.append([nv, nb, round(v, 5)])
 print('PAIRWISE', col, flush=True)
 
-# Holguras de piezas nuevas que no deben tocarse (la bandeja cuelga solo de la celda).
+# Holguras que importan.
 gaps = {}
-tray = parts['16_bandeja_pesaje_inclinada']
-for n in ['01_carcasa_v4_patas_pedestal_integrados', '13_mordaza_fija_celda_tuercas', '10_bancada_28BYJ48',
-          '02_placa_inferior_con_canal', 'TORNILLO_mordaza_fija_-51', 'TORNILLO_mordaza_fija_-27']:
-    gaps['bandeja_vs_' + n] = round(tray.distance(allshapes[n]), 3)
+ramp = parts['16_rampa_salida']
+for n in ['10_bancada_28BYJ48', '02_placa_inferior_con_canal', 'REF_pulsador_12mm', 'REF_ESP32_DevKit', 'REF_driver_ULN2003']:
+    gaps['rampa_vs_' + n] = round(ramp.distance(allshapes[n]), 3)
 cap = parts['21_tapa_cuadrada']
 for n in ['02_placa_inferior_con_canal', '07_reserva_con_barredor',
-          'TORNILLO_placas_39.244_39.244', '01_carcasa_v4_patas_pedestal_integrados']:
+          'TORNILLO_placas_39.244_39.244', '01_carcasa_v4']:
     gaps['tapa_vs_' + n] = round(cap.distance(allshapes[n]), 3)
 # Barredor y techo: la parte de la reserva que queda sobre el disco (z 100..105.7, r<51).
 sweeper = parts['07_reserva_con_barredor'].intersect(cq.Solid.makeCylinder(51, 5.7, V(0, 0, 100.0)))  # sin el pin (r=56)
 for n in ['03_rotor_15x8_eje_D5', '06_cono_repartidor_punta_arriba']:
     gaps['barredor_vs_' + n] = round(sweeper.distance(allshapes[n]), 3)
 print('GAPS', gaps, flush=True)
-assert all(g >= 0.4 for k, g in gaps.items() if k.startswith(('bandeja', 'barredor'))), gaps
-assert all(g >= 0.25 for k, g in gaps.items() if k.startswith('tapa') and not k.endswith('01_carcasa_v4_patas_pedestal_integrados')), gaps  # la tapa apoya en la carcasa
+assert all(g >= 0.4 for k, g in gaps.items() if k.startswith(('rampa', 'barredor'))), gaps
+assert all(g >= 0.25 for k, g in gaps.items() if k.startswith('tapa') and not k.endswith('01_carcasa_v4')), gaps  # la tapa apoya en la carcasa
 
 # Barrido continuo del grupo giratorio.
 env = (cq.Solid.makeCylinder(52.5, 8, V(0, 0, 93.4)).fuse(cq.Solid.makeCylinder(10, 13.4, V(0, 0, 80)))
@@ -128,8 +123,8 @@ poses = [('cayendo', pill.translate((0, -40, z)), z) for z in [93, 89, 80, 70, 6
 tilted = pill.rotate((0, 0, 0), (1, 0, 0), params['tray_slope_deg'])  # cara inferior paralela a la rampa
 for y in [-36, -40, -45, -50, -54]:          # apoyada en la rampa, bajando
     poses.append(('rampa', tilted.translate((0, y, floor_top(y) + 0.15)), y))
-for y in [-70.0]:                             # en el bolsillo exterior
-    poses.append(('bolsillo', pill.translate((0, y, floor_top(-70) + 0.1)), y))
+for y in [tf['pocket_y_center']]:              # en el bolsillo exterior
+    poses.append(('bolsillo', pill.translate((0, y, floor_top(y) + 0.1)), y))
 trajectory = []
 for kind, s_, key in poses:
     bad = [[n, round(o.intersect(s_).Volume(), 3)] for n, o in {**assembly, **hardware}.items()
@@ -137,30 +132,60 @@ for kind, s_, key in poses:
     trajectory.append({'pose': kind, 'pos': key, 'intersections': bad})
 assert all(not t['intersections'] for t in trajectory), trajectory
 # La pastilla del bolsillo queda fuera de la carcasa (se toma desde fuera).
-assert pill.translate((0, -70, 0)).BoundingBox().ymin < -62.5
+assert pill.translate((0, tf['pocket_y_center'], 0)).BoundingBox().ymax < -62.5  # la pastilla entera queda fuera de la caja
 
-# Montaje: el bloque celda + mordaza + bandeja entra por arriba desplazado 22 mm
-# hacia atrás (el bolsillo pasa por dentro de la pared), baja y avanza por la
-# ventana hasta su sitio. Se monta ANTES que la bancada del motor.
-block = [allshapes['16_bandeja_pesaje_inclinada'], allshapes['13_mordaza_fija_celda_tuercas'],
-         refs['REF_celda_50x15x7']]
-path = [(0, 22, dz) for dz in [80, 60, 40, 30, 20, 10, 5, 2, 0.5]] + \
-       [(0, dy, 0.5) for dy in [20, 16, 12, 8, 4, 2, 0]] + [(0, 0, 0.25), (0, 0, 0)]
+# Una pastilla por giro: vista desde arriba, la ventana de salida de la placa
+# (16.8 x 9.6 en y=-40) debe quedar tapada entera por el techo de la reserva,
+# así no caen pastillas de la reserva directamente cuando una cavidad se alinea.
+window = cq.Workplane('XY', origin=(0, -40, 101.8)).slot2D(16.8, 9.6, angle=90).extrude(4).val()
+uncovered = window.cut(assembly['07_reserva_con_barredor']).Volume()
+print('VENTANA_DESCUBIERTA_mm3', round(uncovered, 4), flush=True)
+assert uncovered < 0.001
+
+# Montaje de la rampa: entra por arriba 35 mm más atrás (el bolsillo pasa por
+# dentro de la pared), baja hasta 2 mm sobre el piso, avanza por la ventana y
+# baja 2 mm para que los nervios entren en sus ranuras. Va ANTES que la bancada.
+path = [(0, 35, dz) for dz in [80, 60, 40, 20, 10, 4, 2]] + \
+       [(0, dy, 2.0) for dy in [30, 25, 20, 15, 10, 5, 2, 0]] + [(0, 0, 1.0), (0, 0, 0)]
 insert_bad = []
 for dx, dy, dz in path:
-    for s_ in block:
-        t = s_.translate((dx, dy, dz))
-        v = t.intersect(assembly['01_carcasa_v4_patas_pedestal_integrados']).Volume()
+    t = ramp.translate((dx, dy, dz))
+    for n in ['01_carcasa_v4', 'REF_pulsador_12mm', 'REF_driver_ULN2003', 'REF_ESP32_DevKit']:
+        v = t.intersect(allshapes[n]).Volume()
         if v > .001:
-            insert_bad.append([dy, dz, round(v, 3)])
-# Después, la bancada y el motor bajan en vertical sin tocar la bandeja.
+            insert_bad.append([n, dy, dz, round(v, 3)])
+# Después, la bancada baja en vertical sin tocar la rampa.
 for dz in [80, 40, 10, 2, 0.5]:
-    for n in ['10_bancada_28BYJ48']:
-        v = assembly[n].translate((0, 0, dz)).intersect(allshapes['16_bandeja_pesaje_inclinada']).Volume()
-        if v > .001:
-            insert_bad.append([n, dz, round(v, 3)])
+    v = assembly['10_bancada_28BYJ48'].translate((0, 0, dz)).intersect(ramp).Volume()
+    if v > .001:
+        insert_bad.append(['10_bancada_28BYJ48', dz, round(v, 3)])
 print('MONTAJE', insert_bad, flush=True)
 assert not insert_bad
+
+# Ninguna pieza flotando: cada pieza y componente debe apoyar en otro (contacto
+# a menos de 0.02 mm) y, siguiendo esos apoyos, todo debe llegar a la carcasa.
+# El rotor cuelga del eje del motor por su prisionero: ese apoyo se cuenta con
+# el prisionero, que toca el plano del eje.
+bodies = {**assembly, **refs, 'prisionero_rotor_X': radial['prisionero_rotor_X']}
+contacts = {n: set() for n in bodies}
+names = list(bodies)
+for i, a in enumerate(names):
+    for b in names[i + 1:]:
+        if overlap(bodies[a], bodies[b]) and bodies[a].distance(bodies[b]) < 0.02:
+            contacts[a].add(b); contacts[b].add(a)
+# Uniones roscadas (no hay contacto geométrico porque el agujero tiene holgura):
+# el prisionero rosca en la tuerca atrapada en el cubo del rotor.
+for a_, b_ in [('prisionero_rotor_X', '03_rotor_15x8_eje_D5')]:
+    contacts[a_].add(b_); contacts[b_].add(a_)
+seen, todo = {'01_carcasa_v4'}, ['01_carcasa_v4']
+while todo:
+    for nb in contacts[todo.pop()]:
+        if nb not in seen:
+            seen.add(nb); todo.append(nb)
+floating = sorted(set(bodies) - seen)
+supports = {n: sorted(contacts[n]) for n in bodies}
+print('FLOTANDO', floating, flush=True)
+assert not floating, floating
 
 # Mallas STL: cerradas, orientación coherente, misma envolvente y volumen que el CAD.
 mesh = []
@@ -185,7 +210,7 @@ for p in sorted((R / 'STL').glob('*.stl')):
 
 result = {'static_collisions_mm3_above_0_001': col, 'continuous_rotor_sweep_collisions': sweepbad,
           'minimum_nominal_rotor_clearance_mm': min(clearances.values()), 'rotor_clearances_mm': clearances,
-          'new_part_gaps_mm': gaps, 'pill_release_path': trajectory, 'assembly_path_collisions': insert_bad, 'meshes': mesh,
+          'new_part_gaps_mm': gaps, 'pill_release_path': trajectory, 'assembly_path_collisions': insert_bad, 'floating_parts': floating, 'exit_window_uncovered_mm3': uncovered, 'supports': supports, 'meshes': mesh,
           'fasteners': dict(collections.Counter(bolt_schedule)), 'fastener_count': len(bolt_schedule),
           'nut_count': len(nuts) + 2, 'unique_print_files': len(parts),
           'printed_parts_in_assembly': len(assembly), 'physical_validation': False}

@@ -1,14 +1,17 @@
 """Pastillero V4. Unidades mm. Parte de los STEP de V3 y aplica los cambios de V4.
 
-Cambios respecto a V3:
-  01  Carcasa con patas integradas (base nervada), pedestal de celda integrado y
-      reforzado, tope de sobrecarga bajo el extremo móvil, plataforma electrónica
-      integrada y paso de cable trasero. Sustituye a 01, 12, 18 y 19.
-  02  Placa inferior con el canal de descarga integrado. Sustituye a 02 y 17.
-  04  Aro con techo y los cuatro separadores integrados. Sustituye a 04 y 05.
-  16  Bandeja de pesaje de una pieza con manguito para la celda y un prisionero.
-      Sustituye a 14, 15 y 16.
-  21  Embellecedor nuevo entre la carcasa y la reserva (versión corta y alta).
+Piezas que genera (9 a imprimir + referencias):
+  01  Carcasa: patas nervadas, plataforma electrónica, paso de cable, ranuras
+      de la rampa y realce con el botón de entrega. Sustituye a 01, 12, 18, 19.
+  02  Placa inferior con el canal de descarga integrado y prolongado.
+  03  Rotor V3 con cubo en doble D para el eje Ø5 del motor 28BYJ-48.
+  06  Cono V3 sin cambios.
+  07  Reserva con techo, separadores y barredor integrados (sustituye 04, 05, 20).
+  09  Tapa de llenado redonda, encajada a ras en la tapa de servicio.
+  10  Bancada para el motor 28BYJ-48 (sustituye 10 y 11).
+  16  Rampa de salida fija con bolsillo exterior (sin celda de carga).
+  21  Tapa de servicio cuadrada.
+Sin sistema de pesaje: se eliminaron celda, mordaza 13, pedestal y tope.
 
 Uso: python generar_pastillero_v4.py [directorio_salida]
 Requiere Python 3.12 y CadQuery 2.7. Las piezas que vienen de V3 están en fuentes_V3/.
@@ -52,19 +55,24 @@ def extr_yz(pts, x0, x1):
     return cq.Workplane('YZ', origin=(x0, 0, 0)).polyline(pts).close().extrude(x1 - x0).val()
 
 
-# Geometría de la bandeja inclinada (16), compartida con el canal de la placa 02.
+# Geometría de la rampa de salida (16), compartida con el canal de la placa 02.
+# Ya no hay celda de carga: la rampa es fija, apoya en el borde inferior de la
+# ventana (z=25) y en dos nervios que encajan en ranuras del piso.
 SLOPE = math.tan(math.radians(25))      # fondo a 25°: la pastilla resbala sola
-FLOOR, TW, WALL_H, LIP_H = 2.0, 2.0, 12.0, 6.0
-TY_BACK, TY_FRONT = -21.5, -80.0        # bandeja de -21.5 a -80 (sale 17.5 mm)
-Y_KNEE = -62.0                          # fin de la rampa / inicio del bolsillo
-Z_REF = 37.0                            # cara superior del fondo en y=-55
+FLOOR, TW, WALL_H, LIP_H = 2.0, 2.0, 12.0, 5.0
+RX = 23.5                               # media anchura (ventana: x -27..27)
+TY_BACK, TY_FRONT = -21.5, -92.0        # de -21.5 a -92: el bolsillo sale 29.5 mm de la caja
+Y_KNEE = -60.0                          # fin de la rampa / inicio del bolsillo (cara interior de la pared)
+Z_POCKET = 27.0                         # cara superior del bolsillo: su base (z=25) apoya en la ventana
+Z_REF = Z_POCKET + (-55.0 - Y_KNEE) * SLOPE    # cara superior del fondo en y=-55
+RIB_Y = (-50.0, -30.0)                  # nervios bajo la rampa
+GROOVE = 1.5                            # profundidad de las ranuras del piso
 
 
 def floor_top(y):
     return Z_REF + (y + 55.0) * SLOPE if y >= Y_KNEE else Z_REF + (Y_KNEE + 55.0) * SLOPE
 
 
-Z_POCKET = floor_top(Y_KNEE)
 CANAL_GAP = 10.0                        # hueco canal-rampa para que pase la pastilla
 
 parts, notes = {}, {}
@@ -103,24 +111,10 @@ for x, y in [(-18.5, -51), (-18.5, -27), (27.5, -29.5), (55.5, -29.5),
              (27.5, 29.5), (55.5, 29.5)]:
     car = car.fuse(cyl(1.8, 4.0, x, y, 0))
 
-# Pedestal fijo de la celda integrado: más ancho, unido al piso y a la pared
-# frontal, con contrafuerte. Mantiene la cara de apoyo de V3 (z=24).
-# Los dos M3x30 de la mordaza 13 entran DESDE ABAJO de la carcasa (cabeza
-# alojada en el piso) y roscan en tuercas atrapadas en la mordaza 13. Así la
-# celda, la mordaza y la bandeja se arman fuera y se bajan como un bloque.
-ped = box(-25, -12, -60.0, -23, 4, 24)
-ped = ped.fuse(cq.Workplane('XZ', origin=(0, -23, 0))
-               .polyline([(-25, 4), (-33, 4), (-25, 14)]).close()
-               .extrude(37.0).val())          # XZ extruye hacia -Y
-car = car.fuse(ped)
-for y in (-51, -27):
-    car = car.cut(cyl(1.7, 30, -18.5, y, -1))                     # paso M3
-    car = car.cut(cyl(3.2, 7.1, -18.5, y, -3.1))                  # cabeza
-
-# Segundo apoyo = tope de sobrecarga bajo el extremo móvil. La bandeja queda
-# libre 0.45 mm por encima; solo toca si la celda se sobrecarga o se golpea.
-STOP_TOP = 21.35
-car = car.fuse(box(12, 23, -46, -32, 4, STOP_TOP))
+# Sin sistema de pesaje: ya no hay pedestal, tope ni tornillos de mordaza.
+# Ranuras en el piso donde encajan los dos nervios de la rampa de salida.
+for yr in RIB_Y:
+    car = car.cut(box(-RX - 0.3, RX + 0.3, yr - 1.8, yr + 1.8, 4 - GROOVE, 4.1))
 
 # Plataforma electrónica integrada (geometría de la pieza 18 sin tornillos).
 plat = box(24, 59, -32.5, 32.5, 8, 11)
@@ -135,16 +129,26 @@ car = car.fuse(plat)
 car = car.cut(cq.Workplane('YZ', origin=(56, 0, 17)).slot2D(14, 8)
               .extrude(10).val())
 
-# Botón de entrega: pulsador de panel de 12 mm en la pared frontal, centrado
-# bajo la ventana, justo debajo del bolsillo de la bandeja. Detrás hay ~28 mm
-# libres (entre pedestal y tope de sobrecarga) para el cuerpo y la tuerca.
-BOTON_D, BOTON_XZ = 12.3, (0.0, 14.0)
-car = car.cut(cq.Solid.makeCylinder(BOTON_D / 2, 8, V(BOTON_XZ[0], -58.0, BOTON_XZ[1]), V(0, -1, 0)))
+# Botón de entrega a la vista: a la derecha de la ventana, a media altura,
+# sobre un realce en forma de gota (se imprime sin soportes) que sobresale
+# 5.5 mm. Por dentro, un rebaje de Ø20 deja 3.5 mm de panel para la tuerca del
+# pulsador de 12 mm, y el cuerpo queda lejos de la columna trasera.
+BOTON_D, BOTON_XZ = 12.3, (41.0, 40.0)
+BOSS_R, BOSS_FACE, PANEL_T = 12.0, -68.0, 3.5
+bx, bz = BOTON_XZ
+k45 = BOSS_R * math.sqrt(0.5)
+boss = (cq.Workplane('XZ', origin=(0, -62.5 + 0.01, 0)).center(bx, bz).circle(BOSS_R).extrude(-BOSS_FACE - 62.5 + 0.01)
+        .val().fuse(cq.Workplane('XZ', origin=(0, -62.5 + 0.01, 0))
+                    .polyline([(bx - k45, bz - k45), (bx + k45, bz - k45), (bx, bz - BOSS_R * math.sqrt(2))]).close()
+                    .extrude(-BOSS_FACE - 62.5 + 0.01).val()))
+car = car.fuse(boss)
+car = car.cut(cq.Solid.makeCylinder(BOTON_D / 2, 12, V(bx, -57.0, bz), V(0, -1, 0)))                 # paso del botón
+car = car.cut(cq.Solid.makeCylinder(10.0, -59.0 - (BOSS_FACE + PANEL_T), V(bx, -59.0, bz), V(0, -1, 0)))  # rebaje de la tuerca
 
-add('01_carcasa_v4_patas_pedestal_integrados', car,
-    'Carcasa V3 + patas nervadas, pedestal de celda reforzado, tope de '
-    'sobrecarga, plataforma electrónica, paso de cable y agujero de 12 mm para '
-    'el botón de entrega. Sustituye 01, 12, 18, 19.')
+add('01_carcasa_v4', car,
+    'Carcasa V3 + patas nervadas, plataforma electrónica, paso de cable, '
+    'ranuras de la rampa y realce con el botón de entrega a la derecha de la '
+    'ventana. Sustituye 01, 12, 18, 19.')
 
 # --------------------------------------------------- 02 placa + canal integrado
 plate = cyl(60, 4, z=89)
@@ -171,8 +175,10 @@ for i in range(400):
     zf = z
 for x in (-14, 14):
     canal = canal.fuse(cyl(3.2, 89 - zf, x, -40, zf))
-# Boca del canal recortada en paralelo a la rampa de la bandeja, con 10 mm de
-# paso: la pastilla cae, resbala y sale por debajo de la pared frontal.
+# El canal se prolonga hacia abajo y su boca se corta en paralelo a la rampa,
+# con 10 mm de paso: guía la caída y la pastilla sale por debajo de la pared.
+ext = box(-9.5, 9.5, -55, -25, 20, 50.01).cut(box(-6.5, 6.5, -52, -28, 19, 52))
+canal = canal.fuse(ext)
 canal = canal.cut(extr_yz([(-70, 0), (-70, floor_top(-70) + CANAL_GAP),
                            (-15, floor_top(-15) + CANAL_GAP), (-15, 0)], -30, 30))
 add('02_placa_inferior_con_canal', plate.fuse(canal),
@@ -245,61 +251,46 @@ add('07_reserva_con_barredor', res,
     '(sustituye a 04, 05 y al peine 20 de TPU). Poste de orientación hacia la '
     'placa 02. Imprimir boca abajo.')
 
-# ------------------------------------------ 16 bandeja inclinada, una pieza
-# Celda (referencia) 50x15x7: x -25..25, y -46.5..-31.5, z 24..31. Extremo
-# móvil en +X. La bandeja abraza el extremo con un manguito y se fija con un
-# prisionero M3x10 que se aprieta desde dentro de la bandeja.
-# El fondo baja a 25° hacia la ventana frontal y termina en un bolsillo que
-# sale por la ventana: la pastilla resbala sola y se toma desde fuera, sin
-# dejar de estar sobre la celda (se sigue pesando).
-CL = 0.2
-TX0, TX1 = -22.5, 25.0                  # ventana de la carcasa: x -27..27
-SZ0 = 24 - CL - 2.0                     # fondo del manguito (21.8)
-sleeve = box(10, TX1, -46.5 - CL - 3, -31.5 + CL + 3, SZ0, 70)
-sleeve = sleeve.cut(box(9, TX1 + 1, -46.5 - CL, -31.5 + CL, 24 - CL, 31 + CL))
-tray = sleeve.intersect(extr_yz([(-90, 0), (-90, Z_POCKET), (Y_KNEE, Z_POCKET),
-                                 (TY_BACK, floor_top(TY_BACK)), (TY_BACK, 0)], TX0, TX1))
+# ------------------------------------------------- 16 rampa de salida fija
+# Sin pesaje. El fondo baja a 25° hacia la ventana y termina en un bolsillo
+# largo (30 mm) que sale 29.5 mm de la caja: caben varias pastillas y se toman
+# con los dedos sin meter la mano. Apoya en el borde inferior de la ventana
+# (z=25) y en dos nervios que encajan 1.5 mm en ranuras del piso: no flota y
+# no se mueve. Se mete desde dentro antes que la bancada del motor.
 outer = extr_yz([(TY_BACK, floor_top(TY_BACK) - FLOOR), (Y_KNEE, Z_POCKET - FLOOR),
-                 (TY_FRONT, Z_POCKET - FLOOR), (TY_FRONT, Z_POCKET + WALL_H),
-                 (Y_KNEE, Z_POCKET + WALL_H), (TY_BACK, floor_top(TY_BACK) + WALL_H)], TX0, TX1)
+                 (TY_FRONT, Z_POCKET - FLOOR), (TY_FRONT, Z_POCKET + WALL_H - 2),
+                 (Y_KNEE, Z_POCKET + WALL_H), (TY_BACK, floor_top(TY_BACK) + WALL_H)], -RX, RX)
 cavity = extr_yz([(TY_BACK + TW, floor_top(TY_BACK + TW)), (Y_KNEE, Z_POCKET),
                   (TY_FRONT + TW, Z_POCKET), (TY_FRONT + TW, 120), (TY_BACK + TW, 120)],
-                 TX0 + TW, TX1 - TW)
-tray = tray.fuse(outer).cut(cavity)
+                 -RX + TW, RX - TW)
+ramp = outer.cut(cavity)
 # Labio frontal más bajo que las paredes para meter los dedos.
-tray = tray.cut(box(TX0 + TW, TX1 - TW, TY_FRONT - 1, TY_FRONT + TW + 0.01, Z_POCKET + LIP_H, 120))
-GX, GY = 18.0, -39.0
-tray = tray.cut(cyl(1.7, 30, GX, GY, 30))                         # prisionero
-tray = tray.cut(hexprism(GX, GY, 32.0, 2.6))                       # tuerca
-tray = tray.cut(box(GX, TX1 + 1, GY - 2.95, GY + 2.95, 32.0, 34.6))  # ranura
-add('16_bandeja_pesaje_inclinada', tray,
-    'Sustituye 14, 15 y 16. Fondo a 25° hacia un bolsillo que sale por la '
-    'ventana frontal. Manguito para el extremo móvil de la celda y prisionero '
-    'M3x10 con tuerca. Imprimir de pie sobre la cara +X.')
+ramp = ramp.cut(box(-RX + TW, RX - TW, TY_FRONT - 1, TY_FRONT + TW + 0.01, Z_POCKET + LIP_H, 120))
+for yr in RIB_Y:                                                       # nervios
+    ramp = ramp.fuse(box(-RX, RX, yr - 1.5, yr + 1.5, 4 - GROOVE, floor_top(yr + 1.5) - FLOOR + 0.2))
+add('16_rampa_salida', ramp,
+    'Rampa fija a 25° con bolsillo largo que sale 29.5 mm por la ventana. Apoya '
+    'en la ventana y en dos nervios encajados en el piso. Sustituye a la bandeja '
+    'de pesaje 16, la mordaza 13 y la celda. Imprimir de pie sobre un costado.')
 
-# ------------------------------------------- 13 mordaza fija con tuercas
-# Misma envolvente que V3 (13x32x3.5). Tuercas M3 en alojamientos hexagonales
-# por arriba: quedan atrapadas bajo la bandeja y no se caen al montar.
-mor = box(-25, -12, -55, -23, 31, 34.5)
-for y in (-51, -27):
-    mor = mor.cut(cyl(1.7, 6, -18.5, y, 30)).cut(hexprism(-18.5, y, 31.9, 3))
-add('13_mordaza_fija_celda_tuercas', mor,
-    'Mordaza superior del extremo fijo. Dos tuercas M3 en su cara superior; '
-    'los M3x30 entran desde debajo de la carcasa.')
-
-# --------------------------------------------- 21 tapa cuadrada de una pieza
-# Sustituye al embellecedor (21a/21b) y a la tapa redonda 09. Caja cuadrada a
-# ras de la carcasa que cubre placa, disco, aro y reserva y cierra arriba. Una
-# ceja circular por dentro entra en la boca de la reserva y la centra; cuatro
-# pestañas de esquina entran en la carcasa. Para rellenar se levanta entera.
+# ------------------------- 21 tapa de servicio cuadrada + 09 tapa de llenado
+# Se abre en dos secciones:
+#   * 09 tapa de llenado: disco redondo encajado a ras en la cara de arriba.
+#     Se levanta con el dedo (muesca al frente) y se echan las pastillas por
+#     la boca Ø91 directamente a la reserva.
+#   * 21 tapa de servicio: la caja cuadrada entera. Se levanta para llegar al
+#     disco, el barredor y los tornillos. Su ceja circular entra en la boca de
+#     la reserva y cuatro pestañas en la carcasa.
 RES_TOP, RES_IN = 166.8, 49.0
 DECK0 = RES_TOP + 0.3                   # 0.3 mm sobre el borde de la reserva
-DECK_T = 2.5
+DECK_T = 4.0
 TOP = DECK0 + DECK_T
+FILL_R, SEAT_R, SEAT_D = RES_IN - 3.3, 52.5, 2.0   # boca de llenado, asiento de la tapa 09
 cap = rrect(W, RC, 89, TOP - 89).cut(rrect(W, RC, 88, DECK0 - 88, inset=2.0))
-cap = cap.fuse(cyl(RES_IN - 0.3, DECK0 - 163.8 + 0.01, z=163.8).cut(cyl(RES_IN - 3.3, 10, z=163)))   # ceja
-for x, y in [(12, 12), (-12, 12), (12, -12), (-12, -12)]:
-    cap = cap.cut(cyl(1.0, 10, x, y, DECK0 - 1))                     # respiraderos
+cap = cap.fuse(cyl(RES_IN - 0.3, DECK0 - 163.8 + 0.01, z=163.8).cut(cyl(FILL_R, 10, z=163)))   # ceja
+cap = cap.cut(cyl(FILL_R, 10, z=DECK0 - 1))                                        # boca de llenado
+cap = cap.cut(cyl(SEAT_R, SEAT_D + 1, z=TOP - SEAT_D))                              # asiento a ras
+cap = cap.cut(cyl(8.0, 4, 0, -SEAT_R, TOP - 3.0))                                   # muesca para el dedo
 tabs = rrect(W, RC, 83, 6.01, inset=WALL + 0.25).cut(rrect(W, RC, 82, 8, inset=WALL + 0.25 + 1.6))
 ledge = rrect(W, RC, 89, 2.0).cut(rrect(W, RC, 88, 4, inset=WALL + 0.25 + 1.6))
 keep = None
@@ -309,8 +300,17 @@ for sx in (-1, 1):
         keep = b if keep is None else keep.fuse(b)
 cap = cap.fuse(tabs.fuse(ledge).intersect(keep))
 add('21_tapa_cuadrada', cap,
-    'Tapa y embellecedor en una sola pieza (sustituye 21a, 21b y 09). Ceja '
-    'circular que entra en la boca de la reserva. Imprimir boca abajo.')
+    'Tapa de servicio cuadrada: cubre placa, disco y reserva y se levanta '
+    'entera para mantenimiento. Lleva la boca de llenado con asiento para la '
+    'tapa 09. Imprimir boca abajo.')
+
+lid = cyl(SEAT_R - 0.3, SEAT_D, z=TOP - SEAT_D)
+lid = lid.fuse(cyl(FILL_R - 0.3, DECK_T - SEAT_D + 1.5 + 0.01, z=DECK0 - 1.5).cut(cyl(FILL_R - 2.3, 10, z=DECK0 - 2)))
+for x, y in [(12, 12), (-12, 12), (12, -12), (-12, -12)]:
+    lid = lid.cut(cyl(1.0, 10, x, y, TOP - 5))                                     # respiraderos
+add('09_tapa_llenado', lid,
+    'Tapa redonda de llenado, encajada a ras en la tapa de servicio. Se levanta '
+    'por la muesca del frente. Imprimir boca abajo.')
 
 # ------------------------------------------------- motor 28BYJ-48 (referencia)
 # Medidas de la hoja de datos estándar: cuerpo Ø28 x 19, orejas con agujeros
@@ -378,7 +378,7 @@ for n in UNCHANGED:
 
 # ------------------------------------------------------------- exportación
 # Orientación de impresión de cada STL (los STEP quedan en coordenadas de ensamble).
-FLIP_X = {'02_', '03_', '04_', '07_', '10_', '21_'}  # boca abajo (la bancada: placa del motor sobre la cama)
+FLIP_X = {'02_', '03_', '04_', '07_', '09_', '10_', '21_'}  # boca abajo (la bancada: placa del motor sobre la cama)
 for d in ['STL', 'STEP_piezas', 'Referencias_NO_imprimir']:
     (OUT / d).mkdir(exist_ok=True)
 for n, s in sorted(parts.items()):
@@ -392,16 +392,14 @@ for n, s in sorted(parts.items()):
     cq.exporters.export(q, str(OUT / 'STL' / (n + '.stl')), tolerance=.025, angularTolerance=.08)
     cq.exporters.export(s, str(OUT / 'STEP_piezas' / (n + '.step')))
 REFS = V3
-for n in ['REF_celda_50x15x7']:
-    cq.exporters.export(cq.importers.importStep(str(REFS / (n + '.step'))).val(),
-                        str(OUT / 'Referencias_NO_imprimir' / (n + '.step')))
 # Electrónica de referencia (no se imprime): pulsador 12 mm, ULN2003 y ESP32.
 bx, bz = BOTON_XZ
-puls = (cq.Solid.makeCylinder(5.0, 4.0, V(bx, -62.5, bz), V(0, -1, 0))                      # botón
-        .fuse(cq.Solid.makeCylinder(7.5, 1.5, V(bx, -62.5, bz), V(0, -1, 0)))               # bisel
-        .fuse(cq.Solid.makeCylinder(6.0, 14.0, V(bx, -59.5, bz), V(0, 1, 0)))               # cuerpo
-        .fuse(cq.Workplane('XZ', origin=(bx, -59.5, bz)).polygon(6, 16).extrude(-2.5).val())  # tuerca
-        .fuse(box(bx - 4, bx + 4, -45.5, -40.5, bz - 2.5, bz + 2.5)))                         # terminales
+yb = BOSS_FACE + PANEL_T                                                           # cara interior del panel
+puls = (cq.Solid.makeCylinder(5.0, 4.0, V(bx, BOSS_FACE - 1.5, bz), V(0, -1, 0))        # botón
+        .fuse(cq.Solid.makeCylinder(7.5, 1.5, V(bx, BOSS_FACE, bz), V(0, -1, 0)))       # bisel
+        .fuse(cq.Solid.makeCylinder(5.9, 18.0 + PANEL_T, V(bx, BOSS_FACE, bz), V(0, 1, 0)))  # cuerpo roscado
+        .fuse(cq.Workplane('XZ', origin=(0, yb, 0)).center(bx, bz).polygon(6, 16).extrude(-2.5).val())  # tuerca
+        .fuse(box(bx - 4, bx + 4, yb + 16.0, yb + 18.0, bz - 2.5, bz + 2.5)))           # terminales
 uln = box(-58.0, -26.0, -12.0, 23.0, 4.0, 5.6)                                       # PCB 32x35
 uln = uln.fuse(box(-45.5, -38.5, -6.0, 13.0, 5.6, 9.0))                             # ULN2003 DIP16
 uln = uln.fuse(box(-55.0, -49.0, 4.0, 16.0, 5.6, 12.6))                             # conector del motor
@@ -415,13 +413,14 @@ meta = {n: {'size_mm': [round(s.BoundingBox().xlen, 3), round(s.BoundingBox().yl
         for n, s in sorted(parts.items())}
 json.dump(meta, open(OUT / 'Dimensiones_y_notas.json', 'w'), indent=2, ensure_ascii=False)
 v3params = json.load(open(V3 / 'Parametros_V3.json'))
-v3params.update({'version': 'V4', 'tray_grub_xy': [GX, GY], 'overload_stop_gap_mm':
-                 round(SZ0 - STOP_TOP, 2), 'feet_height_mm': FEET_H,
+v3params.update({'version': 'V4', 'feet_height_mm': FEET_H, 'ramp_rib_y': list(RIB_Y),
                  'sweeper': {'z_bottom': SWEEP_Z, 'r_in': R_IN, 'deg_attack_in': A_IN,
                              'deg_attack_out': A_OUT, 'deg_end': A_END},
                  'reservoir_key_xy': list(KEY_XY), 'button_xz': list(BOTON_XZ), 'button_hole_d': BOTON_D,
                  'motor': '28BYJ-48', 'motor_top_z': M_TOP, 'motor_ear_x': M_EAR_X, 'motor_body_offset_y': M_OFF, 'cap_top_z': TOP,
-                 'tray_slope_deg': 25, 'tray_floor': {'z_ref_at_y_-55': Z_REF, 'y_knee': Y_KNEE,
-                 'z_pocket': round(Z_POCKET, 3), 'y_back': TY_BACK, 'y_front': TY_FRONT}})
+                 'fill_lid_top_z': TOP, 'fill_lid_seat_r': SEAT_R,
+                 'tray_slope_deg': 25, 'tray_floor': {'z_ref_at_y_-55': round(Z_REF, 4), 'y_knee': Y_KNEE,
+                 'z_pocket': round(Z_POCKET, 3), 'y_back': TY_BACK, 'y_front': TY_FRONT,
+                 'pocket_y_center': round((Y_KNEE + TY_FRONT + TW) / 2, 2)}})
 json.dump(v3params, open(OUT / 'Parametros_V4.json', 'w'), indent=2)
 print('BUILT', len(parts), 'valid unique solids', flush=True)

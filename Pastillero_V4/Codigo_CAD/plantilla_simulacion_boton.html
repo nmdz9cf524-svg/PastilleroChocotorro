@@ -41,7 +41,7 @@ __CSS__
   <header class="top">
     <h1>Pastillero con botón</h1>
     <span class="tag">CAD V4 · 28BYJ-48</span>
-    <p>Una pulsación = 30° de giro = una pastilla en la bandeja.</p>
+    <p>Una pulsación = 30° de giro = una pastilla en el bolsillo de salida.</p>
   </header>
   <main class="layout">
     <section class="stage" id="stage" aria-label="Vista 3D del pastillero">
@@ -59,7 +59,7 @@ __CSS__
         <div class="eyebrow">Simulación</div>
         <h2>Pulsa el botón</h2>
       </div>
-      <p style="margin:0">El firmware nuevo solo espera el botón. Al pulsarlo, el motor gira el rotor una cavidad (30°, antihorario visto desde arriba). La pastilla que llega a la salida cae por el canal y resbala hasta el bolsillo, fuera de la caja.</p>
+      <p style="margin:0">El firmware solo espera el botón, a la derecha de la ventana. Al pulsarlo, el motor gira el rotor una cavidad (30°, antihorario visto desde arriba). La pastilla que llega a la salida cae por el canal y resbala por la rampa hasta el bolsillo, fuera de la caja.</p>
       <button class="press" id="press" type="button"><span class="dot"></span>Pulsar botón</button>
       <div class="status" id="status">Listo. El rotor arranca alineado con la salida.</div>
       <div class="stats">
@@ -69,7 +69,8 @@ __CSS__
       </div>
       <div class="toggles">
         <label class="toggle" for="labelsOn"><input type="checkbox" id="labelsOn" checked> Etiquetas</label>
-        <label class="toggle" for="capOn"><input type="checkbox" id="capOn" checked> Tapa puesta</label>
+        <label class="toggle" for="lidOpen"><input type="checkbox" id="lidOpen"> Abrir tapa de llenado</label>
+        <label class="toggle" for="capOn"><input type="checkbox" id="capOn" checked> Tapa de servicio puesta</label>
       </div>
       <div class="group"><h3>Componentes</h3>
         <div class="legend" id="legend"></div>
@@ -103,25 +104,25 @@ __DATA__
   const C = {
     shell: 0x8b979d, plate: 0x3d6079, rotor: 0xd39a3e, cone: 0x3aa898, hopper: 0xa9c6ca, trim: 0xc9a25a,
     mount: 0x8fa56d, tray: 0x4f8fc0, motor: 0x50565c, cell: 0xb7bfc5, screw: 0xc3c9ce, nut: 0x98a1a8,
-    pill: 0xf4f1ea, pcb: 0x2f6b4f, button: 0xd2463c,
+    pill: 0xf4f1ea, pcb: 0x2f6b4f, button: 0xd2463c, lid: 0x7fa7b0,
   };
   const colorOf = (n) => n.startsWith('01_') ? 'shell' : n.startsWith('02_') ? 'plate' : n.startsWith('03_') ? 'rotor'
-    : n.startsWith('06_') ? 'cone' : n.startsWith('07_') ? 'hopper' : n.startsWith('21_') ? 'trim'
-    : n.startsWith('10_') || n.startsWith('13_') ? 'mount' : n.startsWith('16_') ? 'tray'
-    : n === 'REF_motor_28BYJ48' ? 'motor' : n === 'REF_celda_50x15x7' ? 'cell' : n === 'REF_pulsador_12mm' ? 'button'
+    : n.startsWith('06_') ? 'cone' : n.startsWith('07_') ? 'hopper' : n.startsWith('21_') ? 'trim' : n.startsWith('09_') ? 'lid'
+    : n.startsWith('10_') ? 'mount' : n.startsWith('16_') ? 'tray'
+    : n === 'REF_motor_28BYJ48' ? 'motor' : n === 'REF_pulsador_12mm' ? 'button'
     : n.startsWith('REF_driver') || n.startsWith('REF_ESP32') ? 'pcb' : n.startsWith('TUERCA') || n.startsWith('tuerca') ? 'nut' : 'screw';
   const LABELS = {
     REF_pulsador_12mm: 'Botón 12 mm', REF_motor_28BYJ48: 'Motor 28BYJ-48', REF_driver_ULN2003: 'Driver ULN2003',
-    REF_ESP32_DevKit: 'ESP32', '16_bandeja_pesaje_inclinada': 'Bandeja', '03_rotor_15x8_eje_D5': 'Rotor (12 cavidades)',
+    REF_ESP32_DevKit: 'ESP32', '16_rampa_salida': 'Rampa de salida', '09_tapa_llenado': 'Tapa de llenado', '03_rotor_15x8_eje_D5': 'Rotor (12 cavidades)',
     '07_reserva_con_barredor': 'Reserva',
   };
   // Punto de anclaje de algunas etiquetas (marco CAD, mm) para que no se encimen.
-  const ANCHOR = { '16_bandeja_pesaje_inclinada': [0, -74, 44], REF_driver_ULN2003: [-42, 5, 24] };
+  const ANCHOR = { '16_rampa_salida': [0, -82, 40], REF_driver_ULN2003: [-42, 5, 24], '09_tapa_llenado': [0, 0, 172] };
   const LEGEND = [['Botón', 'button'], ['Motor 28BYJ-48', 'motor'], ['ULN2003 / ESP32', 'pcb'], ['Rotor', 'rotor'],
-                  ['Cono', 'cone'], ['Bandeja', 'tray'], ['Reserva', 'hopper'], ['Tapa', 'trim']];
+                  ['Cono', 'cone'], ['Rampa', 'tray'], ['Reserva', 'hopper'], ['Tapa de servicio', 'trim'], ['Tapa de llenado', 'lid']];
   const ROTOR = n => n.startsWith('03_') || n.startsWith('06_') || /cono_|rotor_X/.test(n);
   // Fantasmas en "Ver por dentro": carcasa, tapa, reserva y placa.
-  const GHOST = { '01_': 0.16, '21_': 0.12, '07_': 0.22, '02_': 0.35 };
+  const GHOST = { '01_': 0.16, '21_': 0.12, '09_': 0.12, '07_': 0.22, '02_': 0.35 };
 
   // ---------- Escena ----------
   const stageEl = document.getElementById('stage');
@@ -213,7 +214,7 @@ __DATA__
   // Pastilla que cae: canal -> rampa de 25° -> bolsillo exterior.
   let falling = null, resting = null;
   function pillPose(t) {
-    const yDrop = -40, zTop = 93, zLand = floorTop(yDrop) + 0.15, yEnd = -58, yPocket = -70;
+    const yDrop = -40, zTop = 93, zLand = floorTop(yDrop) + 0.15, yEnd = RAMP.y_knee + 4, yPocket = RAMP.pocket_y;
     if (t < 0.6) { const k = t / 0.6; return [yDrop, zTop + (zLand - zTop) * k * k, k > 0.8 ? (k - 0.8) / 0.2 * RAMP.slope_deg : 0]; }
     if (t < 2.0) { const k = (t - 0.6) / 1.4, e = k * k; const y = yDrop + (yEnd - yDrop) * e; return [y, floorTop(y) + 0.15, RAMP.slope_deg]; }
     if (t < 2.5) { const k = (t - 2.0) / 0.5; const y = yEnd + (yPocket - yEnd) * k; return [y, floorTop(y) + 0.15 * (1 - k) + 0.1 * k, RAMP.slope_deg * (1 - k)]; }
@@ -272,6 +273,7 @@ __DATA__
     parts.forEach((p) => {
       const key = Object.keys(GHOST).find((k) => p.name.startsWith(k));
       if (key === '21_') p.mesh.visible = cap;
+      if (key === '09_') { p.mesh.visible = cap; p.mesh.position.set(0, 0, $('lidOpen').checked ? 45 : 0); }
       const on = xr && !!key;
       p.mat.transparent = on; p.mat.opacity = on ? GHOST[key] : 1; p.mat.depthWrite = !on; p.mesh.castShadow = !on; p.mat.needsUpdate = true;
     });
@@ -316,6 +318,7 @@ __DATA__
   $('press').addEventListener('click', press);
   $('xray').addEventListener('change', applyView);
   $('capOn').addEventListener('change', applyView);
+  $('lidOpen').addEventListener('change', applyView);
   $('labelsOn').addEventListener('change', buildLabels);
   // Tocar el botón rojo del modelo también pulsa.
   const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(); let downAt = null;
@@ -333,7 +336,7 @@ __DATA__
   }
   new ResizeObserver(resize).observe(stageEl); resize();
 
-  // ---------- Cámara inicial: de frente, a la altura del botón y la bandeja ----------
+  // ---------- Cámara inicial: de frente, a la altura del botón y la rampa ----------
   const T = [0, -25, 62], AZ = 28 * Math.PI / 180, EL = 18 * Math.PI / 180;
   const aspect = Math.max(0.6, stageEl.clientWidth / Math.max(1, stageEl.clientHeight));
   const D = 440 * (aspect < 1 ? 1.3 / aspect : 1);
@@ -366,7 +369,7 @@ __DATA__
       falling.mesh.position.set(0, y, z); falling.mesh.rotation.x = THREE.MathUtils.degToRad(tilt);
       if (t >= 2.5 || reduce) {
         resting = falling.mesh; falling = null; delivered += 1; renderStats();
-        $('status').textContent = 'Pastilla ' + delivered + ' en la bandeja. Pulsa otra vez para la siguiente.';
+        $('status').textContent = 'Pastilla ' + delivered + ' en el bolsillo. Pulsa otra vez para la siguiente.';
       }
     }
     controls.update(); renderer.render(scene, camera); placeLabels();

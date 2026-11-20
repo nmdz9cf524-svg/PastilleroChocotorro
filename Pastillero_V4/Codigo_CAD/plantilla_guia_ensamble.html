@@ -13,7 +13,7 @@ __CSS__
   <header class="top">
     <h1>Ensamble Pastillero V4</h1>
     <span class="tag">STEP real · mm</span>
-    <p>Guía animada con la geometría del ensamble V4 con motor 28BYJ-48 y botón: 9 piezas impresas, 17 tornillos y prisioneros, 18 tuercas.</p>
+    <p>Guía animada con la geometría del ensamble V4 con motor 28BYJ-48 y botón: 9 piezas impresas, 14 tornillos y prisioneros, 15 tuercas.</p>
   </header>
   <main class="layout">
     <section class="stage" id="stage" aria-label="Vista 3D del ensamble">
@@ -67,20 +67,10 @@ __DATA__
   const BOLT_PLACAS = [['-' + C, '-' + C], ['-' + C, C], [C, '-' + C], [C, C]].map(([a, b]) => a + '_' + b);
   const MB = ['-18.5_-16', '-18.5_16', '18.5_-16', '18.5_16'];
 
-  def('01_carcasa_v4_patas_pedestal_integrados', { label: '01 Carcasa', col: 'shell', ex: [0, 0, 70], ghost: 'shell' });
+  def('01_carcasa_v4', { label: '01 Carcasa', col: 'shell', ex: [0, 0, 70], ghost: 'shell' });
 
-  // Bloque de pesaje: se arma fuera, entra por arriba 22 mm atrás y avanza por la ventana.
-  const BLOCK = ['REF_celda_50x15x7', 'TUERCA_bandeja_prisionero', '16_bandeja_pesaje_inclinada', 'TORNILLO_bandeja_prisionero',
-    'TUERCA_mordaza_fija_-51', 'TUERCA_mordaza_fija_-27', '13_mordaza_fija_celda_tuercas'];
-  def('REF_celda_50x15x7', { label: 'Celda 50×15×7', col: 'cell', ex: [0, 0, 40] });
-  def('TUERCA_bandeja_prisionero', { hw: true, col: 'nut', ex: [40, 0, 0] });
-  def('16_bandeja_pesaje_inclinada', { label: '16 Bandeja inclinada', col: 'tray', ex: [60, 0, 0] });
-  def('TORNILLO_bandeja_prisionero', { hw: true, col: 'screw', ex: [0, 0, 40] });
-  def(['TUERCA_mordaza_fija_-51', 'TUERCA_mordaza_fija_-27'], { hw: true, col: 'nut', ex: [0, -50, 0] });
-  def('13_mordaza_fija_celda_tuercas', { label: '13 Mordaza fija', col: 'mount', ex: [0, -50, 0] });
-  const LIFTED = [0, 22, 115];
-  BLOCK.forEach((n) => { P[n].lift = { steps: [2], v: LIFTED }; P[n].path = { step: 3, pts: [[0, 22, 0.6], [0, 0, 0.6]] }; });
-  def(['TORNILLO_mordaza_fija_-51', 'TORNILLO_mordaza_fija_-27'], { hw: true, col: 'screw', ex: [0, 0, -45] });
+  // Rampa de salida: entra por arriba 35 mm atrás, baja, avanza por la ventana y encaja sus nervios.
+  def('16_rampa_salida', { label: '16 Rampa de salida', col: 'tray', ex: [0, 35, 90], path: { step: 2, pts: [[0, 35, 2], [0, 0, 2]] } });
 
   def('10_bancada_28BYJ48', { label: '10 Bancada 28BYJ-48', col: 'mount', ex: [0, 0, 90] });
   def(MB.map((s) => 'TORNILLO_motor_base_' + s), { hw: true, col: 'screw', ex: [0, 0, -35] });
@@ -110,7 +100,8 @@ __DATA__
   def('07_reserva_con_barredor', { label: '07 Reserva con barredor', col: 'hopper', ex: [0, 0, 90], ghost: 'top' });
   def(BOLT_PLACAS.map((s) => 'TORNILLO_placas_' + s), { hw: true, col: 'screw', ex: [0, 0, 60] });
   def(BOLT_PLACAS.map((s) => 'TUERCA_placas_' + s), { hw: true, col: 'nut', radial: 25 });
-  def('21_tapa_cuadrada', { label: '21 Tapa cuadrada', col: 'trim', ex: [0, 0, 130], ghost: 'top' });
+  def('21_tapa_cuadrada', { label: '21 Tapa de servicio', col: 'trim', ex: [0, 0, 130], ghost: 'top' });
+  def('09_tapa_llenado', { label: '09 Tapa de llenado', col: 'lid', ex: [0, 0, 60], ghost: 'top' });
 
   // ---------- Pasos ----------
   const STEPS = [
@@ -119,37 +110,26 @@ __DATA__
              'Avanza con Siguiente o con las flechas del teclado. En cada paso solo se mueven las piezas nuevas; las montadas antes se quedan en su sitio.',
              'Imprime las piezas con las placas de Impresion_255x255 y limpia rebabas antes de armar.'],
       parts: ['9 piezas impresas', 'Motor 28BYJ-48 + ULN2003', 'ESP32', 'Botón 12 mm'],
-      hw: ['M3×30 ×6', 'M3×12 ×7', 'M3×8 ×2', 'Prisionero M3×8 ×1', 'Prisionero M3×10 ×1', 'Tuerca M3 ×18'],
-      note: 'Usa tornillos de cabeza de botón (Ø5.7 × 1.65 mm). Las cabezas cilíndricas altas pueden chocar con el rotor o con la bandeja.',
+      hw: ['M3×30 ×4', 'M3×12 ×7', 'M3×8 ×2', 'Prisionero M3×8 ×1', 'Tuerca M3 ×15'],
+      note: 'Usa tornillos de cabeza de botón (Ø5.7 × 1.65 mm). Las cabezas cilíndricas altas pueden chocar con el rotor.',
       view: { t: [0, -10, 92], az: 35, el: 24, d: 420 } },
-    { title: 'Carcasa con patas integradas', stages: [['01_carcasa_v4_patas_pedestal_integrados']],
+    { title: 'Carcasa con patas integradas', stages: [['01_carcasa_v4']],
       text: ['La carcasa (01) ya trae impresas las patas: una base nervada de 3 mm debajo del piso.',
-             'También trae el pedestal de la celda, el tope de sobrecarga, la plataforma electrónica y el paso de cable en la pared derecha.',
+             'También trae la plataforma electrónica, el paso de cable en la pared derecha, las dos ranuras de la rampa en el piso y el realce del botón a la derecha de la ventana.',
              'No hay que pegar ni atornillar nada en este paso.'],
       parts: ['01 Carcasa'], hw: [], hwNone: 'Sin tornillos ni pegamento',
       view: { t: [0, 0, 30], az: 35, el: -24, d: 300 } },
-    { title: 'Bloque de pesaje, fuera de la caja',
-      stages: [['REF_celda_50x15x7'], ['TUERCA_bandeja_prisionero'], ['16_bandeja_pesaje_inclinada'], ['TORNILLO_bandeja_prisionero'],
-               ['TUERCA_mordaza_fija_-51', 'TUERCA_mordaza_fija_-27', '13_mordaza_fija_celda_tuercas']],
-      text: ['Mete una tuerca M3 en la ranura del manguito de la bandeja (16).',
-             'Desliza el extremo móvil de la celda dentro del manguito hasta que quede a ras y aprieta el prisionero M3×10 desde dentro de la bandeja.',
-             'Pon dos tuercas en los hexágonos de la mordaza fija (13) y deslízala entre la celda y el fondo de la bandeja, sobre el extremo fijo. Las tuercas quedan atrapadas.'],
-      parts: ['Celda 50×15×7', '16 Bandeja inclinada', '13 Mordaza fija'], hw: ['Prisionero M3×10 ×1', 'Tuerca M3 ×3', 'Llave Allen 1.5 mm'],
-      note: 'No aprietes la zona central de la celda: ahí están las galgas.',
-      view: { t: [0, -22, 150], az: 40, el: 24, d: 210 } },
-    { title: 'Meter el bloque por la ventana', ghost: true,
-      stages: [BLOCK, ['TORNILLO_mordaza_fija_-51', 'TORNILLO_mordaza_fija_-27']],
-      text: ['Baja el bloque por arriba unos 2 cm más atrás de su sitio, para que el bolsillo de la bandeja pase por dentro de la pared.',
-             'A la altura de la ventana, empújalo hacia el frente: el bolsillo sale por la ventana y la celda apoya en el pedestal.',
-             'Voltea la caja y aprieta los dos M3×30 desde abajo; roscan en las tuercas de la mordaza.'],
-      parts: ['Bloque de pesaje'], hw: ['M3×30 ×2'],
-      note: 'Este bloque va antes que la bancada del motor. Con la bancada puesta ya no hay sitio para meterlo.',
-      view: { t: [0, -30, 50], az: 38, el: 22, d: 300 } },
+    { title: 'Rampa de salida', ghost: true, stages: [['16_rampa_salida']],
+      text: ['Baja la rampa (16) por arriba unos 3.5 cm más atrás de su sitio, para que el bolsillo pase por dentro de la pared.',
+             'Cerca del piso, empújala hacia el frente: el bolsillo sale por la ventana.',
+             'Bájala los últimos 2 mm: sus dos nervios entran en las ranuras del piso y el bolsillo apoya en el borde de la ventana. Queda fija sin tornillos.'],
+      parts: ['16 Rampa de salida'], hw: [], hwNone: 'Sin tornillos',
+      note: 'La rampa va antes que la bancada del motor. Con la bancada puesta ya no hay sitio para meterla.',
+      view: { t: [0, -30, 40], az: 38, el: 24, d: 330 } },
     { title: 'Bancada del motor', ghost: true,
       stages: [['10_bancada_28BYJ48'], MB.map((s) => 'TORNILLO_motor_base_' + s), MB.map((s) => 'TUERCA_motor_base_' + s)],
-      text: ['Baja la bancada (10) detrás de la bandeja.',
-             'Fíjala al piso con cuatro M3×12 desde abajo. Las cabezas quedan dentro de las celdas de la base nervada.',
-             'Comprueba que la bandeja no toque la bancada.'],
+      text: ['Baja la bancada (10) detrás de la rampa.',
+             'Fíjala al piso con cuatro M3×12 desde abajo. Las cabezas quedan dentro de las celdas de la base nervada.'],
       parts: ['10 Bancada'], hw: ['M3×12 ×4', 'Tuerca M3 ×4'],
       view: { t: [0, -5, 35], az: 40, el: 34, d: 250 } },
     { title: 'Motor 28BYJ-48', ghost: true,
@@ -162,16 +142,15 @@ __DATA__
       view: { t: [0, 5, 65], az: 40, el: 30, d: 200 } },
     { title: 'Botón y electrónica', ghost: true,
       stages: [['REF_pulsador_12mm'], ['REF_driver_ULN2003'], ['REF_ESP32_DevKit']],
-      text: ['Mete el botón de 12 mm por el agujero de la pared frontal, debajo de la ventana, y apriétalo con su tuerca por dentro.',
+      text: ['Mete el botón de 12 mm por el realce de la pared frontal, a la derecha de la ventana, y apriétalo con su tuerca por dentro.',
              'Pon la placa ULN2003 en el piso, a la izquierda de la bancada, y conecta el cable del motor.',
              'Pon el ESP32 en la plataforma de la derecha. Cableado: IN1-IN4 a GPIO16-19, botón entre GPIO23 y GND, y 5 V aparte para el motor con GND común.'],
       parts: ['Botón 12 mm', 'Driver ULN2003', 'ESP32'], hw: ['Bridas o cinta doble cara'],
       note: 'El paso de cable de la pared derecha queda junto al ESP32 para la alimentación.',
-      view: { t: [-5, -20, 20], az: 20, el: 40, d: 270 } },
+      view: { t: [5, -25, 25], az: 25, el: 30, d: 300 } },
     { title: 'Placa inferior con canal', ghost: true, stages: [['02_placa_inferior_con_canal']],
       text: ['Asienta la placa (02) sobre las columnas, con la ventana de descarga al frente.',
-             'El canal ya viene impreso con la placa. Su boca está cortada en diagonal, 10 mm sobre la rampa de la bandeja.',
-             'Comprueba que el canal no toque la bandeja: la bandeja tiene que colgar libre de la celda.',
+             'El canal ya viene impreso con la placa y baja hasta 10 mm sobre la rampa, con la boca cortada en diagonal, para guiar la caída.',
              'El agujero pequeño de la cara de arriba es para el poste de la reserva.'],
       parts: ['02 Placa con canal'], hw: [], hwNone: 'Se fija en el paso de la reserva',
       view: { t: [0, -30, 65], az: 70, el: 14, d: 260 } },
@@ -197,15 +176,21 @@ __DATA__
       parts: ['07 Reserva con barredor'], hw: ['M3×30 ×4', 'Tuerca M3 ×4'],
       note: 'Gira el disco a mano: las cavidades deben pasar bajo el barredor sin rozar.',
       view: { t: [0, 0, 120], az: 35, el: 25, d: 330 } },
-    { title: 'Tapa cuadrada', stages: [['21_tapa_cuadrada']],
-      text: ['Baja la tapa (21) por encima de la reserva.',
+    { title: 'Tapa de servicio', stages: [['21_tapa_cuadrada']],
+      text: ['Baja la tapa de servicio cuadrada (21) por encima de la reserva.',
              'Su ceja circular entra en la boca de la reserva y las pestañas de las esquinas entran en la carcasa.',
-             'Para rellenar pastillas levanta la tapa entera.'],
-      parts: ['21 Tapa cuadrada'], hw: [], hwNone: 'Sin herramientas',
+             'Solo se quita para mantenimiento: limpiar el disco, revisar el barredor o los tornillos.'],
+      parts: ['21 Tapa de servicio'], hw: [], hwNone: 'Sin herramientas',
       view: { t: [0, -10, 92], az: 35, el: 22, d: 420 } },
+    { title: 'Tapa de llenado', stages: [['09_tapa_llenado']],
+      text: ['Pon la tapa redonda de llenado (09) en el asiento de la tapa de servicio: queda a ras.',
+             'Para rellenar, levántala por la muesca del frente y echa las pastillas por la boca, directamente en la reserva.',
+             'Así la caja se abre en dos secciones: la tapa redonda para llenar y la cuadrada para mantenimiento.'],
+      parts: ['09 Tapa de llenado'], hw: [], hwNone: 'Sin herramientas',
+      view: { t: [0, -10, 150], az: 30, el: 40, d: 330 } },
     { eyebrow: 'Prueba', title: 'Botón: una pastilla', ghost: true, ghostTop: true, ghostMech: true, spin: true, pill: true, stages: [],
       text: ['Cada pulsación del botón gira el disco 30° en sentido antihorario visto desde arriba: una cavidad, una pastilla.',
-             'La pastilla cae por el canal, se apoya en la rampa de 25° y resbala hasta el bolsillo, fuera de la caja. Sigue sobre la bandeja, así que la celda la pesa.',
+             'La pastilla cae por el canal, se apoya en la rampa de 25° y resbala hasta el bolsillo, fuera de la caja, donde se toma con los dedos.',
              'Prueba primero sin pastillas y después con pastillas ficticias, antes de cargar medicamento.'],
       parts: [], hw: [], hwNone: 'Sin piezas nuevas',
       note: 'La animación usa la geometría del CAD. La fricción real de tu pastilla puede pedir más inclinación.',
@@ -550,7 +535,7 @@ __DATA__
   const D2R = Math.PI / 180;
   function pillPose(t) {
     // devuelve [y, z, inclinación] en el marco CAD; t en segundos dentro del ciclo
-    const yDrop = -40, zTop = 93, zLand = floorTop(yDrop) + 0.15, yEnd = -58, yPocket = -70;
+    const yDrop = -40, zTop = 93, zLand = floorTop(yDrop) + 0.15, yEnd = RAMP.y_knee + 4, yPocket = RAMP.pocket_y;
     if (t < 0.6) { const k = t / 0.6; return [yDrop, zTop + (zLand - zTop) * k * k, k > 0.8 ? (k - 0.8) / 0.2 * RAMP.slope_deg : 0]; }
     if (t < 2.0) { const k = (t - 0.6) / 1.4, e = k * k; const y = yDrop + (yEnd - yDrop) * e; return [y, floorTop(y) + 0.15, RAMP.slope_deg]; }
     if (t < 2.5) { const k = (t - 2.0) / 0.5; const y = yEnd + (yPocket - yEnd) * k; return [y, floorTop(y) + 0.15 * (1 - k) + 0.1 * k, RAMP.slope_deg * (1 - k)]; }

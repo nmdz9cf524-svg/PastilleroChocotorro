@@ -30,7 +30,7 @@ for p in sorted((ROOT / 'STEP_piezas').glob('*.step')):
     if p.stem == '21b_embellecedor_alto':
         continue  # la guía muestra el embellecedor corto; el alto se monta igual
     meshes.append((p.stem, load(p)))
-for n in ['REF_celda_50x15x7', 'REF_motor_28BYJ48', 'REF_pulsador_12mm', 'REF_driver_ULN2003', 'REF_ESP32_DevKit']:
+for n in ['REF_motor_28BYJ48', 'REF_pulsador_12mm', 'REF_driver_ULN2003', 'REF_ESP32_DevKit']:
     meshes.append((n, load(ROOT / 'Referencias_NO_imprimir' / (n + '.step'))))
 hw_names = json.load(open(ROOT / 'Referencias_NO_imprimir' / 'Tornilleria_nominal_nombres.json'))
 hw = load(ROOT / 'Referencias_NO_imprimir' / 'Tornilleria_nominal.step').Solids()
@@ -58,7 +58,7 @@ print(len(meshes), 'mallas,', tris_total, 'triángulos,', round(len(blob) / 1e6,
 
 prm = json.load(open(ROOT / 'Parametros_V4.json'))
 ramp = {'slope_deg': prm['tray_slope_deg'], 'z_ref': prm['tray_floor']['z_ref_at_y_-55'],
-        'y_knee': prm['tray_floor']['y_knee']}
+        'y_knee': prm['tray_floor']['y_knee'], 'pocket_y': prm['tray_floor']['pocket_y_center']}
 src = V3_CSS.read_text()
 i = src.index('<style>\n/* Layout'); j = src.index('</style>', i) + len('</style>')
 page = ((HERE / 'plantilla_guia_ensamble.html').read_text()

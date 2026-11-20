@@ -6,8 +6,8 @@ Con **2 placas** se imprime todo el pastillero, y todo en PLA o PETG: ya no hay 
 
 | Placa | Piezas | Material | Capa | Alto máx. |
 |---|---|---|---|---|
-| ![](Placa_1_estructura_PLA_capa_0.28.png) **1 · Estructura** | 01 carcasa (con agujero del botón), 06 cono, 10 bancada del 28BYJ-48, 16 bandeja inclinada, 13 mordaza | PLA / PETG | **0.28 mm** | 92 mm |
-| ![](Placa_2_mecanismo_y_tapa_PLA_capa_0.20.png) **2 · Mecanismo y tapa** | 21 tapa cuadrada, 07 reserva (con techo, separadores y barredor), 02 placa con canal, 03 rotor para eje D5 | PLA / PETG | **0.20 mm** | 87 mm |
+| ![](Placa_1_estructura_PLA_capa_0.28.png) **1 · Estructura** | 01 carcasa (con realce del botón), 09 tapa de llenado, 16 rampa de salida, 10 bancada del 28BYJ-48, 06 cono | PLA / PETG | **0.28 mm** | 92 mm |
+| ![](Placa_2_mecanismo_y_tapa_PLA_capa_0.20.png) **2 · Mecanismo y tapa** | 21 tapa de servicio, 07 reserva (con techo, separadores y barredor), 02 placa con canal, 03 rotor para eje D5 | PLA / PETG | **0.20 mm** | 88 mm |
 
 ## Si ya imprimiste V3: `Solo_piezas_nuevas/`
 
@@ -15,10 +15,10 @@ Con el motor 28BYJ-48 cambian también la bancada 10 y el rotor 03 (su eje es Ø
 
 | Placa | Piezas | Capa | Alto máx. |
 |---|---|---|---|
-| ![](Solo_piezas_nuevas/Placa_1_nuevas_estructura_PLA_capa_0.28.png) **1 · Estructura** | 01 carcasa, 10 bancada del 28BYJ-48, 16 bandeja inclinada, 13 mordaza | **0.28 mm** | 92 mm |
-| ![](Solo_piezas_nuevas/Placa_2_nuevas_reserva_placa_rotor_y_tapa_PLA_capa_0.20.png) **2 · Reserva, placa, rotor y tapa** | 21 tapa cuadrada, 07 reserva con barredor, 02 placa con canal, 03 rotor para eje D5 | **0.20 mm** | 87 mm |
+| ![](Solo_piezas_nuevas/Placa_1_nuevas_estructura_PLA_capa_0.28.png) **1 · Estructura** | 01 carcasa, 09 tapa de llenado, 16 rampa de salida, 10 bancada del 28BYJ-48 | **0.28 mm** | 92 mm |
+| ![](Solo_piezas_nuevas/Placa_2_nuevas_reserva_placa_rotor_y_tapa_PLA_capa_0.20.png) **2 · Reserva, placa, rotor y tapa** | 21 tapa de servicio, 07 reserva con barredor, 02 placa con canal, 03 rotor para eje D5 | **0.20 mm** | 88 mm |
 
-No reutilices de V3 el rotor 03, la bancada 10, el puente 11, la placa 02, el canal 17, la mordaza 13 ni las piezas 14, 15 y 16: cambiaron y no encajan con el 28BYJ-48 o con la bandeja inclinada.
+No reutilices de V3 el rotor 03, la bancada 10, el puente 11, la placa 02, el canal 17 ni la tapa 09: cambiaron y no encajan con el 28BYJ-48, la rampa o la tapa de servicio. Las piezas de pesaje de V3 (12 a 16 y la celda) ya no se usan.
 
 ## Archivos de cada placa
 
@@ -34,12 +34,13 @@ Las piezas sueltas también están en `../STL/`, por si hay que reimprimir solo 
 1. **Menos placas.** Con 2 impresiones se cubren las 9 piezas.
 2. **Capa según la función.** La placa 1 lleva piezas de estructura sin holguras críticas, así que va a 0.28 mm: unas 30 % menos capas que a 0.20. La placa 2 lleva las piezas con holguras finas (la reserva, que fija el hueco del disco con sus separadores, el disco y la placa) y la tapa, que se ve mejor a 0.20 mm.
 3. **Sin cambio de material.** El barredor rígido de la reserva sustituye al peine de TPU.
-4. **Sin soportes.** Todas las piezas están orientadas para imprimirse sin soportes: la carcasa sobre su base nervada; la placa 02, la reserva 07, la bancada 10 y la tapa 21 boca abajo; y la bandeja 16 de pie.
+4. **Sin soportes.** Todas las piezas están orientadas para imprimirse sin soportes: la carcasa sobre su base nervada; la placa 02, la reserva 07, la bancada 10 y las tapas 21 y 09 boca abajo; y la rampa 16 de pie sobre un costado.
 
 ## Ajustes sugeridos
 
 - **Rígidas:** boquilla 0.4, 3 perímetros, relleno 15–20 % en gyroid o rejilla y **sin soportes**. Para la carcasa basta con 2 perímetros si quieres ir aún más rápido.
-- **Bandeja 16 (placa 1):** ponle un borde (*brim*) de 5 mm porque se imprime de pie. Las líneas de capa quedan a lo largo de la rampa y ayudan a que la pastilla resbale.
+- **Rampa 16 (placa 1):** ponle un borde (*brim*) de 5 mm porque se imprime de pie sobre un costado. Las líneas de capa quedan a lo largo de la pendiente y ayudan a que la pastilla resbale.
+- **Realce del botón (carcasa 01):** tiene forma de gota para imprimirse sin soportes. El agujero de 12 mm y el rebaje de la tuerca son horizontales; si salen un poco cerrados, pásales una broca de 12 mm.
 - **Antes de imprimir:** revisa en el laminador que ninguna pieza haya quedado flotando o girada. Los STL ya vienen apoyados en z = 0.
 
 ## Para regenerar las placas
