@@ -11,14 +11,14 @@ Con **2 placas** se imprime todo el pastillero, y todo en PLA o PETG: ya no hay 
 
 ## Si ya imprimiste V3: `Solo_piezas_nuevas/`
 
-Con el motor 28BYJ-48 cambian también la bancada 10 y el rotor 03 (su eje es Ø5 de doble plano y está descentrado), y el puente 11 ya no se usa. De V3 solo se reutiliza el **cono 06**, que es idéntico. En la carpeta [`Solo_piezas_nuevas/`](Solo_piezas_nuevas/) están las 2 placas sin el cono:
+Con el motor 28BYJ-48 cambia el rotor 03 (su eje es Ø5 de doble plano y está descentrado). De V3 se reutilizan el **cono 06**, que es idéntico, y la **bancada 10**, que tiene la misma base que la V4: encima lleva un **puente 11 nuevo** para el 28BYJ-48 (7 cm³ en vez de los 42 de la bancada V4). En la carpeta [`Solo_piezas_nuevas/`](Solo_piezas_nuevas/) están las 2 placas sin el cono y con el puente en lugar de la bancada:
 
 | Placa | Piezas | Capa | Alto máx. |
 |---|---|---|---|
-| ![](Solo_piezas_nuevas/Placa_1_nuevas_estructura_PLA_capa_0.28.png) **1 · Estructura** | 01 carcasa, 09 tapa de llenado, 16 rampa de salida, 10 bancada del 28BYJ-48 | **0.28 mm** | 92 mm |
+| ![](Solo_piezas_nuevas/Placa_1_nuevas_estructura_PLA_capa_0.28.png) **1 · Estructura** | 01 carcasa, 09 tapa de llenado, 16 rampa de salida, 11 puente del 28BYJ-48 para la bancada V3 | **0.28 mm** | 92 mm |
 | ![](Solo_piezas_nuevas/Placa_2_nuevas_reserva_placa_rotor_y_tapa_PLA_capa_0.20.png) **2 · Reserva, placa, rotor y tapa** | 21 tapa de servicio, 07 reserva con barredor, 02 placa con canal, 03 rotor para eje D5 | **0.20 mm** | 76 mm |
 
-No reutilices de V3 el rotor 03, la bancada 10, el puente 11, la placa 02, el canal 17 ni la tapa 09: cambiaron y no encajan con el 28BYJ-48, la rampa o la tapa de servicio. Las piezas de pesaje de V3 (12 a 16 y la celda) ya no se usan.
+Para montar la bancada V3 con el puente nuevo, mira [la sección del LEEME](../LEEME_V4.md#si-ya-imprimiste-la-bancada-10-de-v3); usa los 2 M3×12 y las tuercas del puente 11 viejo. No reutilices de V3 el rotor 03, el puente 11 viejo, la placa 02, el canal 17 ni la tapa 09: cambiaron y no encajan con el 28BYJ-48, la rampa o la tapa de servicio. Las piezas de pesaje de V3 (12 a 16 y la celda) ya no se usan.
 
 ## Archivos de cada placa
 
@@ -32,7 +32,7 @@ Las piezas sueltas también están en `../STL/`, por si hay que reimprimir solo 
 ## Cómo se ahorró tiempo
 
 1. **Menos placas.** Con 2 impresiones se cubren las 9 piezas.
-2. **Capa según la función.** La placa 1 lleva piezas de estructura sin holguras críticas, así que va a 0.28 mm: unas 30 % menos capas que a 0.20. La placa 2 lleva las piezas con holguras finas (la reserva, que fija el hueco del disco con sus separadores, el disco y la placa) y la tapa, que se ve mejor a 0.20 mm.
+2. **Capa según la función.** La placa 1 lleva piezas de estructura sin holguras críticas, así que va a 0.28 mm: unas 30 % menos capas que a 0.20. La placa 2 lleva las piezas con holguras finas (la reserva, que fija el hueco del disco con su faldón de separadores, el disco y la placa) y la tapa, que se ve mejor a 0.20 mm.
 3. **Sin cambio de material.** El barredor rígido de la reserva sustituye al peine de TPU.
 4. **Sin soportes.** Todas las piezas están orientadas para imprimirse sin soportes: la carcasa sobre su base nervada; la placa 02, la reserva 07, la bancada 10 y las tapas 21 y 09 boca abajo; y la rampa 16 de pie sobre un costado.
 

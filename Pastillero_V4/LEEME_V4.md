@@ -14,6 +14,7 @@ Cada pulsación del botón gira el rotor 30° y deja **una pastilla** en el bols
 | `STL/` | Cada pieza suelta, ya orientada, por si hay que reimprimir una |
 | `STEP_piezas/` | Piezas en coordenadas de ensamble, para editar en CAD |
 | `Pastillero_V4_ensamble.step` | Ensamble completo, con tornillería y referencias |
+| `Alternativa_bancada_V3/` | **Puente 11 para el 28BYJ-48** que va encima de la bancada 10 de V3, si ya la tienes impresa (ver abajo) |
 | `Referencias_NO_imprimir/` | Motor 28BYJ-48, pulsador 6×6, ULN2003, ESP32 y tornillería. **No se imprimen.** |
 | `Codigo_CAD/` | Scripts que generan, validan y arman las placas, más `fuentes_V3/` con las piezas de V3 que se reutilizan |
 
@@ -27,7 +28,7 @@ Cada pulsación del botón gira el rotor 30° y deja **una pastilla** en el bols
 | 02 | **Placa inferior con canal** | El canal va integrado y baja hasta 10 mm sobre la rampa, con la boca cortada en diagonal, para guiar la caída. El agujero pequeño de arriba recibe el poste de la reserva. |
 | 03 | **Rotor** | 12 cavidades, una cada 30°. Disco de Ø103.6 × 7.6 mm (con asiento para el cono), con holgura de giro amplia. El cubo tiene agujero en doble D para el eje Ø5 del 28BYJ-48 y un prisionero M3×8. |
 | 06 | **Cono** | Igual que en V3. |
-| 07 | **Reserva** | Una sola pieza con el techo sobre la salida (así no caen pastillas de golpe), los cuatro separadores del disco y un barredor rígido justo antes del techo. Por dentro lleva grabada la **línea de llenado máximo**, a 12 mm sobre el disco: hasta ahí caben unas 60 pastillas. Un poste entra en la placa 02, así que solo se monta en la posición correcta. |
+| 07 | **Reserva** | Una sola pieza con el techo sobre la salida (así no caen pastillas de golpe), los cuatro separadores del disco unidos por un faldón exterior y un barredor rígido justo antes del techo. Gracias al faldón, al imprimirla boca abajo la cara de arriba queda plana: solo asoma el pivote de 2 mm que entra en la placa. Por dentro lleva grabada la **línea de llenado máximo**, a 12 mm sobre el disco: hasta ahí caben unas 60 pastillas. Un poste entra en la placa 02, así que solo se monta en la posición correcta. |
 | 09 | **Tapa de llenado** | Tapa redonda y delgada que se apoya en la boca de la reserva, con una ceja que entra en ella. Se levanta por la pestaña del frente y se echan las pastillas directamente en la reserva. |
 | 10 | **Bancada del 28BYJ-48** | Deja el eje del motor justo bajo el centro del rotor. El motor se atornilla por sus orejas. |
 | 16 | **Rampa de salida** | Fondo a 25°. El bolsillo mide 30 mm y sale **29.5 mm** de la caja: caben varias pastillas y se toman con los dedos. No tiene tornillos: apoya en el borde inferior de la ventana y en dos nervios encajados en el piso. |
@@ -45,11 +46,23 @@ Cada pulsación del botón gira el rotor 30° y deja **una pastilla** en el bols
 | 17 canal (2 M3×8) | Integrado y prolongado en la placa 02 |
 | 04 aro, 05 separadores ×4, 20 peine TPU | Integrados en la reserva 07 (barredor rígido en lugar del peine) |
 | 09 tapa redonda | 09 tapa de llenado más delgada, sobre la reserva |
-| 10 bancada + 11 puente (motor Ø32) | 10 bancada para 28BYJ-48 |
+| 10 bancada + 11 puente (motor Ø32) | 10 bancada para 28BYJ-48, **o** la bancada 10 de V3 con un puente 11 nuevo para el 28BYJ-48 |
 | 03 rotor (eje Ø6) | 03 rotor para eje D5 |
 | Firmware con horarios y WiFi | Firmware solo con botón |
 
 Balance: de **25 piezas impresas → 9**, de **29 tornillos/prisioneros → 14** y de **29 tuercas → 15**. Sin filamento flexible.
+
+## Si ya imprimiste la bancada 10 de V3
+
+La base de la bancada V4 es **igual que la de V3**: misma huella de 51 × 42 mm, las 4 patas en (±18.5, ±16) sobre los mismos agujeros del piso y la misma altura de apoyo. Lo que cambia es la parte de arriba: la V3 acaba en dos postes a 69 mm para el motor Ø32, y el 28BYJ-48 necesita apoyar sus orejas a 76.5 mm con el cuerpo descentrado 8 mm.
+
+Por eso no hace falta imprimir la bancada V4 (42 cm³). Basta con el **puente 11 nuevo** (`Alternativa_bancada_V3/11_puente_28BYJ48_sobre_bancada_V3.stl`, 7 cm³), que va encima de los postes de la bancada V3:
+
+1. Fija la bancada V3 al piso con sus 4 M3×12, igual que en V3 (tuercas en sus alojamientos de las patas).
+2. Pon el puente 11 nuevo sobre los dos postes y atorníllalo con los **2 M3×12 y las 2 tuercas del puente 11 de V3**.
+3. Mete dos tuercas en los hexágonos de debajo del puente, baja el 28BYJ-48 y atorníllalo por sus orejas con 2 M3×8.
+
+El eje queda a la misma altura y en el mismo centro que con la bancada V4. `validar_v4.py` comprueba este montaje aparte: sin choques con nada, el puente apoya en los postes, el motor en el puente, la bancada a 0.5 mm de la rampa y el puente a 3.5 mm del rotor. Las placas de `Impresion_255x255/Solo_piezas_nuevas/` ya traen el puente en lugar de la bancada V4.
 
 ## Tornillería y componentes
 

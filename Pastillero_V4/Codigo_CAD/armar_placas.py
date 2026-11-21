@@ -3,7 +3,7 @@
 Hay dos juegos de placas:
   ../Impresion_255x255/                     todas las piezas (imprimir desde cero)
   ../Impresion_255x255/Solo_piezas_nuevas/  solo las que cambian respecto a V3
-                                            (rotor, cono, bancada y puente de V3 se reutilizan)
+                                            (se reutilizan el cono 06 y la bancada 10 de V3)
 Para cada placa genera:
   * .3mf  con cada pieza como objeto independiente, ya colocada en la cama
   * .stl  con todas las piezas en un solo archivo (posiciones relativas)
@@ -51,17 +51,19 @@ PLACAS = {
         ]},
 }
 
-# Solo las piezas que no existen en V3 o que cambiaron. De V3 solo se reutiliza
-# el cono 06 (idéntico); todo lo demás cambió con el motor 28BYJ-48, la rampa y las tapas.
+# Solo las piezas que no existen en V3 o que cambiaron. De V3 se reutilizan el
+# cono 06 (idéntico) y la bancada 10 (misma base): sobre ella va el puente 11
+# nuevo para el 28BYJ-48 en vez de la bancada V4. Lo demás cambió con el motor,
+# la rampa y las tapas.
 PLACAS_NUEVAS = {
     'Placa_1_nuevas_estructura_PLA_capa_0.28': {
         'capa': 0.28, 'material': 'PLA o PETG',
-        'nota': 'Carcasa con botón, tapa de llenado, rampa y bancada. Capa gruesa = impresión más rápida.',
+        'nota': 'Carcasa, tapa de llenado, rampa y puente del motor para la bancada V3. Capa gruesa = impresión más rápida.',
         'piezas': [
             ('01_carcasa_v4', 65.0, 68.0, 0),
             ('09_tapa_llenado', 192.5, 62.5, 0),
             ('16_rampa_salida', 35.0, 192.0, 0),
-            ('10_bancada_28BYJ48', 100.0, 192.0, 90),
+            ('11_puente_28BYJ48_sobre_bancada_V3', 100.0, 192.0, 90),
         ]},
     'Placa_2_nuevas_reserva_placa_rotor_y_tapa_PLA_capa_0.20': {
         'capa': 0.20, 'material': 'PLA o PETG',
@@ -85,7 +87,10 @@ def footprint(mesh):
 
 
 def placed(name, x, y, rot):
-    m = trimesh.load(STL / (name + '.stl'))
+    f = STL / (name + '.stl')
+    if not f.exists():
+        f = ROOT / 'Alternativa_bancada_V3' / (name + '.stl')
+    m = trimesh.load(f)
     m.apply_transform(trimesh.transformations.rotation_matrix(math.radians(rot), [0, 0, 1]))
     b = m.bounds
     m.apply_translation([x - (b[0][0] + b[1][0]) / 2, y - (b[0][1] + b[1][1]) / 2, -b[0][2]])

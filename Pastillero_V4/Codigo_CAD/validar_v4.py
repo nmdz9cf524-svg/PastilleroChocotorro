@@ -240,9 +240,45 @@ for p in sorted((R / 'STL').glob('*.stl')):
                  'print_height_mm': round(max(v[2] for v in vv), 2)})
     assert bad == 0 and winding == 0 and err < .05 and verr < .002, (p.name, mesh[-1])
 
+# Alternativa: bancada 10 de V3 (ya impresa) + puente 11 para el 28BYJ-48 en
+# lugar de la bancada 10 V4. Mismas comprobaciones de choque contra todo lo demás.
+ALT = R / 'Alternativa_bancada_V3'
+alt = {'10_bancada_motor_32x25_V3': cq.importers.importStep(str(R.parent / 'Pastillero_V3/STEP_piezas/10_bancada_motor_32x25.step')).val(),
+       '11_puente_28BYJ48_sobre_bancada_V3': cq.importers.importStep(str(ALT / '11_puente_28BYJ48_sobre_bancada_V3.step')).val()}
+alt_hw = {}
+for x in (-21.0, 21.0):
+    bolt(f'puente_V3_{x}', x, 0, 73.0, 12); alt_hw['TORNILLO_puente_V3_' + str(x)] = fast.pop(f'puente_V3_{x}')
+    nut(f'puente_V3_{x}', x, 0, 63.1); alt_hw['TUERCA_puente_V3_' + str(x)] = nuts.pop(f'puente_V3_{x}')
+bolt_schedule = bolt_schedule[:-2]
+for x in (-18.5, 18.5):                                   # la bancada V3 atrapa las tuercas de la base a z=6.1
+    for y in (-16, 16):
+        alt_hw[f'TUERCA_base_V3_{x}_{y}'] = nuts[f'motor_base_{x}_{y}'].translate((0, 0, 6.1 - 8.7))
+alt_hw['TUERCA_oreja_alt_-'] = nuts['motor_oreja_' + str(-params['motor_ear_x'])].translate((0, 0, 70.0 - 71.6))
+alt_hw['TUERCA_oreja_alt_+'] = nuts['motor_oreja_' + str(params['motor_ear_x'])].translate((0, 0, 70.0 - 71.6))
+others = {n: s for n, s in {**assembly, **refs, **hardware}.items()
+          if n != '10_bancada_28BYJ48' and not n.startswith(('TUERCA_motor_oreja', 'TUERCA_motor_base'))}
+alt_col = []
+for na, a in {**alt, **alt_hw}.items():
+    for nb, b in {**others, **{k: v for k, v in {**alt, **alt_hw}.items() if k > na}}.items():
+        if overlap(a, b):
+            v = a.intersect(b).Volume()
+            if v > .001:
+                alt_col.append([na, nb, round(v, 4)])
+alt_contact = {
+    'puente_sobre_postes_V3': round(alt['11_puente_28BYJ48_sobre_bancada_V3'].distance(alt['10_bancada_motor_32x25_V3']), 3),
+    'motor_sobre_puente': round(refs['REF_motor_28BYJ48'].distance(alt['11_puente_28BYJ48_sobre_bancada_V3']), 3),
+    'bancada_V3_sobre_carcasa': round(alt['10_bancada_motor_32x25_V3'].distance(parts['01_carcasa_v4']), 3),
+    'bancada_V3_vs_rampa': round(alt['10_bancada_motor_32x25_V3'].distance(parts['16_rampa_salida']), 3),
+    'puente_vs_rotor': round(alt['11_puente_28BYJ48_sobre_bancada_V3'].distance(parts['03_rotor_15x8_eje_D5']), 3),
+}
+print('ALTERNATIVA_BANCADA_V3', alt_col, alt_contact, flush=True)
+assert not alt_col, alt_col
+assert alt_contact['puente_sobre_postes_V3'] < 0.02 and alt_contact['motor_sobre_puente'] < 0.02 and alt_contact['bancada_V3_sobre_carcasa'] < 0.02
+assert alt_contact['bancada_V3_vs_rampa'] >= 0.4 and alt_contact['puente_vs_rotor'] >= 0.6
+
 result = {'static_collisions_mm3_above_0_001': col, 'continuous_rotor_sweep_collisions': sweepbad,
           'minimum_nominal_rotor_clearance_mm': min(clearances.values()), 'rotor_spin_gaps_mm': spin_gaps, 'fill_max_line': {'z': fl['z'], 'capacity_pills_15x8x6': fill_capacity}, 'rotor_clearances_mm': clearances,
-          'new_part_gaps_mm': gaps, 'pill_release_path': trajectory, 'assembly_path_collisions': insert_bad, 'floating_parts': floating, 'exit_window_uncovered_mm3': uncovered, 'supports': supports, 'meshes': mesh,
+          'new_part_gaps_mm': gaps, 'pill_release_path': trajectory, 'assembly_path_collisions': insert_bad, 'floating_parts': floating, 'alternative_V3_motor_mount': {'collisions': alt_col, 'contacts_and_gaps_mm': alt_contact}, 'exit_window_uncovered_mm3': uncovered, 'supports': supports, 'meshes': mesh,
           'fasteners': dict(collections.Counter(bolt_schedule)), 'fastener_count': len(bolt_schedule),
           'nut_count': len(nuts) + 2, 'unique_print_files': len(parts),
           'printed_parts_in_assembly': len(assembly), 'physical_validation': False}
