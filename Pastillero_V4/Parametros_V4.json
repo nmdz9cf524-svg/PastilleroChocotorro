@@ -76,6 +76,12 @@
   "motor_body_offset_y": 8.0,
   "cap_top_z": 120.8,
   "fill_lid_top_z": 168.4,
+  "fill_max_line": {
+    "z": 113.5,
+    "depth": 0.8,
+    "deg_from": 312.0,
+    "deg_to": 208.0
+  },
   "tray_slope_deg": 25,
   "tray_floor": {
     "z_ref_at_y_-55": 29.3315,

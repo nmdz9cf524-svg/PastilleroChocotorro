@@ -131,6 +131,19 @@ spin_gaps = {k: round(v, 3) for k, v in spin_gaps.items()}
 print('HOLGURAS_GIRO', spin_gaps, flush=True)
 assert all(v >= 0.6 for v in spin_gaps.values()), spin_gaps
 
+# Línea de llenado máximo: capacidad hasta la línea (volumen libre / volumen a
+# granel de una pastilla 15x8x6, compacidad 0.58) y que la ranura no deje la
+# reserva en varios sólidos ni con huecos internos.
+fl = params['fill_max_line']
+free = (cq.Solid.makeCylinder(49, fl['z'] - 101.2, V(0, 0, 101.2))
+        .cut(parts['07_reserva_con_barredor']).cut(parts['06_cono_repartidor_punta_arriba']).cut(parts['03_rotor_15x8_eje_D5']))
+pill_bulk = ((15 - 8) * 8 + math.pi * 16) * 6 / 0.58
+fill_capacity = int(free.Volume() / pill_bulk)
+print('LINEA_LLENADO', fl['z'], 'capacidad', fill_capacity, 'pastillas', flush=True)
+assert 40 <= fill_capacity <= 80, fill_capacity
+r07 = parts['07_reserva_con_barredor']
+assert len(r07.Solids()) == 1 and len(r07.Shells()) == 1, 'reserva con huecos internos'
+
 # Trayectoria de una pastilla acostada 15x8x6: cae por el canal, se apoya en la
 # rampa de 25° y resbala hasta el bolsillo exterior. Nada debe estorbarla.
 tf = params['tray_floor']; slope = math.tan(math.radians(params['tray_slope_deg']))
@@ -228,7 +241,7 @@ for p in sorted((R / 'STL').glob('*.stl')):
     assert bad == 0 and winding == 0 and err < .05 and verr < .002, (p.name, mesh[-1])
 
 result = {'static_collisions_mm3_above_0_001': col, 'continuous_rotor_sweep_collisions': sweepbad,
-          'minimum_nominal_rotor_clearance_mm': min(clearances.values()), 'rotor_spin_gaps_mm': spin_gaps, 'rotor_clearances_mm': clearances,
+          'minimum_nominal_rotor_clearance_mm': min(clearances.values()), 'rotor_spin_gaps_mm': spin_gaps, 'fill_max_line': {'z': fl['z'], 'capacity_pills_15x8x6': fill_capacity}, 'rotor_clearances_mm': clearances,
           'new_part_gaps_mm': gaps, 'pill_release_path': trajectory, 'assembly_path_collisions': insert_bad, 'floating_parts': floating, 'exit_window_uncovered_mm3': uncovered, 'supports': supports, 'meshes': mesh,
           'fasteners': dict(collections.Counter(bolt_schedule)), 'fastener_count': len(bolt_schedule),
           'nut_count': len(nuts) + 2, 'unique_print_files': len(parts),

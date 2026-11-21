@@ -47,7 +47,7 @@ const int PIN_BUZZER = 21;  // zumbador activo (pon -1 si no usas)
 const float    PASOS_POR_VUELTA = 4075.7728f;
 const int      CAVIDADES        = 12;        // 360° / 12 = 30° por pastilla
 const bool     INVERTIR_SENTIDO = false;     // cámbialo si gira horario visto desde arriba
-const uint32_t US_PASO_RAPIDO   = 2000;      // µs por medio paso en crucero (más alto = más par)
+const uint32_t US_PASO_RAPIDO   = 2800;      // µs por medio paso en crucero (más alto = más par; 2800 da ~1 s por entrega)
 const uint32_t US_PASO_LENTO    = 3500;      // µs por medio paso al arrancar y al frenar
 const int      PASOS_RAMPA      = 60;
 
@@ -55,7 +55,7 @@ const int      PASOS_RAMPA      = 60;
 const uint32_t MS_ANTIREBOTE = 15;    // filtra el rebote del contacto (un pulsador táctil rebota < 10 ms)
 const uint32_t MS_BLOQUEO    = 800;   // tras terminar una entrega, ignora pulsaciones durante este tiempo.
                                       // Mientras el rotor gira (~0.75 s) tampoco se leen. Así un doble
-                                      // toque no da dos pastillas, y se puede pedir otra a los ~1.6 s.
+                                      // toque no da dos pastillas, y se puede pedir otra a los ~1.8 s.
 
 // ===================================================
 

@@ -9,6 +9,10 @@
     "cubo_vs_agujero_placa": 1.5,
     "cono_vs_techo": 0.68
   },
+  "fill_max_line": {
+    "z": 113.5,
+    "capacity_pills_15x8x6": 62
+  },
   "rotor_clearances_mm": {
     "01_carcasa_v4": 4.6,
     "02_placa_inferior_con_canal": 0.6,
@@ -216,11 +220,11 @@
     },
     {
       "file": "07_reserva_con_barredor.stl",
-      "triangles": 11714,
+      "triangles": 12392,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0237,
-      "volume_relative_error": 0.000525,
+      "volume_relative_error": 0.000541,
       "print_height_mm": 75.8
     },
     {

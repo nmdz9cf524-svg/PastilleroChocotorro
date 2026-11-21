@@ -5,10 +5,11 @@ No necesita librerías externas.
 
 ## Cómo funciona
 
-- Cada vez que pulsas el botón, el rotor gira **30°** (unos 0.77 s), avanza **una cavidad** y cae **una pastilla** al bolsillo de la rampa.
+- Cada vez que pulsas el botón, el rotor gira **30°** (en 1 s), avanza **una cavidad** y cae **una pastilla** al bolsillo de la rampa.
 - La entrega empieza en cuanto pulsas; no hay que soltar. Mantener pulsado no repite: hay que soltar y volver a pulsar.
-- Mientras el rotor gira no se leen pulsaciones, y al pararse el botón queda ignorado **0.8 s** más (`MS_BLOQUEO`). Así un doble toque no da dos pastillas, y se puede pedir otra a los ~1.6 s. Si pulsas durante el bloqueo, el LED parpadea.
+- Mientras el rotor gira no se leen pulsaciones, y al pararse el botón queda ignorado **0.8 s** más (`MS_BLOQUEO`). Así un doble toque no da dos pastillas, y se puede pedir otra a los ~1.8 s. Si pulsas durante el bloqueo, el LED parpadea.
 - El filtro de rebote es de **15 ms** (`MS_ANTIREBOTE`): un toque corto de 40 ms cuenta y el ruido de 10 ms no.
+- El motor va **despacio a propósito** (`US_PASO_RAPIDO = 2800` µs por medio paso): así da más par para arrastrar el montón de pastillas. A 2000 µs tardaba 0.77 s, pero con la reserva cargada se quedaba justo de fuerza.
 - El motor gira solo **antihorario visto desde arriba**, el sentido para el que está puesto el barredor de la reserva. Nunca da reversa.
 - Al terminar de girar apaga las bobinas. La caja reductora mantiene la posición sin corriente.
 - **Sin horarios, sin WiFi y sin hora:** esa parte se quitó.
@@ -50,7 +51,7 @@ Las medidas del motor son las de la hoja de datos estándar: cuerpo Ø28 × 19 m
    - Si se queda corto o se pasa siempre lo mismo, ajusta `PASOS_POR_VUELTA`.
    - Si se traba o vibra, sube `US_PASO_RAPIDO`. Más lento da más par.
 3. Pulsa el botón varias veces, dejando 2 s entre pulsaciones: cada una debe mover exactamente una cavidad.
-4. Llena la reserva y prueba con pastillas ficticias: cada pulsación debe dejar una pastilla en el bolsillo de la rampa. Anota simples, dobles, vacías y atascos.
+4. Llena la reserva **solo hasta la línea grabada por dentro** (unas 60 pastillas de 15×8×6) y prueba con pastillas ficticias: cada pulsación debe dejar una pastilla en el bolsillo de la rampa. Anota simples, dobles, vacías y atascos.
 
 ## Prueba de la lógica sin hardware
 
@@ -61,10 +62,11 @@ cd prueba_logica
 g++ -std=c++17 -I. prueba_boton.cpp -o prueba_boton && ./prueba_boton
 ```
 
-Comprueba 10 casos: pulsación con rebote, pulsación mantenida, doble toque, pulsación durante el giro, pulsaciones a 1.7 s y a 2.5 s, toque de 40 ms, ruido de 10 ms y 12 pulsaciones. Debe responder **TODO OK**, con 12 pulsaciones = 1 vuelta y un error menor de 0.03° tras 1000 vueltas. No sustituye compilar con el núcleo del ESP32 en el Arduino IDE.
+Comprueba 10 casos: pulsación con rebote, pulsación mantenida, doble toque, pulsación durante el giro, pulsaciones a 2.0 s y a 2.5 s, toque de 40 ms, ruido de 10 ms y 12 pulsaciones. Debe responder **TODO OK**, con 12 pulsaciones = 1 vuelta y un error menor de 0.03° tras 1000 vueltas. No sustituye compilar con el núcleo del ESP32 en el Arduino IDE.
 
 ## Limitaciones
 
+- **No llenes por encima de la línea:** con la reserva llena (~400 pastillas) el montón pide unos 35 mN·m y el motor da unos 30. Se trabaría y perdería pasos.
 - **Sin sensor de origen:** si el motor pierde pasos (un atasco), el disco queda desalineado y el firmware no lo nota. Para corregirlo, añade un sensor hall A3144 con un imán en el rotor.
 - **Sin confirmación de entrega:** se quitó el sistema de pesaje, así que el firmware no sabe si de verdad cayó una pastilla. Revisa el bolsillo.
 - Prototipo sin validación física. No lo uses como único medio para administrar medicación.
