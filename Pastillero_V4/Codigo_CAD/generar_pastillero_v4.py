@@ -225,11 +225,18 @@ hood = (cq.Workplane('XZ').polyline([(31.2, 105.8 - 0.01), (49.0 + 0.5, 105.8 - 
 roof_wedge_tall = cq.Workplane('XY').polyline([(0, 0), (100 * math.cos(a0), 100 * math.sin(a0)),
                                                (100 * math.cos(a1), 100 * math.sin(a1))]).close().extrude(30).translate((0, 0, 101.8)).val()
 res = res.fuse(hood.intersect(roof_wedge_tall))
+# Faldón exterior: une los cuatro separadores y el poste en un anillo de 2.5 mm
+# (z 93-101.8). Impresa boca abajo, la cara de arriba queda plana en vez de
+# acabar en postes sueltos; además los separadores dejan de ser tubos finos
+# aislados. Va por fuera del disco (r=51.8) con 5.7 mm de holgura.
+SKIRT_R_IN = 57.5
+res = res.fuse(cyl(60, 101.8 - 93.0 + 0.01, z=93.0).cut(cyl(SKIRT_R_IN, 12, z=92.0)))
+res = res.fuse(cyl(2.7, 101.8 - 93.0 + 0.01, KEY_XY[0], KEY_XY[1], 93.0))   # refuerzo del poste
 for x in (-C, C):
     for y in (-C, C):
         res = res.cut(cyl(1.7, 30, x, y, 90))                        # paso M3x30 limpio
 # Poste de orientación: baja hasta la placa 02 y entra en su agujero.
-res = res.fuse(cyl(KEY_R, 101.8 - 91.0 + 0.01, KEY_XY[0], KEY_XY[1], 91.0))
+res = res.fuse(cyl(KEY_R, 93.0 - 91.0 + 0.01, KEY_XY[0], KEY_XY[1], 91.0))   # solo asoma 2 mm
 # Holgura cono-techo: el borde interior del techo (y la punta del barredor)
 # pasa de r=31.2 a r=31.55. La ventana de salida empieza en r=31.6, así que
 # sigue tapada entera.
@@ -434,6 +441,30 @@ esp = box(27.5, 55.5, -26.0, 26.0, 11.0, 12.6).fuse(box(32.0, 51.0, -26.0, -8.0,
 refs_new.update({'REF_pulsador_6x6': puls, 'REF_driver_ULN2003': uln, 'REF_ESP32_DevKit': esp})
 for n, sref in refs_new.items():
     cq.exporters.export(sref, str(OUT / 'Referencias_NO_imprimir' / (n + '.step')))
+# ------------------ alternativa: reutilizar la bancada 10 de V3 ya impresa
+# La bancada de V3 tiene la misma base que la V4: 4 patas de 10x10 en
+# (±18.5, ±16), los mismos agujeros del piso y 51x42 mm de huella. Arriba acaba
+# en dos postes a z=69 (en x=±21) para el puente 11 del motor de V3. Este puente
+# sustituye a la bancada 10 V4: se atornilla a esos postes con los 2 M3x12 y las
+# tuercas del puente 11 de V3, y deja la cara de apoyo del 28BYJ-48 a z=76.5,
+# igual que la bancada V4, así que el eje llega a la misma altura del rotor.
+ALT = OUT / 'Alternativa_bancada_V3'
+ALT.mkdir(exist_ok=True)
+AD_Z0, AD_Z1, V3_POST_X = 69.0, PLATE_Z1, 21.0
+ad = box(-25.5, 25.5, -12.0, 21.0, AD_Z0, AD_Z1)
+ad = ad.cut(cyl(M_BODY_R + 0.5, 20, 0, M_OFF, AD_Z0 - 5))                     # cuerpo del motor
+ad = ad.cut(box(-8.5, 8.5, M_OFF + 9, 30, AD_Z0 - 5, AD_Z1 + 1))              # caja de cables
+for sx in (-1, 1):
+    ad = ad.cut(cyl(1.7, 20, sx * M_EAR_X, M_OFF, AD_Z0 - 5))                 # oreja: paso M3x8
+    ad = ad.cut(hexprism(sx * M_EAR_X, M_OFF, AD_Z0 - 0.01, 3.6))             # tuerca de la oreja
+    ad = ad.cut(cyl(1.7, 20, sx * V3_POST_X, 0, AD_Z0 - 5))                   # paso M3x12 al poste V3
+    ad = ad.cut(cyl(3.0, AD_Z1 - 73.0 + 1, sx * V3_POST_X, 0, 73.0))          # cabeza a z=73, como el puente 11
+assert ad.isValid() and len(ad.Solids()) == 1
+cq.exporters.export(ad, str(ALT / '11_puente_28BYJ48_sobre_bancada_V3.step'))
+q = ad.translate((0, 0, -AD_Z0))                                               # cara de los postes sobre la cama
+cq.exporters.export(q, str(ALT / '11_puente_28BYJ48_sobre_bancada_V3.stl'), tolerance=.025, angularTolerance=.08)
+print('ALTERNATIVA puente', round(ad.Volume() / 1000, 1), 'cm3 frente a', round(parts['10_bancada_28BYJ48'].Volume() / 1000, 1), flush=True)
+
 meta = {n: {'size_mm': [round(s.BoundingBox().xlen, 3), round(s.BoundingBox().ylen, 3),
                         round(s.BoundingBox().zlen, 3)],
             'volume_mm3': round(s.Volume(), 1), 'note': notes[n]}

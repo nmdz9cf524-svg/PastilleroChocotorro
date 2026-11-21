@@ -124,6 +124,16 @@
   ],
   "assembly_path_collisions": [],
   "floating_parts": [],
+  "alternative_V3_motor_mount": {
+    "collisions": [],
+    "contacts_and_gaps_mm": {
+      "puente_sobre_postes_V3": 0.0,
+      "motor_sobre_puente": 0.0,
+      "bancada_V3_sobre_carcasa": 0.0,
+      "bancada_V3_vs_rampa": 0.5,
+      "puente_vs_rotor": 3.5
+    }
+  },
   "exit_window_uncovered_mm3": 0.0,
   "supports": {
     "01_carcasa_v4": [
@@ -220,11 +230,11 @@
     },
     {
       "file": "07_reserva_con_barredor.stl",
-      "triangles": 12392,
+      "triangles": 12812,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0237,
-      "volume_relative_error": 0.000541,
+      "volume_relative_error": 0.000533,
       "print_height_mm": 75.8
     },
     {

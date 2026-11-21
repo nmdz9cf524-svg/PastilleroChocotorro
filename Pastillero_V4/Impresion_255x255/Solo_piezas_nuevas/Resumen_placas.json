@@ -2,15 +2,15 @@
   "Placa_1_nuevas_estructura_PLA_capa_0.28": {
     "material": "PLA o PETG",
     "altura_capa_mm": 0.28,
-    "nota": "Carcasa con botón, tapa de llenado, rampa y bancada. Capa gruesa = impresión más rápida.",
+    "nota": "Carcasa, tapa de llenado, rampa y puente del motor para la bancada V3. Capa gruesa = impresión más rápida.",
     "piezas": [
       "01_carcasa_v4",
       "09_tapa_llenado",
       "16_rampa_salida",
-      "10_bancada_28BYJ48"
+      "11_puente_28BYJ48_sobre_bancada_V3"
     ],
     "altura_max_mm": 92.0,
-    "volumen_solido_cm3": 297.5,
+    "volumen_solido_cm3": 262.6,
     "separacion_minima_mm": 13.0
   },
   "Placa_2_nuevas_reserva_placa_rotor_y_tapa_PLA_capa_0.20": {
@@ -24,7 +24,7 @@
       "03_rotor_15x8_eje_D5"
     ],
     "altura_max_mm": 75.8,
-    "volumen_solido_cm3": 264.7,
+    "volumen_solido_cm3": 272.9,
     "separacion_minima_mm": 5.0
   }
 }
