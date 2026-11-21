@@ -102,7 +102,10 @@ assert all(g >= 0.4 for k, g in gaps.items() if k.startswith(('rampa', 'barredor
 assert all(g >= 0.25 for k, g in gaps.items() if k.startswith('tapa') and not k.endswith('01_carcasa_v4')), gaps  # la tapa apoya en la carcasa
 
 # Barrido continuo del grupo giratorio.
-env = (cq.Solid.makeCylinder(52.5, 8, V(0, 0, 93.4)).fuse(cq.Solid.makeCylinder(10, 13.4, V(0, 0, 80)))
+rp = params['rotor']
+env = (cq.Solid.makeCylinder(rp['r'], rp['z1'] - rp['z0'], V(0, 0, rp['z0']))                 # disco
+       .fuse(cq.Solid.makeCylinder(rp['cone_seat_r'], 101.4 - rp['z0'], V(0, 0, rp['z0'])))   # asiento del cono
+       .fuse(cq.Solid.makeCylinder(10, rp['z0'] - 80, V(0, 0, 80)))                            # cubo
        .fuse(cq.Solid.makeCone(31, 1.5, 35, V(0, 0, 101.4))).cut(cq.Solid.makeCylinder(3.2, 25.5, V(0, 0, 79))))
 moving = {'03_rotor_15x8_eje_D5', '06_cono_repartidor_punta_arriba'} | set(radial) | \
     {n for n in allshapes if n.startswith(('TORNILLO_cono_', 'TUERCA_cono_'))}
@@ -114,6 +117,19 @@ for n, s in static.items():
         sweepbad.append([n, v])
     clearances[n] = round(env.distance(s), 3)
 print('FULL_SWEEP', sweepbad, 'MIN_GAP', min(clearances.values()), flush=True)
+# Holguras de giro pensadas para impresión FDM (±0.2 mm por pieza): todas >= 0.6 mm.
+res_ = assembly['07_reserva_con_barredor']; pl_ = assembly['02_placa_inferior_con_canal']
+disk = cq.Solid.makeCylinder(rp['r'], rp['z1'] - rp['z0'], V(0, 0, rp['z0']))
+spin_gaps = {
+    'disco_vs_separadores': disk.distance(res_.intersect(cq.Solid.makeBox(200, 200, 8.7, V(-100, -100, 93.0)))),
+    'disco_vs_placa': disk.distance(pl_.intersect(cq.Solid.makeBox(200, 200, 4, V(-100, -100, 89)))),
+    'disco_vs_techo': disk.distance(res_.intersect(cq.Solid.makeBox(200, 200, 4.2, V(-100, -100, 101.75)))),
+    'cubo_vs_agujero_placa': cq.Solid.makeCylinder(10, rp['z0'] - 80, V(0, 0, 80)).distance(pl_),
+    'cono_vs_techo': cq.Solid.makeCone(31, 1.5, 35, V(0, 0, 101.4)).distance(res_),
+}
+spin_gaps = {k: round(v, 3) for k, v in spin_gaps.items()}
+print('HOLGURAS_GIRO', spin_gaps, flush=True)
+assert all(v >= 0.6 for v in spin_gaps.values()), spin_gaps
 
 # Trayectoria de una pastilla acostada 15x8x6: cae por el canal, se apoya en la
 # rampa de 25° y resbala hasta el bolsillo exterior. Nada debe estorbarla.
@@ -212,7 +228,7 @@ for p in sorted((R / 'STL').glob('*.stl')):
     assert bad == 0 and winding == 0 and err < .05 and verr < .002, (p.name, mesh[-1])
 
 result = {'static_collisions_mm3_above_0_001': col, 'continuous_rotor_sweep_collisions': sweepbad,
-          'minimum_nominal_rotor_clearance_mm': min(clearances.values()), 'rotor_clearances_mm': clearances,
+          'minimum_nominal_rotor_clearance_mm': min(clearances.values()), 'rotor_spin_gaps_mm': spin_gaps, 'rotor_clearances_mm': clearances,
           'new_part_gaps_mm': gaps, 'pill_release_path': trajectory, 'assembly_path_collisions': insert_bad, 'floating_parts': floating, 'exit_window_uncovered_mm3': uncovered, 'supports': supports, 'meshes': mesh,
           'fasteners': dict(collections.Counter(bolt_schedule)), 'fastener_count': len(bolt_schedule),
           'nut_count': len(nuts) + 2, 'unique_print_files': len(parts),

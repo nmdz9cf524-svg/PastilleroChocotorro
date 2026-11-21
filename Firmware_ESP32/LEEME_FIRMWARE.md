@@ -34,7 +34,7 @@ Alimenta el ULN2003 y el motor con **5 V aparte** (≥ 1 A), no desde el pin 3V3
 
 ## Montaje mecánico (ya está en el CAD V4)
 
-- **Botón:** pulsador táctil de **6×6×9.5 mm** (el común de 4 patas), **arriba, en la esquina frontal derecha de la tapa de servicio 21**. Su cuerpo entra por debajo en un alojamiento cuadrado, con tope contra la cara inferior de la tapa, y el vástago asoma unos 2 mm por un agujero de Ø4.2 con rebaje para el dedo. Fíjalo con una gota de pegamento.
+- **Botón:** pulsador táctil de **6×6** (el común de 4 patas; vale de 9.5 mm o de 8 mm de alto), **arriba, en la esquina frontal derecha de la tapa de servicio 21**. Entra deslizándose por debajo de la tapa, desde el lado de la reserva, en un alojamiento con piso: sus patas pasan por dos ranuras y, al pulsarlo, el cuerpo apoya en ese piso. El vástago asoma por un agujero de Ø4.2.
   - Suelda dos cables a dos patas **opuestas en diagonal**, que siempre forman el contacto, y termínalos en un **conector de 2 pines** (tipo Dupont). Así puedes desconectar el botón al levantar la tapa de servicio para mantenimiento. Los cables bajan por la esquina interior de la tapa hasta el ESP32.
 - **Motor:** el 28BYJ-48 entra por arriba en la bancada 10 nueva y se atornilla por sus dos orejas con **2 M3×8** y tuercas atrapadas debajo. Su eje queda justo bajo el centro del rotor. El puente 11 ya no hace falta.
 - **Rotor:** el rotor 03 nuevo tiene el agujero en doble D para el eje Ø5 de doble plano y **un prisionero M3×8** que aprieta contra un plano. El rotor de V3 (agujero redondo Ø6.4) no sirve con este motor.

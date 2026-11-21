@@ -25,15 +25,15 @@ Cada pulsación del botón gira el rotor 30° y deja **una pastilla** en el bols
 |---|---|---|
 | 01 | **Carcasa** | Las patas vienen impresas como una base nervada bajo el piso. Lleva la plataforma del ESP32, el paso de cable de la pared derecha, y dos ranuras en el piso para la rampa. El frente queda limpio: el botón va arriba, en la tapa de servicio. |
 | 02 | **Placa inferior con canal** | El canal va integrado y baja hasta 10 mm sobre la rampa, con la boca cortada en diagonal, para guiar la caída. El agujero pequeño de arriba recibe el poste de la reserva. |
-| 03 | **Rotor** | 12 cavidades, una cada 30°. El cubo tiene agujero en doble D para el eje Ø5 del 28BYJ-48 y un prisionero M3×8. |
+| 03 | **Rotor** | 12 cavidades, una cada 30°. Disco de Ø103.6 × 7.6 mm (con asiento para el cono), con holgura de giro amplia. El cubo tiene agujero en doble D para el eje Ø5 del 28BYJ-48 y un prisionero M3×8. |
 | 06 | **Cono** | Igual que en V3. |
 | 07 | **Reserva** | Una sola pieza con el techo sobre la salida (así no caen pastillas de golpe), los cuatro separadores del disco y un barredor rígido justo antes del techo. Un poste entra en la placa 02, así que solo se monta en la posición correcta. |
-| 09 | **Tapa de llenado** | Disco redondo que encaja a ras en la tapa de servicio. Se levanta por la muesca del frente y se echan las pastillas por la boca de Ø91, directo a la reserva. |
+| 09 | **Tapa de llenado** | Tapa redonda y delgada que se apoya en la boca de la reserva, con una ceja que entra en ella. Se levanta por la pestaña del frente y se echan las pastillas directamente en la reserva. |
 | 10 | **Bancada del 28BYJ-48** | Deja el eje del motor justo bajo el centro del rotor. El motor se atornilla por sus orejas. |
 | 16 | **Rampa de salida** | Fondo a 25°. El bolsillo mide 30 mm y sale **29.5 mm** de la caja: caben varias pastillas y se toman con los dedos. No tiene tornillos: apoya en el borde inferior de la ventana y en dos nervios encajados en el piso. |
-| 21 | **Tapa de servicio** | Caja cuadrada a ras de la carcasa. Cubre placa, disco y reserva y se levanta entera para mantenimiento. Su ceja circular entra en la reserva y sus pestañas en la carcasa. En su esquina frontal derecha lleva el **pulsador de entrega**: un táctil de 6×6 alojado por debajo, con el vástago asomando 2 mm por un agujero con rebaje para el dedo. |
+| 21 | **Tapa de servicio** | Caja cuadrada **corta** (38 mm de alto) a ras de la carcasa. Cubre solo la franja del disco, la pestaña de la reserva y sus tornillos, con una abertura redonda por donde pasa la reserva, que queda a la vista. Así gasta 47 cm³ de filamento en vez de 111. En su esquina frontal derecha lleva el **pulsador de entrega**: un táctil de 6×6 que entra deslizándose en un alojamiento con piso, así que al pulsarlo el cuerpo apoya y no depende del pegamento. |
 
-**La caja se abre en dos secciones:** la tapa redonda 09 para llenar y la cuadrada 21 para mantenimiento.
+**La caja se abre en dos secciones:** la tapa redonda 09 para llenar y la cuadrada 21 para mantenimiento. Para quitar la de servicio, quita primero la de llenado.
 
 ## Qué cambió respecto a V3
 
@@ -44,7 +44,7 @@ Cada pulsación del botón gira el rotor 30° y deja **una pastilla** en el bols
 | 18 plataforma electrónica | Integrada en la carcasa 01 |
 | 17 canal (2 M3×8) | Integrado y prolongado en la placa 02 |
 | 04 aro, 05 separadores ×4, 20 peine TPU | Integrados en la reserva 07 (barredor rígido en lugar del peine) |
-| 09 tapa redonda | 09 tapa de llenado, encajada en la tapa de servicio 21 |
+| 09 tapa redonda | 09 tapa de llenado más delgada, sobre la reserva |
 | 10 bancada + 11 puente (motor Ø32) | 10 bancada para 28BYJ-48 |
 | 03 rotor (eje Ø6) | 03 rotor para eje D5 |
 | Firmware con horarios y WiFi | Firmware solo con botón |
@@ -81,16 +81,16 @@ Además: motor **28BYJ-48 + placa ULN2003**, **ESP32 DevKit**, **pulsador tácti
 4. **Placa y rotor:**
    1. Asienta la placa 02 sobre las columnas.
    2. Une cono y rotor con 3 M3×12 y bájalos sobre el eje. El agujero en doble D solo entra alineado con los planos del eje.
-   3. Aprieta el prisionero M3×8.
+   3. Pon debajo del disco un calce de 0.6 mm (6 hojas de papel de impresora o una tarjeta de plástico), apóyalo y aprieta el prisionero M3×8. Quita el calce: el disco queda centrado en altura, con 0.6 mm a la placa y 0.6 mm al techo.
 5. **Reserva:**
    1. Bájala girándola hasta que su poste entre en la placa.
    2. Cierra con los 4 M3×30.
    3. Gira el disco a mano: debe pasar libre bajo el barredor y el techo.
 6. **Tapas y pulsador:**
-   1. Mete el pulsador 6×6 por debajo de la tapa de servicio 21, en su alojamiento de la esquina, y fíjalo con una gota de pegamento.
+   1. Desliza el pulsador 6×6 en el alojamiento de la esquina, por debajo de la tapa de servicio 21, entrando desde el lado de la reserva. Sus patas pasan por las ranuras del piso.
    2. Conéctalo al conector de 2 pines.
-   3. Baja la tapa de servicio.
-   4. Pon la tapa de llenado 09 en su asiento.
+   3. Baja la tapa de servicio: su abertura pasa alrededor de la reserva.
+   4. Pon la tapa de llenado 09 sobre la boca de la reserva.
 
 ## Revisión de coherencia con lo pedido
 
@@ -101,8 +101,8 @@ Además: motor **28BYJ-48 + placa ULN2003**, **ESP32 DevKit**, **pulsador tácti
 | Motor 28BYJ-48 | Bancada con el eje descentrado bajo el centro del rotor; rotor con agujero en doble D | Sin choques; motor a 0.7 mm del rotor |
 | Sin sistema de peso | Se eliminaron celda, mordaza, pedestal, tope y manguito | Ninguna pieza ni tornillo los menciona |
 | Rampa más larga, pastilla fácil de sacar | El bolsillo sale 29.5 mm de la caja y mide 30 mm; la pastilla queda entera fuera | Trayectoria de la pastilla sin choques hasta el bolsillo |
-| Tapa en dos secciones | Tapa de llenado 09 a ras sobre la tapa de servicio 21 | Encaje a ras: 0.0 mm de desnivel y contacto 0.0 mm |
-| Botón arriba y pequeño | Pulsador táctil 6×6 en la esquina frontal derecha de la tapa de servicio; asoma 2 mm sobre un rebaje para el dedo | Apoya en la tapa (contacto 0.0 mm), sin choques; queda a más de 8 mm de la reserva y de la tapa de llenado |
+| Tapa en dos secciones, con poco filamento | Tapa de llenado 09 sobre la reserva y tapa de servicio 21 corta, que solo cubre el mecanismo (47 cm³ en vez de 111) | Las dos apoyan (contacto 0.0 mm) sin choques; la tapa de servicio queda a 0.5 mm de la reserva |
+| Botón arriba y pequeño | Pulsador táctil 6×6 en la esquina frontal derecha de la tapa de servicio, en un alojamiento con piso; el vástago asoma por un agujero de Ø4.2 | Apoya en el piso del alojamiento, sin choques; queda a 1.9 mm de la reserva |
 | Ninguna pieza flotando | Cada pieza apoya en otra y todas llegan hasta la carcasa. La rampa apoya en la ventana y en el piso, la tapa de llenado y el pulsador en la tapa de servicio, el motor en la bancada y el rotor en el eje por su prisionero | Comprobación de contactos en `validar_v4.py` (`supports` en el JSON) |
 
 ## Verificación (solo geometría)
@@ -110,8 +110,17 @@ Además: motor **28BYJ-48 + placa ULN2003**, **ESP32 DevKit**, **pulsador tácti
 `Codigo_CAD/validar_v4.py` comprobó lo siguiente (resultado en `Verificacion_CAD_y_STL.json`):
 
 - No hay choques entre piezas, referencias (motor, pulsador, ULN2003, ESP32) y tornillería con volumen mayor de 0.001 mm³.
-- El barrido completo del rotor y el cono no choca con nada. La holgura mínima es 0.30 mm.
-- El techo de la reserva queda a 0.4 mm del disco y tapa entera la ventana de salida. El barredor queda a 0.6 mm del disco.
+- El barrido completo del rotor y el cono no choca con nada. **Todas las holguras de giro son de al menos 0.6 mm**, pensadas para impresión FDM (±0.2 mm por pieza):
+
+  | Entre | Holgura |
+  |---|---|
+  | Borde del disco y separadores de la reserva | 1.0 mm |
+  | Disco y placa (abajo) | 0.6 mm |
+  | Disco y techo (arriba) | 0.6 mm |
+  | Cubo y agujero de la placa | 1.5 mm |
+  | Cono y borde del techo | 0.68 mm |
+  | Motor y rotor | 0.7 mm |
+- El techo de la reserva tapa entera la ventana de salida. El barredor queda a 0.8 mm del disco.
 - Una pastilla acostada de 15×8×6 cae por el canal, se apoya en la rampa y queda entera en el bolsillo exterior.
 - La rampa entra por arriba y por la ventana sin chocar, y después la bancada baja sin tocarla (0.5 mm).
 - **Ninguna pieza flota:** todas apoyan en otra y llegan hasta la carcasa.

@@ -117,7 +117,7 @@ __DATA__
     '07_reserva_con_barredor': 'Reserva',
   };
   // Punto de anclaje de algunas etiquetas (marco CAD, mm) para que no se encimen.
-  const ANCHOR = { '16_rampa_salida': [0, -82, 40], REF_driver_ULN2003: [-42, 5, 24], '09_tapa_llenado': [0, 0, 172], REF_pulsador_6x6: [46, -46, 178] };
+  const ANCHOR = { '16_rampa_salida': [0, -82, 40], REF_driver_ULN2003: [-42, 5, 24], '09_tapa_llenado': [0, 0, 170], REF_pulsador_6x6: [46, -46, 128] };
   const LEGEND = [['Botón', 'button'], ['Motor 28BYJ-48', 'motor'], ['ULN2003 / ESP32', 'pcb'], ['Rotor', 'rotor'],
                   ['Cono', 'cone'], ['Rampa', 'tray'], ['Reserva', 'hopper'], ['Tapa de servicio', 'trim'], ['Tapa de llenado', 'lid']];
   const ROTOR = n => n.startsWith('03_') || n.startsWith('06_') || /cono_|rotor_X/.test(n);
@@ -273,7 +273,7 @@ __DATA__
     parts.forEach((p) => {
       const key = Object.keys(GHOST).find((k) => p.name.startsWith(k));
       if (key === '21_' || p.name === 'REF_pulsador_6x6') p.mesh.visible = cap;   // el pulsador va en la tapa
-      if (key === '09_') { p.mesh.visible = cap; p.mesh.position.set(0, 0, $('lidOpen').checked ? 45 : 0); }
+      if (key === '09_') p.mesh.position.set(0, 0, $('lidOpen').checked ? 45 : 0);   // la tapa de llenado va sobre la reserva
       const on = xr && !!key;
       p.mat.transparent = on; p.mat.opacity = on ? GHOST[key] : 1; p.mat.depthWrite = !on; p.mesh.castShadow = !on; p.mat.needsUpdate = true;
     });
@@ -333,7 +333,7 @@ __DATA__
   // Posición en pantalla del vástago del pulsador (la usan las pruebas automáticas).
   window.__btnScreen = () => {
     if (!buttonPart || !buttonPart.mesh.visible) return null;
-    const v = new THREE.Vector3(46, -46, 172.6); buttonPart.mesh.localToWorld(v); v.project(camera);
+    const v = new THREE.Vector3(46, -46, 123.0); buttonPart.mesh.localToWorld(v); v.project(camera);
     const r = canvas.getBoundingClientRect();
     return { x: r.left + (v.x + 1) / 2 * r.width, y: r.top + (1 - v.y) / 2 * r.height };
   };

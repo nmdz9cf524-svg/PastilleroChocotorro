@@ -137,7 +137,7 @@ add('01_carcasa_v4', car,
 plate = cyl(60, 4, z=89)
 plate = plate.cut(cq.Workplane('XY', origin=(0, -40, 88)).slot2D(16.8, 9.6, angle=90)
                   .extrude(6).val())
-plate = plate.cut(cyl(10.5, 6, z=88))
+plate = plate.cut(cyl(11.5, 6, z=88))      # paso del cubo del rotor: 1.5 mm de holgura por si el eje queda algo descentrado
 # Agujero del poste de orientación de la reserva: solo entra en una posición,
 # con el techo encima de la ventana de salida.
 KEY_XY, KEY_R = (0.0, 56.0), 1.5
@@ -229,6 +229,10 @@ for x in (-C, C):
         res = res.cut(cyl(1.7, 30, x, y, 90))                        # paso M3x30 limpio
 # Poste de orientación: baja hasta la placa 02 y entra en su agujero.
 res = res.fuse(cyl(KEY_R, 101.8 - 91.0 + 0.01, KEY_XY[0], KEY_XY[1], 91.0))
+# Holgura cono-techo: el borde interior del techo (y la punta del barredor)
+# pasa de r=31.2 a r=31.55. La ventana de salida empieza en r=31.6, así que
+# sigue tapada entera.
+res = res.cut(cyl(31.55, 8, z=100.0))
 add('07_reserva_con_barredor', res,
     'Reserva con barredor rígido, aro con techo y separadores integrados '
     '(sustituye a 04, 05 y al peine 20 de TPU). Poste de orientación hacia la '
@@ -256,34 +260,35 @@ add('16_rampa_salida', ramp,
     'en la ventana y en dos nervios encajados en el piso. Sustituye a la bandeja '
     'de pesaje 16, la mordaza 13 y la celda. Imprimir de pie sobre un costado.')
 
-# ------------------------- 21 tapa de servicio cuadrada + 09 tapa de llenado
+# ------------------------- 21 tapa de servicio corta + 09 tapa de llenado
 # Se abre en dos secciones:
-#   * 09 tapa de llenado: disco redondo encajado a ras en la cara de arriba.
-#     Se levanta con el dedo (muesca al frente) y se echan las pastillas por
-#     la boca Ø91 directamente a la reserva.
-#   * 21 tapa de servicio: la caja cuadrada entera. Se levanta para llegar al
-#     disco, el barredor y los tornillos. Su ceja circular entra en la boca de
-#     la reserva y cuatro pestañas en la carcasa.
-RES_TOP, RES_IN = 166.8, 49.0
-DECK0 = RES_TOP + 0.3                   # 0.3 mm sobre el borde de la reserva
-DECK_T = 4.0
+#   * 09 tapa de llenado: tapa redonda apoyada en la boca de la reserva, con una
+#     ceja que entra en ella y una pestaña al frente para levantarla.
+#   * 21 tapa de servicio: caja cuadrada corta (unos 32 mm) que solo cubre la
+#     franja del disco, la pestaña de la reserva y sus tornillos. Su abertura
+#     redonda rodea la reserva, que queda a la vista. Se levanta para llegar al
+#     disco y los tornillos. Lleva el pulsador de entrega en la esquina.
+RES_TOP, RES_IN, RES_OUT = 166.8, 49.0, 52.0
+HOLE_R = RES_OUT + 0.5                  # abertura de la tapa de servicio alrededor de la reserva
+CHAMFER_AT_HOLE = 109.8 + (60.0 - HOLE_R)   # altura del chaflán de la reserva en el borde de la abertura
+DECK0 = CHAMFER_AT_HOLE + 1.0           # cara inferior de la cubierta, 1 mm sobre el chaflán
+DECK_T = 2.5
 TOP = DECK0 + DECK_T
-FILL_R, SEAT_R, SEAT_D = RES_IN - 3.3, 52.5, 2.0   # boca de llenado, asiento de la tapa 09
 cap = rrect(W, RC, 89, TOP - 89).cut(rrect(W, RC, 88, DECK0 - 88, inset=2.0))
-cap = cap.fuse(cyl(RES_IN - 0.3, DECK0 - 163.8 + 0.01, z=163.8).cut(cyl(FILL_R, 10, z=163)))   # ceja
-cap = cap.cut(cyl(FILL_R, 10, z=DECK0 - 1))                                        # boca de llenado
-cap = cap.cut(cyl(SEAT_R, SEAT_D + 1, z=TOP - SEAT_D))                              # asiento a ras
-cap = cap.cut(cyl(8.0, 4, 0, -SEAT_R, TOP - 3.0))                                   # muesca para el dedo
-# Botón de entrega arriba: pulsador táctil de 6x6 mm en la esquina frontal
-# derecha de la tapa de servicio, fuera de la tapa de llenado. El cuerpo entra
-# por debajo en un alojamiento cuadrado (tope contra la cara inferior) y el
-# vástago asoma ~2 mm por un agujero de Ø4.2 con un rebaje para el dedo.
+cap = cap.cut(cyl(HOLE_R, 10, z=DECK0 - 1))                                         # abertura para la reserva
+# Botón de entrega arriba: pulsador táctil 6x6 en la esquina frontal derecha.
+# Alojamiento bajo la cubierta, con piso: el pulsador entra deslizándose desde
+# el lado de la reserva (-X), sus patas pasan por dos ranuras del piso y, al
+# pulsarlo, el cuerpo apoya en ese piso. El vástago asoma por un agujero Ø4.2.
 BTN_XY, BTN_BODY, BTN_H, BTN_STEM = (46.0, -46.0), 6.0, 3.5, 6.0   # 6x6x9.5 mm
+BTN_FLOOR = 1.5
 bx, by = BTN_XY
-cap = cap.fuse(box(bx - 5, bx + 5, by - 5, by + 5, DECK0 - 4.0, DECK0 + 0.01))          # alojamiento
-cap = cap.cut(box(bx - 3.05, bx + 3.05, by - 3.05, by + 3.05, DECK0 - 4.5, DECK0))      # hueco del cuerpo
-cap = cap.cut(cyl(2.1, 10, bx, by, DECK0 - 1))                                          # paso del vástago
-cap = cap.cut(cyl(5.0, 2, bx, by, TOP - 1.0))                                           # rebaje para el dedo
+cap = cap.fuse(box(bx - 5, bx + 5, by - 5, by + 5, DECK0 - BTN_H - BTN_FLOOR, DECK0 + 0.01))   # alojamiento
+cap = cap.cut(box(bx - 6, bx + 3.05, by - 3.05, by + 3.05, DECK0 - BTN_H, DECK0))               # cuerpo (entra desde -X)
+for sy in (-1, 1):                                                                            # ranuras de las patas
+    cap = cap.cut(box(bx - 6, bx + 3.05, min(by + sy * 2.0, by + sy * 3.05), max(by + sy * 2.0, by + sy * 3.05),
+                      DECK0 - BTN_H - BTN_FLOOR - 1, DECK0 - BTN_H + 0.01))
+cap = cap.cut(cyl(2.1, 10, bx, by, DECK0 - 1))                                                # paso del vástago
 tabs = rrect(W, RC, 83, 6.01, inset=WALL + 0.25).cut(rrect(W, RC, 82, 8, inset=WALL + 0.25 + 1.6))
 ledge = rrect(W, RC, 89, 2.0).cut(rrect(W, RC, 88, 4, inset=WALL + 0.25 + 1.6))
 keep = None
@@ -293,17 +298,21 @@ for sx in (-1, 1):
         keep = b if keep is None else keep.fuse(b)
 cap = cap.fuse(tabs.fuse(ledge).intersect(keep))
 add('21_tapa_cuadrada', cap,
-    'Tapa de servicio cuadrada: cubre placa, disco y reserva y se levanta '
-    'entera para mantenimiento. Lleva la boca de llenado con asiento para la '
-    'tapa 09 y el pulsador de entrega de 6x6 en la esquina. Imprimir boca abajo.')
+    'Tapa de servicio cuadrada corta: cubre solo la franja del disco y los '
+    'tornillos, con abertura para la reserva. Lleva el pulsador de entrega 6x6 '
+    'en la esquina. Imprimir boca abajo.')
 
-lid = cyl(SEAT_R - 0.3, SEAT_D, z=TOP - SEAT_D)
-lid = lid.fuse(cyl(FILL_R - 0.3, DECK_T - SEAT_D + 1.5 + 0.01, z=DECK0 - 1.5).cut(cyl(FILL_R - 2.3, 10, z=DECK0 - 2)))
+# Tapa de llenado sobre la reserva: disco de 1.6 mm, ceja que entra 3 mm en la
+# boca (holgura 0.3) y pestaña al frente para levantarla con el dedo.
+LID_T = 1.6
+lid = cyl(RES_OUT, LID_T, z=RES_TOP)
+lid = lid.fuse(cyl(RES_IN - 0.3, 3.0 + 0.01, z=RES_TOP - 3.0).cut(cyl(RES_IN - 2.3, 4, z=RES_TOP - 3.5)))   # ceja
+lid = lid.fuse(cq.Workplane('XY', origin=(0, -RES_OUT + 1, RES_TOP)).slot2D(18, 12).extrude(LID_T).val())  # pestaña
 for x, y in [(12, 12), (-12, 12), (12, -12), (-12, -12)]:
-    lid = lid.cut(cyl(1.0, 10, x, y, TOP - 5))                                     # respiraderos
+    lid = lid.cut(cyl(1.0, 10, x, y, RES_TOP - 5))                                  # respiraderos
 add('09_tapa_llenado', lid,
-    'Tapa redonda de llenado, encajada a ras en la tapa de servicio. Se levanta '
-    'por la muesca del frente. Imprimir boca abajo.')
+    'Tapa redonda de llenado apoyada en la boca de la reserva, con ceja y '
+    'pestaña al frente para levantarla. Imprimir boca abajo.')
 
 # ------------------------------------------------- motor 28BYJ-48 (referencia)
 # Medidas de la hoja de datos estándar: cuerpo Ø28 x 19, orejas con agujeros
@@ -360,6 +369,16 @@ rot = rot.fuse(cq.Solid.makeCylinder(1.75, 10.5, V(0, 0, 84), V(0, 1, 0)).inters
 rot = rot.fuse(box(-3, 3, 5.8, 10.5, 80, 87.35).intersect(hub))                  # tapar ranura Y
 rot = rot.cut(cyl(2.6, 24, z=79).intersect(box(-1.6, 1.6, -5, 5, 78, 104)))      # doble D 5.2 / 3.2
 rot = rot.cut(cq.Solid.makeCylinder(1.7, 12, V(0, 0, 84), V(1, 0, 0)))          # paso del prisionero (+X)
+# Holguras para impresión FDM (±0.2 mm por pieza):
+#   * radio del disco 52.5 -> 51.8: 1.0 mm a los separadores de la reserva (antes 0.3).
+#     El borde sigue bajo el anillo de la reserva (r=51.8), así que no escapan pastillas.
+#   * disco 0.2 mm más fino por cada cara fuera del cono: 0.6 mm a la placa y al techo
+#     (antes 0.4). La pastilla acostada (6 mm) sigue quedando bajo la cara superior.
+ROTOR_R, ROTOR_Z0, ROTOR_Z1 = 51.8, 93.6, 101.2
+rot = rot.cut(cyl(60, 20, z=90).cut(cyl(ROTOR_R, 22, z=89)))                       # borde exterior
+rot = rot.cut(cyl(ROTOR_R + 1, ROTOR_Z0 - 93.0, z=93.0).cut(cyl(10.8, 2, z=92.9)))    # cara inferior (no toca el cubo)
+CONE_SEAT_R = 30.8                      # base del cono: r=30.67
+rot = rot.cut(cyl(ROTOR_R + 1, 1.0, z=ROTOR_Z1).cut(cyl(CONE_SEAT_R, 2, z=ROTOR_Z1 - 0.5)))  # cara superior (no toca el asiento del cono)
 add('03_rotor_15x8_eje_D5', rot,
     'Rotor V3 con cubo para el eje Ø5 de doble plano del 28BYJ-48 y un '
     'prisionero M3x8. Imprimir boca abajo.')
@@ -391,8 +410,8 @@ puls = (box(bx - h, bx + h, by - h, by + h, DECK0 - BTN_H, DECK0)               
         .fuse(cyl(1.75, BTN_STEM, bx, by, DECK0)))                                          # vástago
 for sx in (-1, 1):
     for sy in (-1, 1):
-        puls = puls.fuse(box(bx + sx * 2.25 - 0.35, bx + sx * 2.25 + 0.35, by + sy * (h - 0.3) - 0.3,
-                             by + sy * (h - 0.3) + 0.3, DECK0 - BTN_H - 3.5, DECK0 - BTN_H))  # patas, bajo el cuerpo
+        puls = puls.fuse(box(bx + sx * 2.25 - 0.35, bx + sx * 2.25 + 0.35, by + sy * 2.55 - 0.3,
+                             by + sy * 2.55 + 0.3, DECK0 - BTN_H - 3.5, DECK0 - BTN_H))  # patas, por las ranuras del piso
 uln = box(-58.0, -26.0, -12.0, 23.0, 4.0, 5.6)                                       # PCB 32x35
 uln = uln.fuse(box(-45.5, -38.5, -6.0, 13.0, 5.6, 9.0))                             # ULN2003 DIP16
 uln = uln.fuse(box(-55.0, -49.0, 4.0, 16.0, 5.6, 12.6))                             # conector del motor
@@ -409,9 +428,9 @@ v3params = json.load(open(V3 / 'Parametros_V3.json'))
 v3params.update({'version': 'V4', 'feet_height_mm': FEET_H, 'ramp_rib_y': list(RIB_Y),
                  'sweeper': {'z_bottom': SWEEP_Z, 'r_in': R_IN, 'deg_attack_in': A_IN,
                              'deg_attack_out': A_OUT, 'deg_end': A_END},
-                 'reservoir_key_xy': list(KEY_XY), 'button': {'type': 'pulsador tactil 6x6x9.5', 'xy': list(BTN_XY), 'body_top_z': DECK0},
+                 'reservoir_key_xy': list(KEY_XY), 'rotor': {'r': ROTOR_R, 'z0': ROTOR_Z0, 'z1': ROTOR_Z1, 'cone_seat_r': CONE_SEAT_R}, 'button': {'type': 'pulsador tactil 6x6x9.5', 'xy': list(BTN_XY), 'body_top_z': DECK0},
                  'motor': '28BYJ-48', 'motor_top_z': M_TOP, 'motor_ear_x': M_EAR_X, 'motor_body_offset_y': M_OFF, 'cap_top_z': TOP,
-                 'fill_lid_top_z': TOP, 'fill_lid_seat_r': SEAT_R,
+                 'fill_lid_top_z': RES_TOP + LID_T,
                  'tray_slope_deg': 25, 'tray_floor': {'z_ref_at_y_-55': round(Z_REF, 4), 'y_knee': Y_KNEE,
                  'z_pocket': round(Z_POCKET, 3), 'y_back': TY_BACK, 'y_front': TY_FRONT,
                  'pocket_y_center': round((Y_KNEE + TY_FRONT + TW) / 2, 2)}})

@@ -56,21 +56,26 @@
     0.0,
     56.0
   ],
+  "rotor": {
+    "r": 51.8,
+    "z0": 93.6,
+    "z1": 101.2,
+    "cone_seat_r": 30.8
+  },
   "button": {
     "type": "pulsador tactil 6x6x9.5",
     "xy": [
       46.0,
       -46.0
     ],
-    "body_top_z": 167.10000000000002
+    "body_top_z": 118.3
   },
   "motor": "28BYJ-48",
   "motor_top_z": 77.5,
   "motor_ear_x": 17.5,
   "motor_body_offset_y": 8.0,
-  "cap_top_z": 171.10000000000002,
-  "fill_lid_top_z": 171.10000000000002,
-  "fill_lid_seat_r": 52.5,
+  "cap_top_z": 120.8,
+  "fill_lid_top_z": 168.4,
   "tray_slope_deg": 25,
   "tray_floor": {
     "z_ref_at_y_-55": 29.3315,
