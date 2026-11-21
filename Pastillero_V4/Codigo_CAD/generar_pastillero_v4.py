@@ -197,7 +197,8 @@ for x, y in V3P['wiper_bolts_xy']:
 res = cyl(52, 61, z=105.8).fuse(cyl(60, 4, z=105.8))
 # Chaflán de 45° sobre la pestaña: la reserva se imprime boca abajo.
 res = res.fuse(cq.Solid.makeCone(60, 52, 8, V(0, 0, 109.8)))
-res = res.cut(cyl(49, 63, z=104.8))
+RES_IN_R = 49.0
+res = res.cut(cyl(RES_IN_R, 63, z=104.8))
 for x in (-C, C):
     for y in (-C, C):
         res = res.cut(cyl(1.7, 8, x, y, 104)).cut(cyl(3.3, 12, x, y, 109.8))  # paso + cabeza
@@ -233,6 +234,20 @@ res = res.fuse(cyl(KEY_R, 101.8 - 91.0 + 0.01, KEY_XY[0], KEY_XY[1], 91.0))
 # pasa de r=31.2 a r=31.55. La ventana de salida empieza en r=31.6, así que
 # sigue tapada entera.
 res = res.cut(cyl(31.55, 8, z=100.0))
+# Línea de llenado máximo: ranura en V grabada por dentro de la pared. Con la
+# reserva llena (~400 pastillas) el montón pide más par del que da el
+# 28BYJ-48; hasta la línea caben ~60 pastillas de 15x8x6 y el par necesario
+# queda en ~7 mN·m, con margen de sobra. No se graba donde la pared está tapada
+# por el barredor y el relleno del techo (208°-312°), para no dejar huecos.
+FILL_Z, FILL_DEPTH = 113.5, 0.8
+fill_groove = (cq.Workplane('XZ').polyline([(RES_IN_R - 0.01, FILL_Z - FILL_DEPTH - 0.1),
+                                            (RES_IN_R + FILL_DEPTH, FILL_Z),
+                                            (RES_IN_R - 0.01, FILL_Z + FILL_DEPTH + 0.1)]).close()
+               .revolve(360, (0, 0, 0), (0, 1, 0)).val())
+FILL_A0, FILL_A1 = 312.0, 208.0 + 360.0          # arco grabado, en sentido antihorario
+fill_wedge = (cq.Workplane('XY').polyline([(0, 0)] + [polar(80, FILL_A0 + (FILL_A1 - FILL_A0) * k / 24) for k in range(25)])
+              .close().extrude(10).translate((0, 0, FILL_Z - 5)).val())
+res = res.cut(fill_groove.intersect(fill_wedge))
 add('07_reserva_con_barredor', res,
     'Reserva con barredor rígido, aro con techo y separadores integrados '
     '(sustituye a 04, 05 y al peine 20 de TPU). Poste de orientación hacia la '
@@ -430,7 +445,7 @@ v3params.update({'version': 'V4', 'feet_height_mm': FEET_H, 'ramp_rib_y': list(R
                              'deg_attack_out': A_OUT, 'deg_end': A_END},
                  'reservoir_key_xy': list(KEY_XY), 'rotor': {'r': ROTOR_R, 'z0': ROTOR_Z0, 'z1': ROTOR_Z1, 'cone_seat_r': CONE_SEAT_R}, 'button': {'type': 'pulsador tactil 6x6x9.5', 'xy': list(BTN_XY), 'body_top_z': DECK0},
                  'motor': '28BYJ-48', 'motor_top_z': M_TOP, 'motor_ear_x': M_EAR_X, 'motor_body_offset_y': M_OFF, 'cap_top_z': TOP,
-                 'fill_lid_top_z': RES_TOP + LID_T,
+                 'fill_lid_top_z': RES_TOP + LID_T, 'fill_max_line': {'z': FILL_Z, 'depth': FILL_DEPTH, 'deg_from': FILL_A0, 'deg_to': FILL_A1 - 360.0},
                  'tray_slope_deg': 25, 'tray_floor': {'z_ref_at_y_-55': round(Z_REF, 4), 'y_knee': Y_KNEE,
                  'z_pocket': round(Z_POCKET, 3), 'y_back': TY_BACK, 'y_front': TY_FRONT,
                  'pocket_y_center': round((Y_KNEE + TY_FRONT + TW) / 2, 2)}})

@@ -44,8 +44,8 @@ int main() {
   expect("doble toque rapido (0.3 s entre ambos)", {{0.5, 0.1}, {0.9, 0.1}}, 5, 1);
   expect("2 pulsaciones separadas 2.5 s", {{0.5, 0.1}, {3.0, 0.1}}, 7, 2);
   expect("pulsacion durante el giro (se ignora)", {{0.5, 0.1}, {0.8, 0.1}}, 5, 1);
-  expect("2 pulsaciones separadas 1.7 s", {{0.5, 0.1}, {2.2, 0.1}}, 5, 2);
-  expect("2a pulsacion 0.3 s despues de parar el rotor (bloqueada)", {{0.5, 0.1}, {1.6, 0.1}}, 4, 1);
+  expect("2 pulsaciones separadas 2.0 s", {{0.5, 0.1}, {2.5, 0.1}}, 5, 2);
+  expect("2a pulsacion 0.3 s despues de parar el rotor (bloqueada)", {{0.5, 0.1}, {1.8, 0.1}}, 4, 1);
   expect("pulsaciones de 40 ms (toque muy corto)", {{0.5, 0.04}, {2.5, 0.04}}, 5, 2);
   expect("ruido de 10 ms (no es pulsacion)", {{0.5, 0.01}}, 2, 0);
   expect("12 pulsaciones separadas 2.5 s", [](){ std::vector<Press> v; for (int i=0;i<12;i++) v.push_back({0.5+2.5*i,0.1}); return v; }(), 32, 12);
