@@ -46,12 +46,12 @@
   },
   "09_tapa_llenado": {
     "size_mm": [
-      104.4,
-      104.4,
-      5.5
+      104.0,
+      109.0,
+      4.6
     ],
-    "volume_mm3": 19048.4,
-    "note": "Tapa redonda de llenado, encajada a ras en la tapa de servicio. Se levanta por la muesca del frente. Imprimir boca abajo."
+    "volume_mm3": 15496.7,
+    "note": "Tapa redonda de llenado apoyada en la boca de la reserva, con ceja y pestaña al frente para levantarla. Imprimir boca abajo."
   },
   "10_bancada_28BYJ48": {
     "size_mm": [
@@ -75,9 +75,9 @@
     "size_mm": [
       125.0,
       125.0,
-      88.1
+      37.8
     ],
-    "volume_mm3": 111043.1,
-    "note": "Tapa de servicio cuadrada: cubre placa, disco y reserva y se levanta entera para mantenimiento. Lleva la boca de llenado con asiento para la tapa 09 y el pulsador de entrega de 6x6 en la esquina. Imprimir boca abajo."
+    "volume_mm3": 47237.9,
+    "note": "Tapa de servicio cuadrada corta: cubre solo la franja del disco y los tornillos, con abertura para la reserva. Lleva el pulsador de entrega 6x6 en la esquina. Imprimir boca abajo."
   }
 }

@@ -13,14 +13,14 @@
     "01_carcasa_v4": 4.6,
     "02_placa_inferior_con_canal": 0.6,
     "07_reserva_con_barredor": 0.6,
-    "09_tapa_llenado": 32.7,
+    "09_tapa_llenado": 30.4,
     "10_bancada_28BYJ48": 3.5,
     "16_rampa_salida": 30.782,
     "21_tapa_cuadrada": 8.7,
     "REF_ESP32_DevKit": 68.19,
     "REF_driver_ULN2003": 76.101,
     "REF_motor_28BYJ48": 0.7,
-    "REF_pulsador_6x6": 59.629,
+    "REF_pulsador_6x6": 13.798,
     "TORNILLO_placas_-39.244_-39.244": 2.199,
     "TORNILLO_placas_-39.244_39.244": 2.199,
     "TORNILLO_placas_39.244_-39.244": 2.199,
@@ -47,11 +47,11 @@
     "rampa_vs_02_placa_inferior_con_canal": 9.858,
     "rampa_vs_REF_ESP32_DevKit": 4.717,
     "rampa_vs_REF_driver_ULN2003": 16.688,
-    "pulsador_vs_07_reserva_con_barredor": 8.811,
-    "pulsador_vs_09_tapa_llenado": 8.84,
+    "pulsador_vs_07_reserva_con_barredor": 1.909,
+    "pulsador_vs_09_tapa_llenado": 42.113,
     "tapa_vs_02_placa_inferior_con_canal": 0.5,
-    "tapa_vs_07_reserva_con_barredor": 0.3,
-    "tapa_vs_TORNILLO_placas_39.244_39.244": 17.111,
+    "tapa_vs_07_reserva_con_barredor": 0.5,
+    "tapa_vs_TORNILLO_placas_39.244_39.244": 6.85,
     "tapa_vs_01_carcasa_v4": 0.0,
     "barredor_vs_03_rotor_15x8_eje_D5": 0.6,
     "barredor_vs_06_cono_repartidor_punta_arriba": 0.68
@@ -142,10 +142,11 @@
       "03_rotor_15x8_eje_D5"
     ],
     "07_reserva_con_barredor": [
-      "02_placa_inferior_con_canal"
+      "02_placa_inferior_con_canal",
+      "09_tapa_llenado"
     ],
     "09_tapa_llenado": [
-      "21_tapa_cuadrada"
+      "07_reserva_con_barredor"
     ],
     "10_bancada_28BYJ48": [
       "01_carcasa_v4",
@@ -156,7 +157,6 @@
     ],
     "21_tapa_cuadrada": [
       "01_carcasa_v4",
-      "09_tapa_llenado",
       "REF_pulsador_6x6"
     ],
     "REF_ESP32_DevKit": [
@@ -225,12 +225,12 @@
     },
     {
       "file": "09_tapa_llenado.stl",
-      "triangles": 4436,
+      "triangles": 4716,
       "bad_edges": 0,
       "winding_errors": 0,
-      "dimension_max_error_mm": 0.0206,
-      "volume_relative_error": 0.000264,
-      "print_height_mm": 5.5
+      "dimension_max_error_mm": 0.0103,
+      "volume_relative_error": 0.000251,
+      "print_height_mm": 4.6
     },
     {
       "file": "10_bancada_28BYJ48.stl",
@@ -252,12 +252,12 @@
     },
     {
       "file": "21_tapa_cuadrada.stl",
-      "triangles": 6416,
+      "triangles": 4036,
       "bad_edges": 0,
       "winding_errors": 0,
       "dimension_max_error_mm": 0.0,
-      "volume_relative_error": 3.3e-05,
-      "print_height_mm": 88.1
+      "volume_relative_error": 0.000102,
+      "print_height_mm": 37.8
     }
   ],
   "fasteners": {

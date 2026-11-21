@@ -7,7 +7,7 @@ Con **2 placas** se imprime todo el pastillero, y todo en PLA o PETG: ya no hay 
 | Placa | Piezas | Material | Capa | Alto máx. |
 |---|---|---|---|---|
 | ![](Placa_1_estructura_PLA_capa_0.28.png) **1 · Estructura** | 01 carcasa, 09 tapa de llenado, 16 rampa de salida, 10 bancada del 28BYJ-48, 06 cono | PLA / PETG | **0.28 mm** | 92 mm |
-| ![](Placa_2_mecanismo_y_tapa_PLA_capa_0.20.png) **2 · Mecanismo y tapa** | 21 tapa de servicio (con alojamiento del pulsador), 07 reserva (con techo, separadores y barredor), 02 placa con canal, 03 rotor para eje D5 | PLA / PETG | **0.20 mm** | 88 mm |
+| ![](Placa_2_mecanismo_y_tapa_PLA_capa_0.20.png) **2 · Mecanismo y tapa** | 21 tapa de servicio (con alojamiento del pulsador), 07 reserva (con techo, separadores y barredor), 02 placa con canal, 03 rotor para eje D5 | PLA / PETG | **0.20 mm** | 76 mm |
 
 ## Si ya imprimiste V3: `Solo_piezas_nuevas/`
 
@@ -16,7 +16,7 @@ Con el motor 28BYJ-48 cambian también la bancada 10 y el rotor 03 (su eje es Ø
 | Placa | Piezas | Capa | Alto máx. |
 |---|---|---|---|
 | ![](Solo_piezas_nuevas/Placa_1_nuevas_estructura_PLA_capa_0.28.png) **1 · Estructura** | 01 carcasa, 09 tapa de llenado, 16 rampa de salida, 10 bancada del 28BYJ-48 | **0.28 mm** | 92 mm |
-| ![](Solo_piezas_nuevas/Placa_2_nuevas_reserva_placa_rotor_y_tapa_PLA_capa_0.20.png) **2 · Reserva, placa, rotor y tapa** | 21 tapa de servicio, 07 reserva con barredor, 02 placa con canal, 03 rotor para eje D5 | **0.20 mm** | 88 mm |
+| ![](Solo_piezas_nuevas/Placa_2_nuevas_reserva_placa_rotor_y_tapa_PLA_capa_0.20.png) **2 · Reserva, placa, rotor y tapa** | 21 tapa de servicio, 07 reserva con barredor, 02 placa con canal, 03 rotor para eje D5 | **0.20 mm** | 76 mm |
 
 No reutilices de V3 el rotor 03, la bancada 10, el puente 11, la placa 02, el canal 17 ni la tapa 09: cambiaron y no encajan con el 28BYJ-48, la rampa o la tapa de servicio. Las piezas de pesaje de V3 (12 a 16 y la celda) ya no se usan.
 

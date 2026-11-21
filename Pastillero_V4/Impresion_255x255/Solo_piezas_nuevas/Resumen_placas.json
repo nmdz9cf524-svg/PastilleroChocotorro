@@ -10,8 +10,8 @@
       "10_bancada_28BYJ48"
     ],
     "altura_max_mm": 92.0,
-    "volumen_solido_cm3": 301.1,
-    "separacion_minima_mm": 12.8
+    "volumen_solido_cm3": 297.5,
+    "separacion_minima_mm": 13.0
   },
   "Placa_2_nuevas_reserva_placa_rotor_y_tapa_PLA_capa_0.20": {
     "material": "PLA o PETG",
@@ -23,8 +23,8 @@
       "02_placa_inferior_con_canal",
       "03_rotor_15x8_eje_D5"
     ],
-    "altura_max_mm": 88.1,
-    "volumen_solido_cm3": 328.7,
+    "altura_max_mm": 75.8,
+    "volumen_solido_cm3": 264.9,
     "separacion_minima_mm": 5.0
   }
 }

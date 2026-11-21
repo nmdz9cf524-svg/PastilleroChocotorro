@@ -260,34 +260,35 @@ add('16_rampa_salida', ramp,
     'en la ventana y en dos nervios encajados en el piso. Sustituye a la bandeja '
     'de pesaje 16, la mordaza 13 y la celda. Imprimir de pie sobre un costado.')
 
-# ------------------------- 21 tapa de servicio cuadrada + 09 tapa de llenado
+# ------------------------- 21 tapa de servicio corta + 09 tapa de llenado
 # Se abre en dos secciones:
-#   * 09 tapa de llenado: disco redondo encajado a ras en la cara de arriba.
-#     Se levanta con el dedo (muesca al frente) y se echan las pastillas por
-#     la boca Ø91 directamente a la reserva.
-#   * 21 tapa de servicio: la caja cuadrada entera. Se levanta para llegar al
-#     disco, el barredor y los tornillos. Su ceja circular entra en la boca de
-#     la reserva y cuatro pestañas en la carcasa.
-RES_TOP, RES_IN = 166.8, 49.0
-DECK0 = RES_TOP + 0.3                   # 0.3 mm sobre el borde de la reserva
-DECK_T = 4.0
+#   * 09 tapa de llenado: tapa redonda apoyada en la boca de la reserva, con una
+#     ceja que entra en ella y una pestaña al frente para levantarla.
+#   * 21 tapa de servicio: caja cuadrada corta (unos 32 mm) que solo cubre la
+#     franja del disco, la pestaña de la reserva y sus tornillos. Su abertura
+#     redonda rodea la reserva, que queda a la vista. Se levanta para llegar al
+#     disco y los tornillos. Lleva el pulsador de entrega en la esquina.
+RES_TOP, RES_IN, RES_OUT = 166.8, 49.0, 52.0
+HOLE_R = RES_OUT + 0.5                  # abertura de la tapa de servicio alrededor de la reserva
+CHAMFER_AT_HOLE = 109.8 + (60.0 - HOLE_R)   # altura del chaflán de la reserva en el borde de la abertura
+DECK0 = CHAMFER_AT_HOLE + 1.0           # cara inferior de la cubierta, 1 mm sobre el chaflán
+DECK_T = 2.5
 TOP = DECK0 + DECK_T
-FILL_R, SEAT_R, SEAT_D = RES_IN - 3.3, 52.5, 2.0   # boca de llenado, asiento de la tapa 09
 cap = rrect(W, RC, 89, TOP - 89).cut(rrect(W, RC, 88, DECK0 - 88, inset=2.0))
-cap = cap.fuse(cyl(RES_IN - 0.3, DECK0 - 163.8 + 0.01, z=163.8).cut(cyl(FILL_R, 10, z=163)))   # ceja
-cap = cap.cut(cyl(FILL_R, 10, z=DECK0 - 1))                                        # boca de llenado
-cap = cap.cut(cyl(SEAT_R, SEAT_D + 1, z=TOP - SEAT_D))                              # asiento a ras
-cap = cap.cut(cyl(8.0, 4, 0, -SEAT_R, TOP - 3.0))                                   # muesca para el dedo
-# Botón de entrega arriba: pulsador táctil de 6x6 mm en la esquina frontal
-# derecha de la tapa de servicio, fuera de la tapa de llenado. El cuerpo entra
-# por debajo en un alojamiento cuadrado (tope contra la cara inferior) y el
-# vástago asoma ~2 mm por un agujero de Ø4.2 con un rebaje para el dedo.
+cap = cap.cut(cyl(HOLE_R, 10, z=DECK0 - 1))                                         # abertura para la reserva
+# Botón de entrega arriba: pulsador táctil 6x6 en la esquina frontal derecha.
+# Alojamiento bajo la cubierta, con piso: el pulsador entra deslizándose desde
+# el lado de la reserva (-X), sus patas pasan por dos ranuras del piso y, al
+# pulsarlo, el cuerpo apoya en ese piso. El vástago asoma por un agujero Ø4.2.
 BTN_XY, BTN_BODY, BTN_H, BTN_STEM = (46.0, -46.0), 6.0, 3.5, 6.0   # 6x6x9.5 mm
+BTN_FLOOR = 1.5
 bx, by = BTN_XY
-cap = cap.fuse(box(bx - 5, bx + 5, by - 5, by + 5, DECK0 - 4.0, DECK0 + 0.01))          # alojamiento
-cap = cap.cut(box(bx - 3.05, bx + 3.05, by - 3.05, by + 3.05, DECK0 - 4.5, DECK0))      # hueco del cuerpo
-cap = cap.cut(cyl(2.1, 10, bx, by, DECK0 - 1))                                          # paso del vástago
-cap = cap.cut(cyl(5.0, 2, bx, by, TOP - 1.0))                                           # rebaje para el dedo
+cap = cap.fuse(box(bx - 5, bx + 5, by - 5, by + 5, DECK0 - BTN_H - BTN_FLOOR, DECK0 + 0.01))   # alojamiento
+cap = cap.cut(box(bx - 6, bx + 3.05, by - 3.05, by + 3.05, DECK0 - BTN_H, DECK0))               # cuerpo (entra desde -X)
+for sy in (-1, 1):                                                                            # ranuras de las patas
+    cap = cap.cut(box(bx - 6, bx + 3.05, min(by + sy * 2.0, by + sy * 3.05), max(by + sy * 2.0, by + sy * 3.05),
+                      DECK0 - BTN_H - BTN_FLOOR - 1, DECK0 - BTN_H + 0.01))
+cap = cap.cut(cyl(2.1, 10, bx, by, DECK0 - 1))                                                # paso del vástago
 tabs = rrect(W, RC, 83, 6.01, inset=WALL + 0.25).cut(rrect(W, RC, 82, 8, inset=WALL + 0.25 + 1.6))
 ledge = rrect(W, RC, 89, 2.0).cut(rrect(W, RC, 88, 4, inset=WALL + 0.25 + 1.6))
 keep = None
@@ -297,17 +298,21 @@ for sx in (-1, 1):
         keep = b if keep is None else keep.fuse(b)
 cap = cap.fuse(tabs.fuse(ledge).intersect(keep))
 add('21_tapa_cuadrada', cap,
-    'Tapa de servicio cuadrada: cubre placa, disco y reserva y se levanta '
-    'entera para mantenimiento. Lleva la boca de llenado con asiento para la '
-    'tapa 09 y el pulsador de entrega de 6x6 en la esquina. Imprimir boca abajo.')
+    'Tapa de servicio cuadrada corta: cubre solo la franja del disco y los '
+    'tornillos, con abertura para la reserva. Lleva el pulsador de entrega 6x6 '
+    'en la esquina. Imprimir boca abajo.')
 
-lid = cyl(SEAT_R - 0.3, SEAT_D, z=TOP - SEAT_D)
-lid = lid.fuse(cyl(FILL_R - 0.3, DECK_T - SEAT_D + 1.5 + 0.01, z=DECK0 - 1.5).cut(cyl(FILL_R - 2.3, 10, z=DECK0 - 2)))
+# Tapa de llenado sobre la reserva: disco de 1.6 mm, ceja que entra 3 mm en la
+# boca (holgura 0.3) y pestaña al frente para levantarla con el dedo.
+LID_T = 1.6
+lid = cyl(RES_OUT, LID_T, z=RES_TOP)
+lid = lid.fuse(cyl(RES_IN - 0.3, 3.0 + 0.01, z=RES_TOP - 3.0).cut(cyl(RES_IN - 2.3, 4, z=RES_TOP - 3.5)))   # ceja
+lid = lid.fuse(cq.Workplane('XY', origin=(0, -RES_OUT + 1, RES_TOP)).slot2D(18, 12).extrude(LID_T).val())  # pestaña
 for x, y in [(12, 12), (-12, 12), (12, -12), (-12, -12)]:
-    lid = lid.cut(cyl(1.0, 10, x, y, TOP - 5))                                     # respiraderos
+    lid = lid.cut(cyl(1.0, 10, x, y, RES_TOP - 5))                                  # respiraderos
 add('09_tapa_llenado', lid,
-    'Tapa redonda de llenado, encajada a ras en la tapa de servicio. Se levanta '
-    'por la muesca del frente. Imprimir boca abajo.')
+    'Tapa redonda de llenado apoyada en la boca de la reserva, con ceja y '
+    'pestaña al frente para levantarla. Imprimir boca abajo.')
 
 # ------------------------------------------------- motor 28BYJ-48 (referencia)
 # Medidas de la hoja de datos estándar: cuerpo Ø28 x 19, orejas con agujeros
@@ -405,8 +410,8 @@ puls = (box(bx - h, bx + h, by - h, by + h, DECK0 - BTN_H, DECK0)               
         .fuse(cyl(1.75, BTN_STEM, bx, by, DECK0)))                                          # vástago
 for sx in (-1, 1):
     for sy in (-1, 1):
-        puls = puls.fuse(box(bx + sx * 2.25 - 0.35, bx + sx * 2.25 + 0.35, by + sy * (h - 0.3) - 0.3,
-                             by + sy * (h - 0.3) + 0.3, DECK0 - BTN_H - 3.5, DECK0 - BTN_H))  # patas, bajo el cuerpo
+        puls = puls.fuse(box(bx + sx * 2.25 - 0.35, bx + sx * 2.25 + 0.35, by + sy * 2.55 - 0.3,
+                             by + sy * 2.55 + 0.3, DECK0 - BTN_H - 3.5, DECK0 - BTN_H))  # patas, por las ranuras del piso
 uln = box(-58.0, -26.0, -12.0, 23.0, 4.0, 5.6)                                       # PCB 32x35
 uln = uln.fuse(box(-45.5, -38.5, -6.0, 13.0, 5.6, 9.0))                             # ULN2003 DIP16
 uln = uln.fuse(box(-55.0, -49.0, 4.0, 16.0, 5.6, 12.6))                             # conector del motor
@@ -425,7 +430,7 @@ v3params.update({'version': 'V4', 'feet_height_mm': FEET_H, 'ramp_rib_y': list(R
                              'deg_attack_out': A_OUT, 'deg_end': A_END},
                  'reservoir_key_xy': list(KEY_XY), 'rotor': {'r': ROTOR_R, 'z0': ROTOR_Z0, 'z1': ROTOR_Z1, 'cone_seat_r': CONE_SEAT_R}, 'button': {'type': 'pulsador tactil 6x6x9.5', 'xy': list(BTN_XY), 'body_top_z': DECK0},
                  'motor': '28BYJ-48', 'motor_top_z': M_TOP, 'motor_ear_x': M_EAR_X, 'motor_body_offset_y': M_OFF, 'cap_top_z': TOP,
-                 'fill_lid_top_z': TOP, 'fill_lid_seat_r': SEAT_R,
+                 'fill_lid_top_z': RES_TOP + LID_T,
                  'tray_slope_deg': 25, 'tray_floor': {'z_ref_at_y_-55': round(Z_REF, 4), 'y_knee': Y_KNEE,
                  'z_pocket': round(Z_POCKET, 3), 'y_back': TY_BACK, 'y_front': TY_FRONT,
                  'pocket_y_center': round((Y_KNEE + TY_FRONT + TW) / 2, 2)}})
