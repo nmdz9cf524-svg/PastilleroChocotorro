@@ -54,7 +54,7 @@ const int      PASOS_RAMPA      = 60;
 // --- Botón ---
 const uint32_t MS_ANTIREBOTE = 15;    // filtra el rebote del contacto (un pulsador táctil rebota < 10 ms)
 const uint32_t MS_BLOQUEO    = 800;   // tras terminar una entrega, ignora pulsaciones durante este tiempo.
-                                      // Mientras el rotor gira (~0.75 s) tampoco se leen. Así un doble
+                                      // Mientras el rotor gira (~1 s) tampoco se leen. Así un doble
                                       // toque no da dos pastillas, y se puede pedir otra a los ~1.8 s.
 
 // ===================================================
@@ -91,7 +91,7 @@ void darPasos(long n) {
     long borde = min(i, n - 1 - i);  // pasos hasta el inicio o el final más cercano
     uint32_t t = US_PASO_RAPIDO;
     if (borde < PASOS_RAMPA) {
-      t = US_PASO_LENTO - (US_PASO_LENTO - US_PASO_RAPIDO) * borde / PASOS_RAMPA;
+      t = (uint32_t)(US_PASO_LENTO - (US_PASO_LENTO - US_PASO_RAPIDO) * borde / PASOS_RAMPA);
     }
     delayMicroseconds(t);
     if ((i & 0x3F) == 0) yield();
