@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Entregable final DoseMec</title>
+<style>
+  @page { size: letter; margin: 14mm 14mm 16mm 14mm; }
+  :root { --ink: #1b1f24; --muted: #5b6470; --line: #c9ced6; --head: #1f5f8b; --soft: #f2f4f7; --warn: #fff6e5; --warnline: #e6b85c; --ok: #1d7a4f; }
+  * { box-sizing: border-box; }
+  html, body { width: 187.9mm; }
+  body { margin: 0; color: var(--ink); background: #fff; font: 10pt/1.38 "Liberation Sans", Arial, Helvetica, sans-serif; }
+  .run { text-align: right; color: #7a828c; font-size: 8pt; letter-spacing: .02em; margin-bottom: 4px; }
+  h1 { font-size: 19pt; text-align: center; margin: 2px 0 2px; letter-spacing: .01em; }
+  .sub { text-align: center; color: #333; margin: 0 0 12px; }
+  h2 { font-size: 13.5pt; margin: 16px 0 4px; }
+  .hint { color: #444; font-size: 9pt; margin: 0 0 6px; }
+  table { width: 100%; border-collapse: collapse; }
+  td, th { border: 1px solid var(--line); padding: 6px 8px; vertical-align: top; text-align: left; }
+  th { font-weight: 700; }
+  .id td:first-child { width: 22%; font-weight: 700; }
+  .cambios th { text-align: center; background: #fff; }
+  .cambios td:first-child { width: 18%; font-weight: 700; vertical-align: middle; }
+  .cambios td:last-child { width: 15%; }
+  .opts { list-style: none; margin: 0; padding: 0; font-size: 9pt; line-height: 1.5; }
+  .opts li { color: #9aa1aa; }
+  .opts li::before { content: "○ "; }
+  .opts li.on { color: var(--ink); font-weight: 700; }
+  .opts li.on::before { content: "● "; color: var(--head); }
+  .inline-opts span { margin-right: 12px; color: #9aa1aa; }
+  .inline-opts span.on { color: var(--ink); font-weight: 700; border: 1.5px solid var(--head); border-radius: 10px; padding: 0 6px; }
+  .avance td { width: 25%; }
+  .avance td.k { font-weight: 700; }
+  .ref { font-size: 9pt; margin: 4px 0 0; }
+  .note { background: var(--warn); border: 1px solid var(--warnline); padding: 7px 9px; font-size: 9pt; margin: 8px 0 0; }
+  .peso { margin-top: 8px; font-size: 9pt; }
+  .peso td, .peso th { padding: 3px 7px; }
+  .peso th { background: var(--soft); }
+  .peso td:nth-child(2), .peso td:nth-child(3), .peso td:nth-child(4), .peso th:nth-child(2), .peso th:nth-child(3), .peso th:nth-child(4) { text-align: center; width: 15%; }
+  .evid { table-layout: fixed; }
+  .evid td { width: 50%; padding: 0; overflow: hidden; }
+  .evid .ph { background: var(--soft); height: 62mm; display: flex; align-items: center; justify-content: center; padding: 4px; overflow: hidden; min-width: 0; }
+  .evid .ph img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+  .evid .cap { padding: 6px 8px; font-size: 8.8pt; }
+  .evid .cap b { display: block; margin-bottom: 1px; }
+  pre.term { margin: 0; width: 100%; height: 100%; background: #14181d; color: #d6dde5; font: 6.3pt/1.36 "DejaVu Sans Mono", monospace; min-width: 0; padding: 7px 8px; white-space: pre; overflow: hidden; }
+  pre.term .ok { color: #6fd39a; font-weight: 700; }
+  pre.term .dim { color: #8b96a3; }
+  .estado th { background: var(--head); color: #fff; text-align: center; }
+  .estado td:first-child { width: 20%; font-weight: 700; vertical-align: middle; }
+  .estado td:nth-child(2) { width: 15%; }
+  .prueba td:first-child { width: 22%; font-weight: 700; }
+  .cierre { border: 1px solid #9cc8bd; padding: 10px 12px; margin-top: 14px; }
+  .cierre h3 { margin: 0 0 8px; font-size: 11pt; letter-spacing: .03em; }
+  .cierre p { margin: 0 0 8px; }
+  .cierre .ans { border-bottom: 1px solid #555; padding: 1px 2px 3px; display: block; margin-top: 2px; }
+  .firmas { margin-top: 16px; }
+  .firmas td { border: none; padding: 16px 10px 2px 0; width: 50%; }
+  .firmas .l { border-top: 1px solid #555; padding-top: 3px; display: block; }
+  .links { font-size: 8.8pt; color: var(--muted); margin-top: 10px; }
+  .pb { break-before: page; }
+  .avoid { break-inside: avoid; }
+  a { color: var(--head); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="run">PROTOTIPOS ELECTROMECÁNICOS · ACTUALIZACIÓN FINAL DE AVANCE</div>
+<h1>ENTREGABLE FINAL DE ACTUALIZACIÓN DEL PROTOTIPO</h1>
+<p class="sub">Últimos avances, evidencia reciente y estado funcional</p>
+
+<table class="id">
+  <tr><td>Proyecto</td><td>Pastillero automático <b>DoseMec</b>. Versión actual: <b>Pastillero V4</b>, dispensador de una pastilla por pulsación</td></tr>
+  <tr><td>Equipo</td><td>DOSEMEC</td></tr>
+  <tr><td>Integrantes</td><td>Andrés Imanol González Castellanos · Paulo Fabián Ruiz Castillo · Luis Antonio Olmos Gómez · Juan Alberto Salinas Chávez · Jeshua Romero Villalobos</td></tr>
+  <tr><td>Fecha</td><td>26 de noviembre de 2026 (revisión anterior: 1 de octubre de 2026, avance del 50 %)</td></tr>
+  <tr><td>Repositorio</td><td>github.com/nmdz9cf524-svg/PastilleroChocotorro, rama <code>main</code>. Carpeta <code>Pastillero_V4/</code> y <code>Firmware_ESP32/</code></td></tr>
+</table>
+
+<h2>1. ¿Qué cambió desde la última entrega?</h2>
+<p class="hint">Solo se reportan las actualizaciones realizadas desde la revisión del 1 de octubre de 2026.</p>
+<table class="cambios">
+  <tr><th>Área</th><th>Última actualización realizada</th><th>Estado</th></tr>
+  <tr><td>Diseño mecánico / CAD</td>
+    <td>Rediseño completo a la <b>V4</b>. Los compartimentos con servo se sustituyeron por un <b>rotor de 12 cavidades</b> bajo una reserva circular: cada giro de 30° deja caer una sola pastilla. El techo de la reserva tapa la salida y un barredor rígido aparta las pastillas sobrantes. Una rampa a 25° deja la pastilla en un bolsillo fuera de la caja. Se añadieron una tapa de servicio, una tapa de llenado y una línea grabada de llenado máximo (≈ 60 pastillas). Las piezas impresas bajaron de 25 a <b>9</b> y los tornillos de 29 a 14.</td>
+    <td><ul class="opts"><li class="on">Terminado</li><li>En proceso</li><li>Pendiente</li></ul></td></tr>
+  <tr><td>Electrónica</td>
+    <td>Se cambió de Arduino Nano + servos + HX711 + pantalla a <b>ESP32 + motor paso a paso 28BYJ-48 con driver ULN2003</b>, un pulsador táctil de 6×6 en la tapa, un LED y un zumbador. Se quitó la celda de carga. Ya están definidos los pines (GPIO16–19 al motor, GPIO23 al botón) y la fuente de 5 V ≥ 1 A con tierra común.</td>
+    <td><ul class="opts"><li>Terminado</li><li class="on">En proceso</li><li>Pendiente</li></ul></td></tr>
+  <tr><td>Control / programación</td>
+    <td>Firmware nuevo para el ESP32. Cada pulsación gira el rotor 30°, con 339 o 340 medios pasos calculados para que el error no se acumule. Lleva antirrebote de 15 ms y un bloqueo de 0.8 s contra el doble toque. Se bajó la velocidad (1 s por entrega) para tener más par, y hay comandos serie para calibrar. Pasa la prueba lógica en simulación; falta compilarlo y cargarlo en el ESP32.</td>
+    <td><ul class="opts"><li>Terminado</li><li class="on">En proceso</li><li>Pendiente</li></ul></td></tr>
+  <tr><td>Integración física</td>
+    <td>Las patas, la plataforma del ESP32, el canal de caída, los separadores y el barredor quedaron integrados en piezas de una sola impresión. Hay 2 placas de impresión de 255 × 255 mm sin soportes y una guía animada de ensamble de 12 pasos. También hay un puente para reutilizar la bancada de la V3, que ya está impresa.</td>
+    <td><ul class="opts"><li>Terminado</li><li class="on">En proceso</li><li>Pendiente</li></ul></td></tr>
+  <tr><td>Pruebas / funcionamiento</td>
+    <td>Se hizo una validación automática del CAD: choques entre piezas, barrido completo del rotor (holguras ≥ 0.6 mm), recorrido de una pastilla de 15×8×6 mm hasta el bolsillo, orden de montaje y piezas flotantes. También se hizo la prueba lógica del firmware (10 casos y 1000 vueltas). <b>Falta la prueba física.</b></td>
+    <td><ul class="opts"><li>Terminado</li><li class="on">En proceso</li><li>Pendiente</li></ul></td></tr>
+</table>
+<div class="note"><b>Cambio de alcance:</b> se eliminó la verificación por peso (celda de carga + HX711, mordazas y bandeja de pesaje). Ahora la dosis la asegura la geometría: cada cavidad del rotor admite una sola pastilla y el techo de la reserva tapa la ventana de salida, así que no caen pastillas de más. Con eso desapareció la parte más difícil de calibrar y la mecánica quedó en 9 piezas.</div>
+
+<div class="avoid">
+<h2>2. Avance actual del proyecto</h2>
+<table class="avance">
+  <tr><td class="k">Avance global estimado</td><td><b>69 %</b></td><td class="k">Nivel actual</td>
+    <td class="inline-opts"><span class="on">P0</span><span>P1</span><span>P2</span><span>P3</span></td></tr>
+  <tr><td class="k">¿Qué ya funciona?</td><td>En CAD y en simulación: el mecanismo completo ensambla sin choques ni piezas flotando, el rotor gira libre y la pastilla llega al bolsillo exterior. El firmware entrega una cavidad por pulsación sin acumular error.</td>
+    <td class="k">¿Qué falta integrar?</td><td>Imprimir las piezas V4; montar el motor, el ULN2003, el ESP32 y el pulsador; cargar el firmware y probar con pastillas reales.</td></tr>
+  <tr><td class="k">Mayor avance logrado</td><td>El diseño V4 está completo y validado: 9 piezas listas para imprimir en 2 placas, con firmware, guía de ensamble y documentación.</td>
+    <td class="k">Principal bloqueo</td><td>Falta la prueba física. Todavía no se confirma el par del 28BYJ-48 con la reserva cargada ni el funcionamiento en el ESP32 real.</td></tr>
+</table>
+<p class="ref">Referencia de niveles: P0 = diseño conceptual · P1 = una función crítica probada · P2 = varios subsistemas integrados · P3 = prototipo electromecánico integrado y funcional. Se mantiene en <b>P0</b> porque la función crítica (entregar una pastilla) está demostrada en CAD y en simulación, pero aún no físicamente. Con la primera prueba de entrega física, el proyecto pasa a P1.</p>
+<table class="peso">
+  <tr><th style="text-align:left">Etapa (misma ponderación que la revisión anterior)</th><th>Peso</th><th>Avance</th><th>Aporte</th></tr>
+  <tr><td>1. Ideación y necesidad</td><td>15 %</td><td>100 %</td><td>15.0 %</td></tr>
+  <tr><td>2. Búsqueda tecnológica (sin cambios)</td><td>15 %</td><td>50 %</td><td>7.5 %</td></tr>
+  <tr><td>3. Definición técnica: motor, driver, control y alimentación cerrados</td><td>20 %</td><td>95 %</td><td>19.0 %</td></tr>
+  <tr><td>4. Diseño y preparación: CAD validado, placas, tornillería, conexiones y guía</td><td>25 %</td><td>90 %</td><td>22.5 %</td></tr>
+  <tr><td>5. Construcción e integración: V3 impresa, V4 lista para imprimir, sin pruebas físicas</td><td>25 %</td><td>20 %</td><td>5.0 %</td></tr>
+  <tr><td><b>Total</b></td><td></td><td></td><td><b>69 %</b></td></tr>
+</table>
+</div>
+
+<h2 class="pb">3. Evidencia más reciente del prototipo</h2>
+<p class="hint">Capturas nuevas generadas a partir de los archivos actuales del repositorio. Cada una muestra un avance que no existía en la entrega anterior.</p>
+<table class="evid">
+  <tr>
+    <td><div class="ph"><img src="img/ev1_cad_ensamble_y_corte.png" alt="Ensamble V4 y corte del mecanismo"></div>
+      <div class="cap"><b>Evidencia 1 · Fecha: 21/11/2026</b>¿Qué muestra / qué demuestra?: El ensamble V4 en CAD y un corte por el centro, con la reserva, el rotor de 12 cavidades, el cono, el canal, la rampa con su bolsillo exterior y el motor 28BYJ-48 en su bancada. Demuestra que las 9 piezas encajan: la validación automática no encontró choques ni piezas flotando.</div></td>
+    <td><div class="ph"><img src="img/ev2_guia_ensamble_electronica.png" alt="Guía animada de ensamble, paso 5"></div>
+      <div class="cap"><b>Evidencia 2 · Fecha: 21/11/2026</b>¿Qué muestra / qué demuestra?: La guía animada de ensamble (12 pasos, con la geometría real) en el paso de electrónica: ULN2003, ESP32, bancada con el motor y rampa en su sitio. Demuestra la integración física planeada y el orden de montaje.</div></td>
+  </tr>
+  <tr>
+    <td><div class="ph"><img src="img/ev3_placas_impresion.png" alt="Placas de impresión 255 x 255"></div>
+      <div class="cap"><b>Evidencia 3 · Fecha: 21/11/2026</b>¿Qué muestra / qué demuestra?: Las 2 placas de impresión de 255 × 255 mm con las 9 piezas V4, orientadas para imprimirse sin soportes: estructura a 0.28 mm y mecanismo a 0.20 mm. Demuestra que el diseño está listo para fabricarse.</div></td>
+    <td><div class="ph"><pre class="term"><span class="dim">$ ./prueba_boton</span>
+=== Pastillero V4 - entrega con boton ===
+30 grados = 339.65 medios pasos (339 o 340 por entrega)
+1 pulsacion corta con rebote          -&gt; 1 entrega,  340 pasos
+pulsacion mantenida 3 s (no repite)   -&gt; 1 entrega,  339 pasos
+doble toque rapido (0.3 s)            -&gt; 1 entrega,  340 pasos
+2 pulsaciones separadas 2.5 s         -&gt; 2 entregas, 679 pasos
+pulsacion durante el giro (ignorada)  -&gt; 1 entrega,  340 pasos
+2 pulsaciones separadas 2.0 s         -&gt; 2 entregas, 679 pasos
+2a pulsacion 0.3 s tras parar (bloq.) -&gt; 1 entrega,  340 pasos
+pulsaciones de 40 ms                  -&gt; 2 entregas, 679 pasos
+ruido de 10 ms (no es pulsacion)      -&gt; 0 entregas,   0 pasos
+12 pulsaciones separadas 2.5 s        -&gt; 12 entregas,4076 pasos
+Entregas totales 23, cavidad 11 (debe ser 11)
+1000 vueltas: error 0.022 grados
+<span class="ok">TODO OK</span></pre></div>
+      <div class="cap"><b>Evidencia 4 · Fecha: 24/11/2026</b>¿Qué muestra / qué demuestra?: La salida de la prueba lógica del firmware, compilado en PC con un sustituto de Arduino que simula el reloj y el rebote del botón (salida resumida). Demuestra una cavidad por pulsación, que se ignoran el doble toque y el ruido, y que 12 pulsaciones dan una vuelta exacta.</div></td>
+  </tr>
+</table>
+
+<div class="avoid">
+<h2>4. Estado actual del prototipo</h2>
+<table class="estado">
+  <tr><th>Subsistema</th><th>Estado</th><th>¿Qué falta?</th></tr>
+  <tr><td>Mecánica / estructura</td><td><ul class="opts"><li>Funciona</li><li class="on">Parcial</li><li>Pendiente</li></ul></td>
+    <td>El diseño V4 está terminado y validado en CAD, y la V3 está impresa. Falta imprimir las piezas V4 (2 placas, o solo las nuevas reutilizando el cono y la bancada de la V3) y comprobar las holguras reales de 0.6 mm.</td></tr>
+  <tr><td>Electrónica</td><td><ul class="opts"><li>Funciona</li><li class="on">Parcial</li><li>Pendiente</li></ul></td>
+    <td>Los componentes y las conexiones están definidos. Falta cablear el ESP32, el ULN2003, el pulsador y el zumbador, y alimentar con 5 V ≥ 1 A con tierra común.</td></tr>
+  <tr><td>Control</td><td><ul class="opts"><li>Funciona</li><li class="on">Parcial</li><li>Pendiente</li></ul></td>
+    <td>El firmware está terminado y probado en simulación. Falta compilarlo y cargarlo en el ESP32 desde el Arduino IDE y calibrar el sentido de giro y los pasos por vuelta (comando <code>v</code>).</td></tr>
+  <tr><td>Actuadores / sensores</td><td><ul class="opts"><li>Funciona</li><li>Parcial</li><li class="on">Pendiente</li></ul></td>
+    <td>Falta probar el 28BYJ-48 con la reserva cargada; el par estimado hasta la línea de llenado es de unos 7 mN·m, frente a unos 30 mN·m del motor. No hay sensor de posición: la siguiente mejora sería un sensor hall A3144 para detectar atascos.</td></tr>
+  <tr><td>Integración completa</td><td><ul class="opts"><li>Funciona</li><li>Parcial</li><li class="on">Pendiente</li></ul></td>
+    <td>Falta montar la V4 completa siguiendo la guía y hacer la prueba de entrega con pastillas reales: una por pulsación, sin dobles ni atascos.</td></tr>
+</table>
+</div>
+
+<div class="avoid">
+<h2>5. Última prueba realizada</h2>
+<table class="prueba">
+  <tr><td>¿Qué probaron?</td><td>La lógica del firmware de entrega con botón, en simulación sin hardware (24/11/2026): el reloj y el rebote del botón se simulan, y el código del sketch se compila tal cual en una PC.</td></tr>
+  <tr><td>¿Qué esperaban?</td><td>Una entrega (30°) por pulsación. Que se ignoren el doble toque, la pulsación mantenida, el ruido de 10 ms y las pulsaciones durante el giro, y que 12 pulsaciones den una vuelta sin acumular error.</td></tr>
+  <tr><td>¿Qué ocurrió?</td><td>Los 10 casos dieron el resultado esperado. 12 pulsaciones = 4076 medios pasos (1 vuelta), con un error de 0.022° tras 1000 vueltas. Con la velocidad reducida, cada entrega tarda 1 s y se puede pedir otra a los 1.8 s.</td></tr>
+  <tr><td>¿Funcionó?</td><td class="inline-opts"><span class="on">Sí</span><span>Parcialmente</span><span>No</span> &nbsp;<span style="color:var(--muted);font-weight:400">(en simulación; falta en hardware)</span></td></tr>
+  <tr><td>¿Qué cambiarán?</td><td>Cargar el firmware en el ESP32 y verificar con el comando <code>v</code> que el disco da una vuelta exacta y gira en sentido antihorario. Después, probar con pastillas reales llenando solo hasta la línea grabada. Si el motor se traba, subir <code>US_PASO_RAPIDO</code> o usar el 28BYJ-48 de 12 V.</td></tr>
+</table>
+</div>
+
+<div class="cierre avoid">
+  <h3>CIERRE DEL EQUIPO</h3>
+  <p>Avance global actual: <b>69 %</b></p>
+  <p>La función principal que actualmente puede demostrar nuestro prototipo es:
+    <span class="ans">Entregar una sola pastilla por pulsación: el botón gira el rotor 30° y la pastilla de esa cavidad cae por el canal a la rampa. Está demostrado en el modelo CAD validado, en la simulación animada y en la prueba lógica del firmware.</span></p>
+  <p>Lo más importante que falta para considerarlo terminado es:
+    <span class="ans">Imprimir y ensamblar la V4, cargar el firmware en el ESP32 y hacer la prueba física de entrega con el 28BYJ-48 y pastillas reales.</span></p>
+</div>
+
+<table class="firmas avoid">
+  <tr><td><span class="l">Andrés Imanol González Castellanos</span></td><td><span class="l">Paulo Fabián Ruiz Castillo</span></td></tr>
+  <tr><td><span class="l">Luis Antonio Olmos Gómez</span></td><td><span class="l">Juan Alberto Salinas Chávez</span></td></tr>
+  <tr><td><span class="l">Jeshua Romero Villalobos</span></td><td></td></tr>
+</table>
+
+<p class="links">Archivos de apoyo en el repositorio: <code>Pastillero_V4/LEEME_V4.md</code> (piezas, tornillería, armado y verificación), <code>Pastillero_V4/Impresion_255x255/</code> (placas listas), <code>Pastillero_V4/Guia_visual/</code> (guía animada y simulación del botón), <code>Firmware_ESP32/</code> (sketch, conexiones y prueba lógica). Prototipo sin validación física: no debe usarse como único medio para administrar medicación.</p>
+
+</body>
+</html>
