@@ -81,19 +81,19 @@
 <table class="cambios">
   <tr><th>Área</th><th>Última actualización realizada</th><th>Estado</th></tr>
   <tr><td>Diseño mecánico / CAD</td>
-    <td>Rediseño completo a la <b>V4</b>. Los compartimentos con servo se sustituyeron por un <b>rotor de 12 cavidades</b> bajo una reserva circular: cada giro de 30° deja caer una sola pastilla. El techo de la reserva tapa la salida y un barredor rígido aparta las pastillas sobrantes. Una rampa a 25° deja la pastilla en un bolsillo fuera de la caja. Se añadieron una tapa de servicio, una tapa de llenado y una línea grabada de llenado máximo (≈ 60 pastillas). Las piezas impresas bajaron de 25 a <b>9</b> y los tornillos de 29 a 14.</td>
+    <td>Rediseño completo a la <b>V4</b>. Los compartimentos con servo se sustituyeron por un <b>rotor de 12 cavidades</b> bajo una reserva circular: cada giro de 30° deja caer una sola pastilla. El techo de la reserva tapa la salida y un barredor rígido aparta las pastillas sobrantes. Una rampa a 25° deja la pastilla en un bolsillo fuera de la caja. Se añadieron una tapa de servicio, una tapa de llenado y una línea grabada de llenado máximo (≈ 60 pastillas). Las piezas impresas bajaron de 25 a <b>9</b> y los tornillos de 29 a 14. Las 9 piezas V4 ya están impresas.</td>
     <td><ul class="opts"><li class="on">Terminado</li><li>En proceso</li><li>Pendiente</li></ul></td></tr>
   <tr><td>Electrónica</td>
-    <td>Se cambió de Arduino Nano + servos + HX711 + pantalla a <b>ESP32 + motor paso a paso 28BYJ-48 con driver ULN2003</b>, un pulsador táctil de 6×6 en la tapa, un LED y un zumbador. Se quitó la celda de carga. Ya están definidos los pines (GPIO16–19 al motor, GPIO23 al botón) y la fuente de 5 V ≥ 1 A con tierra común.</td>
+    <td>Se cambió de Arduino Nano + servos + HX711 + pantalla a <b>ESP32 + motor paso a paso 28BYJ-48 con driver ULN2003</b>, un pulsador táctil de 6×6 en la tapa, un LED y un zumbador. Se quitó la celda de carga. Ya funciona montada en protoboard, con un módulo de alimentación de 5 V, fuera de la caja. Falta llevarla dentro de la carcasa.</td>
     <td><ul class="opts"><li>Terminado</li><li class="on">En proceso</li><li>Pendiente</li></ul></td></tr>
   <tr><td>Control / programación</td>
-    <td>Firmware nuevo para el ESP32. Cada pulsación gira el rotor 30°, con 339 o 340 medios pasos calculados para que el error no se acumule. Lleva antirrebote de 15 ms y un bloqueo de 0.8 s contra el doble toque. Se bajó la velocidad (1 s por entrega) para tener más par, y hay comandos serie para calibrar. Pasa la prueba lógica en simulación; falta compilarlo y cargarlo en el ESP32.</td>
-    <td><ul class="opts"><li>Terminado</li><li class="on">En proceso</li><li>Pendiente</li></ul></td></tr>
+    <td>Firmware nuevo para el ESP32. Cada pulsación gira el rotor 30°, con 339 o 340 medios pasos calculados para que el error no se acumule. Lleva antirrebote de 15 ms y un bloqueo de 0.8 s contra el doble toque. Se bajó la velocidad (1 s por entrega) para tener más par, y hay comandos serie para calibrar. Pasó la prueba lógica en simulación y ya está cargado en el ESP32 del prototipo, que responde al botón.</td>
+    <td><ul class="opts"><li class="on">Terminado</li><li>En proceso</li><li>Pendiente</li></ul></td></tr>
   <tr><td>Integración física</td>
-    <td>Las patas, la plataforma del ESP32, el canal de caída, los separadores y el barredor quedaron integrados en piezas de una sola impresión. Hay 2 placas de impresión de 255 × 255 mm sin soportes y una guía animada de ensamble de 12 pasos. También hay un puente para reutilizar la bancada de la V3, que ya está impresa.</td>
+    <td><b>Prototipo V4 impreso y ensamblado</b> con las 9 piezas, siguiendo la guía de ensamble de 12 pasos. La reserva quedó fijada a la tapa de servicio con soldadura plástica. El cable del motor sale por el paso de la pared hacia la electrónica, que todavía está en protoboard fuera de la caja.</td>
     <td><ul class="opts"><li>Terminado</li><li class="on">En proceso</li><li>Pendiente</li></ul></td></tr>
   <tr><td>Pruebas / funcionamiento</td>
-    <td>Se hizo una validación automática del CAD: choques entre piezas, barrido completo del rotor (holguras ≥ 0.6 mm), recorrido de una pastilla de 15×8×6 mm hasta el bolsillo, orden de montaje y piezas flotantes. También se hizo la prueba lógica del firmware (10 casos y 1000 vueltas). <b>Falta la prueba física.</b></td>
+    <td><b>Primera prueba física:</b> al pulsar el botón, el prototipo ensamblado entrega pastillas de paracetamol de 650 mg en la rampa. Antes se hicieron la validación automática del CAD y la prueba lógica del firmware (10 casos y 1000 vueltas). Falta registrar una serie de pruebas con conteo de resultados.</td>
     <td><ul class="opts"><li>Terminado</li><li class="on">En proceso</li><li>Pendiente</li></ul></td></tr>
 </table>
 <div class="note"><b>Cambio de alcance:</b> se eliminó la verificación por peso (celda de carga + HX711, mordazas y bandeja de pesaje). Ahora la dosis la asegura la geometría: cada cavidad del rotor admite una sola pastilla y el techo de la reserva tapa la ventana de salida, así que no caen pastillas de más. Con eso desapareció la parte más difícil de calibrar y la mecánica quedó en 9 piezas.</div>
@@ -101,37 +101,37 @@
 <div class="avoid">
 <h2>2. Avance actual del proyecto</h2>
 <table class="avance">
-  <tr><td class="k">Avance global estimado</td><td><b>69 %</b></td><td class="k">Nivel actual</td>
-    <td class="inline-opts"><span class="on">P0</span><span>P1</span><span>P2</span><span>P3</span></td></tr>
-  <tr><td class="k">¿Qué ya funciona?</td><td>En CAD y en simulación: el mecanismo completo ensambla sin choques ni piezas flotando, el rotor gira libre y la pastilla llega al bolsillo exterior. El firmware entrega una cavidad por pulsación sin acumular error.</td>
-    <td class="k">¿Qué falta integrar?</td><td>Imprimir las piezas V4; montar el motor, el ULN2003, el ESP32 y el pulsador; cargar el firmware y probar con pastillas reales.</td></tr>
-  <tr><td class="k">Mayor avance logrado</td><td>El diseño V4 está completo y validado: 9 piezas listas para imprimir en 2 placas, con firmware, guía de ensamble y documentación.</td>
-    <td class="k">Principal bloqueo</td><td>Falta la prueba física. Todavía no se confirma el par del 28BYJ-48 con la reserva cargada ni el funcionamiento en el ESP32 real.</td></tr>
+  <tr><td class="k">Avance global estimado</td><td><b>83 %</b></td><td class="k">Nivel actual</td>
+    <td class="inline-opts"><span>P0</span><span>P1</span><span class="on">P2</span><span>P3</span></td></tr>
+  <tr><td class="k">¿Qué ya funciona?</td><td>El prototipo físico V4: al pulsar el botón, el ESP32 hace girar el 28BYJ-48, el rotor avanza una cavidad y la pastilla de paracetamol cae por el canal a la rampa exterior.</td>
+    <td class="k">¿Qué falta integrar?</td><td>Llevar la electrónica dentro de la caja: el ESP32 a su plataforma y el ULN2003 al piso, con conexiones fijas en lugar de la protoboard.</td></tr>
+  <tr><td class="k">Mayor avance logrado</td><td>Pasar del diseño digital a un prototipo físico que dispensa con el botón, con las 9 piezas V4 impresas en 2 placas.</td>
+    <td class="k">Principal bloqueo</td><td>Falta medir la confiabilidad (simples, dobles, vacías y atascos) y revisar el polvo blanco que aparece en la rampa y la reserva, que puede indicar roce con las pastillas.</td></tr>
 </table>
-<p class="ref">Referencia de niveles: P0 = diseño conceptual · P1 = una función crítica probada · P2 = varios subsistemas integrados · P3 = prototipo electromecánico integrado y funcional. Se mantiene en <b>P0</b> porque la función crítica (entregar una pastilla) está demostrada en CAD y en simulación, pero aún no físicamente. Con la primera prueba de entrega física, el proyecto pasa a P1.</p>
+<p class="ref">Referencia de niveles: P0 = diseño conceptual · P1 = una función crítica probada · P2 = varios subsistemas integrados · P3 = prototipo electromecánico integrado y funcional. Se marca <b>P2</b> porque la mecánica, el motor, el control y el botón ya funcionan juntos en el prototipo físico. Para P3 falta integrar la electrónica dentro de la caja y documentar la serie de pruebas.</p>
 <table class="peso">
   <tr><th style="text-align:left">Etapa (misma ponderación que la revisión anterior)</th><th>Peso</th><th>Avance</th><th>Aporte</th></tr>
   <tr><td>1. Ideación y necesidad</td><td>15 %</td><td>100 %</td><td>15.0 %</td></tr>
   <tr><td>2. Búsqueda tecnológica (sin cambios)</td><td>15 %</td><td>50 %</td><td>7.5 %</td></tr>
   <tr><td>3. Definición técnica: motor, driver, control y alimentación cerrados</td><td>20 %</td><td>95 %</td><td>19.0 %</td></tr>
   <tr><td>4. Diseño y preparación: CAD validado, placas, tornillería, conexiones y guía</td><td>25 %</td><td>90 %</td><td>22.5 %</td></tr>
-  <tr><td>5. Construcción e integración: V3 impresa, V4 lista para imprimir, sin pruebas físicas</td><td>25 %</td><td>20 %</td><td>5.0 %</td></tr>
-  <tr><td><b>Total</b></td><td></td><td></td><td><b>69 %</b></td></tr>
+  <tr><td>5. Construcción e integración: V4 impresa, ensamblada y entregando pastillas; electrónica en protoboard</td><td>25 %</td><td>75 %</td><td>18.75 %</td></tr>
+  <tr><td><b>Total</b></td><td></td><td></td><td><b>83 %</b></td></tr>
 </table>
 </div>
 
 <h2 class="pb">3. Evidencia más reciente del prototipo</h2>
-<p class="hint">Capturas nuevas generadas a partir de los archivos actuales del repositorio. Cada una muestra un avance que no existía en la entrega anterior.</p>
+<p class="hint">Una fotografía del prototipo físico y capturas nuevas de los archivos actuales del repositorio. Cada una muestra un avance que no existía en la entrega anterior.</p>
 <table class="evid">
   <tr>
+    <td><div class="ph"><img src="img/ev1_prototipo_fisico_V4.jpg" alt="Prototipo físico V4 ensamblado"></div>
+      <div class="cap"><b>Evidencia 1 · Fecha: 26/11/2026</b>¿Qué muestra / qué demuestra?: El prototipo físico V4 ensamblado con las 9 piezas impresas: reserva con tapa de llenado, tapa de servicio, carcasa y rampa con el bolsillo fuera de la ventana. A la izquierda, el ULN2003 y el ESP32 en protoboard. Demuestra que el diseño se fabricó y ensambló, y que entrega pastillas al pulsar el botón.</div></td>
     <td><div class="ph"><img src="img/ev1_cad_ensamble_y_corte.png" alt="Ensamble V4 y corte del mecanismo"></div>
-      <div class="cap"><b>Evidencia 1 · Fecha: 21/11/2026</b>¿Qué muestra / qué demuestra?: El ensamble V4 en CAD y un corte por el centro, con la reserva, el rotor de 12 cavidades, el cono, el canal, la rampa con su bolsillo exterior y el motor 28BYJ-48 en su bancada. Demuestra que las 9 piezas encajan: la validación automática no encontró choques ni piezas flotando.</div></td>
-    <td><div class="ph"><img src="img/ev2_guia_ensamble_electronica.png" alt="Guía animada de ensamble, paso 5"></div>
-      <div class="cap"><b>Evidencia 2 · Fecha: 21/11/2026</b>¿Qué muestra / qué demuestra?: La guía animada de ensamble (12 pasos, con la geometría real) en el paso de electrónica: ULN2003, ESP32, bancada con el motor y rampa en su sitio. Demuestra la integración física planeada y el orden de montaje.</div></td>
+      <div class="cap"><b>Evidencia 2 · Fecha: 21/11/2026</b>¿Qué muestra / qué demuestra?: El ensamble V4 en CAD y un corte por el centro, con la reserva, el rotor de 12 cavidades, el cono, el canal, la rampa y el motor 28BYJ-48 en su bancada. Muestra el mecanismo interno que no se ve en la foto; la validación automática no encontró choques ni piezas flotando.</div></td>
   </tr>
   <tr>
-    <td><div class="ph"><img src="img/ev3_placas_impresion.png" alt="Placas de impresión 255 x 255"></div>
-      <div class="cap"><b>Evidencia 3 · Fecha: 21/11/2026</b>¿Qué muestra / qué demuestra?: Las 2 placas de impresión de 255 × 255 mm con las 9 piezas V4, orientadas para imprimirse sin soportes: estructura a 0.28 mm y mecanismo a 0.20 mm. Demuestra que el diseño está listo para fabricarse.</div></td>
+    <td><div class="ph"><img src="img/ev2_guia_ensamble_electronica.png" alt="Guía animada de ensamble, paso 5"></div>
+      <div class="cap"><b>Evidencia 3 · Fecha: 21/11/2026</b>¿Qué muestra / qué demuestra?: La guía animada de ensamble (12 pasos, con la geometría real) en el paso de electrónica: ULN2003, ESP32, bancada con el motor y rampa en su sitio. Es la guía con la que se armó el prototipo y muestra dónde va la electrónica dentro de la caja.</div></td>
     <td><div class="ph"><pre class="term"><span class="dim">$ ./prueba_boton</span>
 === Pastillero V4 - entrega con boton ===
 30 grados = 339.65 medios pasos (339 o 340 por entrega)
@@ -156,37 +156,37 @@ Entregas totales 23, cavidad 11 (debe ser 11)
 <h2>4. Estado actual del prototipo</h2>
 <table class="estado">
   <tr><th>Subsistema</th><th>Estado</th><th>¿Qué falta?</th></tr>
-  <tr><td>Mecánica / estructura</td><td><ul class="opts"><li>Funciona</li><li class="on">Parcial</li><li>Pendiente</li></ul></td>
-    <td>El diseño V4 está terminado y validado en CAD, y la V3 está impresa. Falta imprimir las piezas V4 (2 placas, o solo las nuevas reutilizando el cono y la bancada de la V3) y comprobar las holguras reales de 0.6 mm.</td></tr>
+  <tr><td>Mecánica / estructura</td><td><ul class="opts"><li class="on">Funciona</li><li>Parcial</li><li>Pendiente</li></ul></td>
+    <td>Impresa y ensamblada completa con las piezas V4. Falta revisar el polvo blanco en la rampa y la reserva (posible roce del barredor o del borde del techo con las pastillas) y que el pegamento junto a la boca del canal no estreche el paso.</td></tr>
   <tr><td>Electrónica</td><td><ul class="opts"><li>Funciona</li><li class="on">Parcial</li><li>Pendiente</li></ul></td>
-    <td>Los componentes y las conexiones están definidos. Falta cablear el ESP32, el ULN2003, el pulsador y el zumbador, y alimentar con 5 V ≥ 1 A con tierra común.</td></tr>
-  <tr><td>Control</td><td><ul class="opts"><li>Funciona</li><li class="on">Parcial</li><li>Pendiente</li></ul></td>
-    <td>El firmware está terminado y probado en simulación. Falta compilarlo y cargarlo en el ESP32 desde el Arduino IDE y calibrar el sentido de giro y los pasos por vuelta (comando <code>v</code>).</td></tr>
-  <tr><td>Actuadores / sensores</td><td><ul class="opts"><li>Funciona</li><li>Parcial</li><li class="on">Pendiente</li></ul></td>
-    <td>Falta probar el 28BYJ-48 con la reserva cargada; el par estimado hasta la línea de llenado es de unos 7 mN·m, frente a unos 30 mN·m del motor. No hay sensor de posición: la siguiente mejora sería un sensor hall A3144 para detectar atascos.</td></tr>
-  <tr><td>Integración completa</td><td><ul class="opts"><li>Funciona</li><li>Parcial</li><li class="on">Pendiente</li></ul></td>
-    <td>Falta montar la V4 completa siguiendo la guía y hacer la prueba de entrega con pastillas reales: una por pulsación, sin dobles ni atascos.</td></tr>
+    <td>Funciona en protoboard fuera de la caja. Falta montarla en la plataforma del ESP32 y en el piso de la carcasa, con conexiones fijas.</td></tr>
+  <tr><td>Control</td><td><ul class="opts"><li class="on">Funciona</li><li>Parcial</li><li>Pendiente</li></ul></td>
+    <td>El firmware está cargado en el ESP32 y responde al botón. Falta confirmar con el comando <code>v</code> que 12 pulsaciones dan una vuelta exacta en el prototipo real.</td></tr>
+  <tr><td>Actuadores / sensores</td><td><ul class="opts"><li>Funciona</li><li class="on">Parcial</li><li>Pendiente</li></ul></td>
+    <td>El 28BYJ-48 mueve el rotor con pastillas. Falta probarlo con la reserva llena hasta la línea grabada. No hay sensor de posición: la siguiente mejora sería un sensor hall A3144 para detectar atascos.</td></tr>
+  <tr><td>Integración completa</td><td><ul class="opts"><li>Funciona</li><li class="on">Parcial</li><li>Pendiente</li></ul></td>
+    <td>El conjunto ya funciona. Falta llevar la electrónica dentro de la caja y documentar con una serie de pruebas que sale una sola pastilla por pulsación, sin dobles ni atascos.</td></tr>
 </table>
 </div>
 
 <div class="avoid">
 <h2>5. Última prueba realizada</h2>
 <table class="prueba">
-  <tr><td>¿Qué probaron?</td><td>La lógica del firmware de entrega con botón, en simulación sin hardware (24/11/2026): el reloj y el rebote del botón se simulan, y el código del sketch se compila tal cual en una PC.</td></tr>
-  <tr><td>¿Qué esperaban?</td><td>Una entrega (30°) por pulsación. Que se ignoren el doble toque, la pulsación mantenida, el ruido de 10 ms y las pulsaciones durante el giro, y que 12 pulsaciones den una vuelta sin acumular error.</td></tr>
-  <tr><td>¿Qué ocurrió?</td><td>Los 10 casos dieron el resultado esperado. 12 pulsaciones = 4076 medios pasos (1 vuelta), con un error de 0.022° tras 1000 vueltas. Con la velocidad reducida, cada entrega tarda 1 s y se puede pedir otra a los 1.8 s.</td></tr>
-  <tr><td>¿Funcionó?</td><td class="inline-opts"><span class="on">Sí</span><span>Parcialmente</span><span>No</span> &nbsp;<span style="color:var(--muted);font-weight:400">(en simulación; falta en hardware)</span></td></tr>
-  <tr><td>¿Qué cambiarán?</td><td>Cargar el firmware en el ESP32 y verificar con el comando <code>v</code> que el disco da una vuelta exacta y gira en sentido antihorario. Después, probar con pastillas reales llenando solo hasta la línea grabada. Si el motor se traba, subir <code>US_PASO_RAPIDO</code> o usar el 28BYJ-48 de 12 V.</td></tr>
+  <tr><td>¿Qué probaron?</td><td>La entrega con botón en el prototipo físico V4 ensamblado (26/11/2026), con pastillas de paracetamol de 650 mg en la reserva, el ESP32 con el firmware y el motor 28BYJ-48 con el driver ULN2003.</td></tr>
+  <tr><td>¿Qué esperaban?</td><td>Que cada pulsación girara el rotor 30° y dejara una pastilla en el bolsillo de la rampa, fuera de la caja.</td></tr>
+  <tr><td>¿Qué ocurrió?</td><td>Al pulsar el botón, el rotor gira y las pastillas llegan a la rampa: el prototipo funciona como conjunto. Se observó polvo blanco en la rampa y en la reserva. Antes, la prueba lógica del firmware en simulación había dado 10 de 10 casos correctos y 0.022° de error tras 1000 vueltas.</td></tr>
+  <tr><td>¿Funcionó?</td><td class="inline-opts"><span class="on">Sí</span><span>Parcialmente</span><span>No</span> &nbsp;<span style="color:var(--muted);font-weight:400">(falta un conteo sistemático de resultados)</span></td></tr>
+  <tr><td>¿Qué cambiarán?</td><td>Hacer una serie de unas 50 pulsaciones contando pastillas simples, dobles, vacías y atascos. Revisar si las pastillas salen raspadas; si es así, subir la holgura del barredor (<code>SWEEP_Z</code>). Comprobar que la pastilla de 650 mg queda holgada en la cavidad de 15 × 8 mm. Llevar la electrónica dentro de la caja.</td></tr>
 </table>
 </div>
 
 <div class="cierre avoid">
   <h3>CIERRE DEL EQUIPO</h3>
-  <p>Avance global actual: <b>69 %</b></p>
+  <p>Avance global actual: <b>83 %</b></p>
   <p>La función principal que actualmente puede demostrar nuestro prototipo es:
-    <span class="ans">Entregar una sola pastilla por pulsación: el botón gira el rotor 30° y la pastilla de esa cavidad cae por el canal a la rampa. Está demostrado en el modelo CAD validado, en la simulación animada y en la prueba lógica del firmware.</span></p>
+    <span class="ans">Entregar pastillas de paracetamol de 650 mg con un botón: cada pulsación gira el rotor 30° y la pastilla de esa cavidad cae por el canal a la rampa exterior. Funciona en el prototipo físico V4.</span></p>
   <p>Lo más importante que falta para considerarlo terminado es:
-    <span class="ans">Imprimir y ensamblar la V4, cargar el firmware en el ESP32 y hacer la prueba física de entrega con el 28BYJ-48 y pastillas reales.</span></p>
+    <span class="ans">Llevar la electrónica dentro de la caja y registrar una serie de pruebas que confirme una sola pastilla por pulsación, sin atascos ni desgaste de las pastillas.</span></p>
 </div>
 
 <table class="firmas avoid">
@@ -195,7 +195,7 @@ Entregas totales 23, cavidad 11 (debe ser 11)
   <tr><td><span class="l">Jeshua Romero Villalobos</span></td><td></td></tr>
 </table>
 
-<p class="links">Archivos de apoyo en el repositorio: <code>Pastillero_V4/LEEME_V4.md</code> (piezas, tornillería, armado y verificación), <code>Pastillero_V4/Impresion_255x255/</code> (placas listas), <code>Pastillero_V4/Guia_visual/</code> (guía animada y simulación del botón), <code>Firmware_ESP32/</code> (sketch, conexiones y prueba lógica). Prototipo sin validación física: no debe usarse como único medio para administrar medicación.</p>
+<p class="links">Archivos de apoyo en el repositorio: <code>Pastillero_V4/LEEME_V4.md</code> (piezas, tornillería, armado y verificación), <code>Pastillero_V4/Impresion_255x255/</code> (placas listas), <code>Pastillero_V4/Guia_visual/</code> (guía animada y simulación del botón), <code>Firmware_ESP32/</code> (sketch, conexiones y prueba lógica). Prototipo en pruebas: no debe usarse como único medio para administrar medicación.</p>
 
 </body>
 </html>
